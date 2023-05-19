@@ -126,6 +126,12 @@ module.exports = {
                 },
             },
 
+            // JSON (requires loader): npm install --save-dev json-loader
+            {
+                test: /\.json$/,
+                loader: 'json-loader'
+            },
+
             // CSS (requires loader): npm install --save-dev style-loader css-loader
             {
                 test: /\.css$/i,
