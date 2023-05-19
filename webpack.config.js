@@ -80,10 +80,8 @@
 
 // https://webpack.js.org/configuration/
 
-const HtmlWebpackPlugin = require('html-webpack-plugin');        // const reference to webpack's html plugin
-const path = require('path');                                    // const convenience reference to the local filepath
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const devMode = process.env.NODE_ENV !== "production";
+const HtmlWebpackPlugin = require('html-webpack-plugin');      // const reference to webpack's html plugin
+const path = require('path');                                  // const convenience reference to the local filepath
 
 module.exports = {
 
@@ -102,12 +100,7 @@ module.exports = {
             //                                          webpage title here
             title: 'New Website',
         }),
-    ].concat(devMode ? [
-        // dev mode ONLY plugins
-    ] : [
-        // production mode ONLY plugins
-        new MiniCssExtractPlugin(),
-    ]),
+    ],
 
     // enable inline source mapping, so we can see lines/error info in browser console output
     devtool: 'inline-source-map', // see: https://webpack.js.org/guides/development/#using-source-maps
@@ -125,7 +118,7 @@ module.exports = {
             //                                          module rules (with some presets)
 
             // Jquery (requires library): npm install --save-dev jquery
-            {
+            { 
                 test: require.resolve("jquery"),
                 loader: "expose-loader",
                 options: {
@@ -139,22 +132,10 @@ module.exports = {
                 loader: 'json-loader'
             },
 
-            // CSS / SCSS / SASS (requires loader): npm install --save-dev style-loader css-loader
+            // CSS (requires loader): npm install --save-dev style-loader css-loader
             {
-                test: /\.(c|sa|sc)ss$/i,
-                use: [
-                    devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
-                    {
-                        loader: 'css-loader',
-                    },
-                    {
-                        loader: 'postcss-loader',
-                        options: { plugins: () => [postcssPresetEnv({ stage: 0 })] },
-                    },
-                    {
-                        loader: 'sass-loader',
-                    }
-                ],
+                test: /\.css$/i,
+                use: ['style-loader', 'css-loader', 'postcss-loader'],
             },
 
             // Images asset loading
