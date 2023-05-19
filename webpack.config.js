@@ -81,7 +81,7 @@
 // https://webpack.js.org/configuration/
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');      // const reference to webpack's html plugin
-const path = require('path');                                  // const convenience reference to the local filepath
+const path = require('path');                                  // const convenience reference to the local filepath-
 
 module.exports = {
 
