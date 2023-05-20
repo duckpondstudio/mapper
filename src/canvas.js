@@ -2,7 +2,8 @@
 
 
 import demoMap from './img/grieger-triptychial-political.png';
-import geojson from './demo.geojson';
+// import geojson from './demo.geojson';
+import geojson from './world.geojson';
 // import worldGeoJson from './world.geo.json';
 // const worldGeoJson = require('./world.geo.json');
 
