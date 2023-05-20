@@ -128,7 +128,7 @@ module.exports = {
 
             // JSON (requires loader): npm install --save-dev json-loader
             {
-                test: /\.json$/,
+                test: /\.(json|geojson)$/,
                 loader: 'json-loader'
             },
 
