@@ -10,8 +10,6 @@ import * as Canvas from './canvas';
 import * as d3 from 'd3';
 
 var container;
-var svg;
-var map;
 
 var width = '800px';
 var height = '400px';
@@ -24,15 +22,15 @@ function GenerateCanvas() {
     container.setAttribute('id', 'container');
     document.body.appendChild(container);
 
-    svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    // svg.setAttribute("id", "container");
-    svg.style.width = width;
-    svg.style.height = height;
-    container.appendChild(svg);
+    // svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    // // svg.setAttribute("id", "container");
+    // svg.style.width = width;
+    // svg.style.height = height;
+    // container.appendChild(svg);
 
-    map = document.createElement("g");
-    map.setAttribute('class', 'map');
-    svg.appendChild(map);
+    // map = document.createElement("g");
+    // map.setAttribute('class', 'map');
+    // svg.appendChild(map);
 
     RetrieveProjection();
 }
@@ -46,15 +44,19 @@ function RetrieveProjection() {
 
     let geoGenerator = d3.geoPath()
         .projection(projection);
-
-    let u = d3.select('#container g.map')
+    
+    let svg = d3.select("#container").append('svg')
+        .attr("width", width)
+        .attr("height", height);
+    
+    let g = svg.append('g')
+        .attr('class', 'map')
         .selectAll('path')
         .data(geojson.features);
 
-    u.enter()
+    g.enter()
         .append('path')
         .attr('d', geoGenerator);
-
 }
 /*
     // Define the width and height of the square
