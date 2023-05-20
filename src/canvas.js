@@ -1,3 +1,5 @@
+// EXTREMELY WIP
+
 
 import demoMap from './img/grieger-triptychial-political.png';
 import geojson from './demo.geojson';
