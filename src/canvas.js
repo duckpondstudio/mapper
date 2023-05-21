@@ -9,11 +9,12 @@ import geojson from './world.geojson';
 
 import * as Canvas from './canvas';
 import * as d3 from 'd3';
+import * as d3gp from 'd3-geo-projection';
 
 var container;
 
-var width = '800px';
-var height = '400px';
+var width = 800;
+var height = 400;
 
 
 function GenerateCanvas() {
@@ -39,17 +40,16 @@ function GenerateCanvas() {
 
 function RetrieveProjection() {
 
-    let projection = d3.geoEquirectangular()
-        .scale(200)
-        .translate([200, 150]);
+    let projection = GetProjection('adams1')
+        .fitSize([width, height], geojson);
 
     let geoGenerator = d3.geoPath()
         .projection(projection);
-    
+
     let svg = d3.select("#container").append('svg')
         .attr("width", width)
         .attr("height", height);
-    
+
     let g = svg.append('g')
         .attr('class', 'map')
         .selectAll('path')
@@ -132,29 +132,55 @@ function RetrieveProjection() {
 }
 
 
-
+*/
 function GetProjection(type) {
+
+    // nullcheck
+    if (type == null) {
+        // null, just return default projection type (geoEquirectangular)
+        console.warn("Cannot get projection type, given type is null, returning d3.geoEquirectangular");
+        return d3.geoEquirectangular();
+    }
+
+    // ensure lowercase
+    if (typeof (type) === 'string') {
+        type = type.toLowerCase();
+    } else {
+        // not a string, invalid parsing 
+        console.warn("Can't get projection from type, type isn't a string, type value: "
+            + type + ", typeof: " + typeof (type) + ", returning d3.geoEquirectangular");
+        return d3.geoEquirectangular();
+    }
+
     switch (type) {
 
         default:
-            console.log("equi");
+            console.log("Unsupported projection type " + type + ", returning geoEquirectangular");
+            return d3.geoEquirectangular();
+        case "geoequirectangular":
+        case "equirectangular":
             return d3.geoEquirectangular();
 
+        case "pierce":
+            console.warn("Warning, common misspelling of Peirce, E before I in this name my dude! Returning correct, but check spelling.");
+            return GetProjection('peirce');
+
+        case "peirce":
+        case "peircequincuncial":
+            return d3gp.geoPeirceQuincuncial()
+                .rotate([0, 0, 315]);
+
         case "adams":
-            return d3.geoProjection(function (x, y) {
-                var s = y < 0 ? -1 : 1; // Hemisphere determination
+            console.warn("Warning, should specify WHICH hemisphere. adams1 = atlantic, adams2 = pacific")
+        case "adams1":
+            return d3gp.geoPeirceQuincuncial()
+                .rotate([0, 0, 315])
+                .clipAngle(90);
+        case "adams2":
+            return d3gp.geoPeirceQuincuncial()
+                .rotate([180, 0, 315])
+                .clipAngle(90);
 
-                var xn = (x / 180) - 1; // Normalized longitude
-                var yn = s * Math.sqrt(1 - (Math.abs(y) / 90) ** 2); // Normalized latitude
-
-                var maxAbs = Math.max(Math.abs(xn), Math.abs(yn)); // Maximum absolute value
-
-                // Map the normalized coordinates to the square
-                var mappedX = xn / maxAbs * (width / 2);
-                var mappedY = yn / maxAbs * (height / 2);
-
-                return [mappedX, mappedY];
-            });
     }
 }
 
