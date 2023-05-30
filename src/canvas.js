@@ -13,8 +13,8 @@ import * as d3gp from 'd3-geo-projection';
 
 var container;
 
-var width = 800;
-var height = 400;
+var containerWidth = 600;
+var containerHeight = 600;
 
 
 function GenerateCanvas() {
@@ -41,22 +41,37 @@ function GenerateCanvas() {
 function RetrieveProjection() {
 
     let projection = GetProjection('adams1')
-        .fitSize([width, height], geojson);
+        .fitSize([containerWidth, containerHeight], geojson)
+        ;
 
     let geoGenerator = d3.geoPath()
         .projection(projection);
 
     let svg = d3.select("#container").append('svg')
-        .attr("width", width)
-        .attr("height", height);
+        .attr("width", containerWidth)
+        .attr("height", containerHeight); 
+    
+    // container border
+    var containerBorder = svg.append("rect")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("height", containerHeight)
+        .attr("width", containerWidth)
+        .style("stroke", "#FF0000")
+        .style("fill", "none")
+        .style("stroke-width", 2)
+        ;
 
     let g = svg.append('g')
         .attr('class', 'map')
         .selectAll('path')
         .data(geojson.features);
+    
+    // g.append('path',
 
     g.enter()
         .append('path')
+        // .attr("transform","rotate(45)")
         .attr('d', geoGenerator);
 }
 /*
@@ -171,7 +186,7 @@ function GetProjection(type) {
                 .rotate([0, 0, 315]);
 
         case "adams":
-            console.warn("Warning, should specify WHICH hemisphere. adams1 = atlantic, adams2 = pacific")
+            console.warn("Warning, should specify WHICH hemisphere. adams1 = atlantic, adams2 = pacific. Defaulting to adams1")
         case "adams1":
             return d3gp.geoPeirceQuincuncial()
                 .rotate([0, 0, 315])
