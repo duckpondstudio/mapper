@@ -3,6 +3,7 @@
         "type": "Feature",
         "properties": {
             "name": "Ocean",
+            "water": true,
             "devnote": "Manually added ocean to avoid auto-zooming on land-only SVG projection"
         },
         "geometry": {
