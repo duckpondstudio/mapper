@@ -3,7 +3,8 @@
 
 import demoMap from './img/grieger-triptychial-political.png';
 // import geojson from './demo.geojson';
-import geojson from './world.geojson';
+// import geojson from './world.geojson';
+import geojson from './ne_50m_land.geojson';
 // import worldGeoJson from './world.geo.json';
 // const worldGeoJson = require('./world.geo.json');
 
@@ -13,9 +14,14 @@ import * as d3gp from 'd3-geo-projection';
 
 var container;
 
-var containerWidth = 600;
-var containerHeight = 600;
+var containerWidth = 360;
+var containerHeight = containerWidth;
+const containerScale = 1.4142135623730950488016887242097;
+const containerOffset = 0.70710678118654752440084436210485;
 
+let zoom = 1;
+let rotation = [0, 0, 315];
+let rotIndex = 0;
 
 function GenerateCanvas() {
     console.log("generating canvas");
@@ -24,33 +30,52 @@ function GenerateCanvas() {
     container.setAttribute('id', 'container');
     document.body.appendChild(container);
 
-    // svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    // // svg.setAttribute("id", "container");
-    // svg.style.width = width;
-    // svg.style.height = height;
-    // container.appendChild(svg);
-
-    // map = document.createElement("g");
-    // map.setAttribute('class', 'map');
-    // svg.appendChild(map);
-
-    RetrieveProjection();
+    RetrieveProjection('adams1');
+    // RetrieveProjection('adams2');
+    // RetrieveProjection('adams1alt');
+    // RetrieveProjection('adams1alt');
+    // RetrieveProjection('adams1alt');
+    // RetrieveProjection('adams1alt');
+    // RetrieveProjection('adams1alt');
+    // RetrieveProjection('adams1alt');
+    // RetrieveProjection();
+    // RetrieveProjection('adams1alt');
 }
 
+var b = true;
+function RetrieveProjection(projectionType) {
 
-function RetrieveProjection() {
+    if (projectionType == null || projectionType == "") {
+        projectionType = 'adams1';
+    }
 
-    let projection = GetProjection('adams1')
-        .fitSize([containerWidth, containerHeight], geojson)
-        ;
+    let projection = GetProjection(projectionType);
+    console.log("proj " + projectionType + " scale 1: " + projection.clipExtent());
+
+    switch (projectionType) {
+        default:
+            projection
+                .fitSize([containerWidth, containerHeight], geojson);
+            break;
+        case "adams1":
+        case "adams1alt":
+        case "adams2":
+            projection
+                .fitSize([containerWidth * containerScale, containerHeight * containerScale], geojson);
+            // b = true;
+            break;
+    }
+    console.log("proj " + projectionType + " scale 2: " + projection.clipExtent());
+
 
     let geoGenerator = d3.geoPath()
         .projection(projection);
 
     let svg = d3.select("#container").append('svg')
+        .attr("class", "map")
         .attr("width", containerWidth)
-        .attr("height", containerHeight); 
-    
+        .attr("height", containerHeight);
+
     // container border
     var containerBorder = svg.append("rect")
         .attr("x", 0)
@@ -63,114 +88,57 @@ function RetrieveProjection() {
         ;
 
     let g = svg.append('g')
-        .attr('class', 'map')
-        .selectAll('path')
-        .data(geojson.features);
-    
-    // g.append('path',
+    .attr("transform", "rotate(225 " +
+        containerWidth * 1 + " " +
+        containerHeight * 1 + ") " +
+        "translate(" +
+        containerWidth * 1 + " " +
+        containerHeight * .4125 * containerOffset + ")")
 
-    g.enter()
-        .append('path')
-        // .attr("transform","rotate(45)")
+        // .attr("transform", "rotate(225 " +
+        //     containerWidth * 1 + " " +
+        //     containerHeight * 1 + ") " +
+        //     "translate(" +
+        //     containerWidth * 1 + " " +
+        //     containerHeight * .4125 * containerOffset + ")")
+        
+        .selectAll('path')
+        .data(geojson.features)
+        .enter();
+
+
+    g.append('path')
+        .attr('class', function (d) {
+            return 'map' + (d.properties && d.properties.water === true ? ' water' : ' land');
+        })
         .attr('d', geoGenerator);
 }
-/*
-    // Define the width and height of the square
 
-    // Define the projection function for Adam's Hemisphere In A Square
-    var projection = GetProjection()
-        .fitSize([width, height], worldGeoJson)
-        // .scale(200)
-        // .translate([200, 150])
-        ;
+let nx = 0;
 
-
-    // Create a path generator
-    var path = d3.geoPath().projection(projection);
-
-    var joined = d3.select('#container').select('g.map')
-        .selectAll('path')
-        .data(worldGeoJson.features);
-
-    joined.enter()
-        .append('path')
-        .attr('d', path)
-    
-        .attr('fill', 'steelblue')
-        .attr('stroke', 'white')
-        .attr('stroke-width', 0.5)
-        ;
-
-    // console.log("JSON:");
-    // console.log(worldGeoJson);
-
-    // var geo = worldGeoJson;
-
-    // console.log(geo);
-
-    // // Fetch the geographic data (e.g., GeoJSON)
-    // d3.json(geo).then(function (data) {
-    //     // Append the path elements for each feature
-    //     d3.select('#map').selectAll('path')
-    //         .data(data.features)
-    //         .enter()
-    //         .append('path')
-    //         .attr('d', path)
-    //         .attr('fill', 'steelblue')
-    //         .attr('stroke', 'white')
-    //         .attr('stroke-width', 0.5);
-    // });
-
-
-
-
-    // fetch('https://proj.org/operations/projections/adams_hemi')
-    //     .then(response => response.text())
-    //     .then(svgData => {
-    //         // Process the retrieved SVG data
-
-    //         const img = document.createElement('img');
-    //         img.src = `data:image/svg+xml,${encodeURIComponent(svgData)}`;
-
-    //         // Embed the SVG into your website
-    //         // const container = document.getElementById('imageContainer');
-    //         // container.appendChild(img);
-    //         document.body.appendChild(img);
-
-    //     })
-    //     .catch(error => {
-    //         // Handle any errors that occur during the request
-    //         console.log("failed get, " + error);
-    //     });
-
-    // ShowDemoMap();
-}
-
-
-*/
-function GetProjection(type) {
+function GetProjection(projectionType) {
 
     // nullcheck
-    if (type == null) {
+    if (projectionType == null) {
         // null, just return default projection type (geoEquirectangular)
         console.warn("Cannot get projection type, given type is null, returning d3.geoEquirectangular");
         return d3.geoEquirectangular();
     }
 
     // ensure lowercase
-    if (typeof (type) === 'string') {
-        type = type.toLowerCase();
+    if (typeof (projectionType) === 'string') {
+        projectionType = projectionType.toLowerCase();
     } else {
         // not a string, invalid parsing 
         console.warn("Can't get projection from type, type isn't a string, type value: "
-            + type + ", typeof: " + typeof (type) + ", returning d3.geoEquirectangular");
+            + projectionType + ", typeof: " + typeof (projectionType) + ", returning d3.geoEquirectangular");
         return d3.geoEquirectangular();
     }
 
-    switch (type) {
+    switch (projectionType) {
 
         default:
-            console.log("Unsupported projection type " + type + ", returning geoEquirectangular");
+            console.log("Unsupported projection type " + projectionType + ", returning geoEquirectangular");
             return d3.geoEquirectangular();
         case "geoequirectangular":
         case "equirectangular":
@@ -189,8 +157,21 @@ function GetProjection(type) {
             console.warn("Warning, should specify WHICH hemisphere. adams1 = atlantic, adams2 = pacific. Defaulting to adams1")
         case "adams1":
             return d3gp.geoPeirceQuincuncial()
-                .rotate([0, 0, 315])
+                .rotate([0, 315, 45])
                 .clipAngle(90);
+            ;
+
+        case "adams1alt":
+            rotation[rotIndex] = nx * 45;
+            let d = d3gp.geoPeirceQuincuncial()
+                // .center([45,45])
+                .rotate(rotation)
+                // .rotate([45, 90,nx * 45 ])
+                // .rotate([0, 180, nx * 45])
+                ;
+            nx++;
+            return d;
+
         case "adams2":
             return d3gp.geoPeirceQuincuncial()
                 .rotate([180, 0, 315])
