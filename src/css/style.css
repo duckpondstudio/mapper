@@ -8,5 +8,14 @@ body {
   #container .map path {
     fill: #ddd;
     stroke: #aaa;
+  } 
+
+  #container .map .land {
+    stroke: rgb(93, 181, 146);
+    fill: #9ea;
   }
-  
+
+  #container .map .water {
+      fill: rgb(175, 234, 255);
+      stroke: rgb(20, 161, 174);
+  }
