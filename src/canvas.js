@@ -14,11 +14,13 @@ var root = document.querySelector(':root');
 
 var container;
 
-var containerWidth = 600;
+var containerWidth = 500;
 var containerHeight = 200;
 var mapSize = 200;
 const containerScale = 1.4142135623730950488016887242097;
 const containerOffset = 0.70710678118654752440084436210485;
+
+const usePerMapBorder = false;
 
 let zoom = 1;
 let rotation = [0, 0, 315];
@@ -79,28 +81,32 @@ function RetrieveProjection(projectionType) {
     // prepare relevant transformations 
     let transform;
 
+    let applyTransformation = false;
+    let rotation = 0;
+    let translationX = 0;
+    let translationY = 0;
+
+    // check for / apply transformations
     switch (projectionType) {
         case "adams1":
         case "adams2":
-
-            transform =
-                // horizontal, a1 NA facing up
-                "rotate(135 " +
-                mapSize * 1 + " " +
-                mapSize * 1 + ") " +
-                "translate(" +
-                mapSize * (containerScale - 1) * containerOffset + " " +
-                mapSize * containerScale * containerOffset + ")";
-
-            // vertical, a1 NA facing up
-            // "rotate(225 " +
-            // containerWidth * 1 + " " +
-            // containerHeight * 1 + ") " +
-            // "translate(" +
-            // containerWidth * 1 + " " +
-            // containerHeight * .4125 * containerOffset + ")";
-
+            applyTransformation = true;
+            // horizontal, a1 NA facing up
+            rotation = 135;
+            translationX = (mapSize * (containerScale - 1) * containerOffset);
+            translationY = mapSize;
+            // vertical, a1 NA facing right
+            // rotation = 225;
+            // translationX = mapSize;
+            // translationY = mapSize * (containerScale - 1) * containerOffset;
             break;
+    }
+
+    // if projection calls for transformation, apply it here
+    if (applyTransformation) {
+        transform =
+            "rotate(" + rotation + " " + mapSize + " " + mapSize + ") " +
+            "translate(" + translationX + " " + translationY + ")";
     }
 
     // apply data
@@ -118,16 +124,18 @@ function RetrieveProjection(projectionType) {
         })
         .attr('d', geoGenerator);
 
-    // map border
-    var containerBorder = svg.append("rect")
-        .attr("x", 0)
-        .attr("y", 0)
-        .attr("height", mapSize)
-        .attr("width", mapSize)
-        .style("stroke", "#FF0000")
-        .style("fill", "none")
-        .style("stroke-width", 2)
-        ;
+    // per-map border
+    if (usePerMapBorder) {
+        var containerBorder = svg.append("rect")
+            .attr("x", 0)
+            .attr("y", 0)
+            .attr("height", mapSize)
+            .attr("width", mapSize)
+            .style("stroke", "#FF0000")
+            .style("fill", "none")
+            .style("stroke-width", 2)
+            ;
+    }
 }
 
 let nx = 0;

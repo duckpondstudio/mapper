@@ -5,13 +5,15 @@ body {
 }
 
 .container {
-    /* width: 600px;
-    height: 200px; */
     outline-color: black;
     outline-style: solid;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
-/* #container .map { } */
+#container .map {
+    margin-right: 0px;
+ }
 
 #container .map path {
     stroke: #aaa;
