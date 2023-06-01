@@ -10,10 +10,13 @@ import * as Canvas from './canvas';
 import * as d3 from 'd3';
 import * as d3gp from 'd3-geo-projection';
 
+var root = document.querySelector(':root');
+
 var container;
 
-var containerWidth = 200;
-var containerHeight = containerWidth;
+var containerWidth = 600;
+var containerHeight = 200;
+var mapSize = 200;
 const containerScale = 1.4142135623730950488016887242097;
 const containerOffset = 0.70710678118654752440084436210485;
 
@@ -26,6 +29,11 @@ function GenerateCanvas() {
 
     container = document.createElement('div');
     container.setAttribute('id', 'container');
+    container.setAttribute('class', 'container');
+    container.style.width = containerWidth + 'px';
+    container.style.height = containerHeight + 'px';
+    // container.setAttribute('width', containerWidth);
+    // container.setAttribute('height', containerHeight);
     document.body.appendChild(container);
     // 
     RetrieveProjection('adams2');
@@ -47,13 +55,13 @@ function RetrieveProjection(projectionType) {
     switch (projectionType) {
         default:
             projection
-                .fitSize([containerWidth, containerHeight], geojson);
+                .fitSize([mapSize, mapSize], geojson);
             break;
         case "adams1":
         case "adams1alt":
         case "adams2":
             projection
-                .fitSize([containerWidth * containerScale, containerHeight * containerScale], geojson);
+                .fitSize([mapSize * containerScale, mapSize * containerScale], geojson);
             // b = true;
             break;
     }
@@ -65,22 +73,12 @@ function RetrieveProjection(projectionType) {
 
     let svg = d3.select("#container").append('svg')
         .attr("class", "map")
-        .attr("width", containerWidth)
-        .attr("height", containerHeight);
-
-    // container border
-    var containerBorder = svg.append("rect")
-        .attr("x", 0)
-        .attr("y", 0)
-        .attr("height", containerHeight)
-        .attr("width", containerWidth)
-        .style("stroke", "#FF0000")
-        .style("fill", "none")
-        .style("stroke-width", 2)
-        ;
+        .attr("width", mapSize)
+        .attr("height", mapSize);
 
     // prepare relevant transformations 
     let transform;
+
     switch (projectionType) {
         case "adams1":
         case "adams2":
@@ -88,20 +86,19 @@ function RetrieveProjection(projectionType) {
             transform =
                 // horizontal, a1 NA facing up
                 "rotate(135 " +
-                containerWidth * 1 + " " +
-                containerHeight * 1 + ") " +
+                mapSize * 1 + " " +
+                mapSize * 1 + ") " +
                 "translate(" +
-                containerWidth * (containerScale - 1) * containerOffset + " " +
-                containerHeight * containerScale * containerOffset + ")";
+                mapSize * (containerScale - 1) * containerOffset + " " +
+                mapSize * containerScale * containerOffset + ")";
 
-                // vertical, a1 NA facing up
-                // "rotate(225 " +
-                // containerWidth * 1 + " " +
-                // containerHeight * 1 + ") " +
-                // "translate(" +
-                // containerWidth * 1 + " " +
-                // containerHeight * .4125 * containerOffset + ")";
-
+            // vertical, a1 NA facing up
+            // "rotate(225 " +
+            // containerWidth * 1 + " " +
+            // containerHeight * 1 + ") " +
+            // "translate(" +
+            // containerWidth * 1 + " " +
+            // containerHeight * .4125 * containerOffset + ")";
 
             break;
     }
@@ -120,6 +117,17 @@ function RetrieveProjection(projectionType) {
             return 'map' + (d.properties && d.properties.water === true ? ' water' : ' land');
         })
         .attr('d', geoGenerator);
+
+    // map border
+    var containerBorder = svg.append("rect")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("height", mapSize)
+        .attr("width", mapSize)
+        .style("stroke", "#FF0000")
+        .style("fill", "none")
+        .style("stroke-width", 2)
+        ;
 }
 
 let nx = 0;
@@ -165,7 +173,7 @@ function GetProjection(projectionType) {
             console.warn("Warning, \"adams\" is invalid projection, must specify WHICH hemisphere. " +
                 "\"adams1\" = atlantic, \"adams2\" = pacific. Returning null");
             return null;
-            
+
         case "adams1":
             return d3gp.geoPeirceQuincuncial()
                 .rotate([0, 315, 45])

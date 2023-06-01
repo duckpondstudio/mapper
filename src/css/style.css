@@ -1,21 +1,28 @@
-
 body {
     font-family: "Helvetica Neue", Helvetica, sans-serif;
     font-size: 14px;
     color: #333;
-  }
-  
-  #container .map path {
-    fill: #ddd;
+}
+
+.container {
+    /* width: 600px;
+    height: 200px; */
+    outline-color: black;
+    outline-style: solid;
+}
+
+/* #container .map { } */
+
+#container .map path {
     stroke: #aaa;
-  } 
+}
 
-  #container .map .land {
-    stroke: rgb(93, 181, 146);
+#container .map .land {
     fill: #9ea;
-  }
+    stroke: rgb(93, 181, 146);
+}
 
-  #container .map .water {
-      fill: rgb(175, 234, 255);
-      stroke: rgb(20, 161, 174);
-  }
+#container .map .water {
+    fill: rgb(175, 234, 255);
+    stroke: rgb(20, 161, 174);
+}
