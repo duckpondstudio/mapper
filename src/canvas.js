@@ -1,6 +1,3 @@
-// EXTREMELY WIP
-
-
 import demoMap from './img/grieger-triptychial-political.png';
 // import geojson from './demo.geojson';
 // import geojson from './world.geojson';
@@ -36,8 +33,6 @@ function GenerateCanvas() {
     container.setAttribute('class', 'container');
     container.style.width = containerWidth + 'px';
     container.style.height = containerHeight + 'px';
-    // container.setAttribute('width', containerWidth);
-    // container.setAttribute('height', containerHeight);
     document.body.appendChild(container);
 
     firstMap = true;
@@ -48,7 +43,6 @@ function GenerateCanvas() {
     RetrieveProjection('adams2');
 }
 
-var b = true;
 function RetrieveProjection(projectionType) {
 
     if (projectionType == null || projectionType == "") {
@@ -157,8 +151,6 @@ function RetrieveProjection(projectionType) {
     }
 }
 
-let nx = 0;
-
 function GetProjection(projectionType) {
 
     // nullcheck
@@ -213,8 +205,6 @@ function GetProjection(projectionType) {
 
     }
 }
-
-/* */
 
 function ShowDemoMap() {
     console.log("creating demo map img");
