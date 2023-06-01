@@ -14,7 +14,7 @@ var root = document.querySelector(':root');
 
 var container;
 
-var containerWidth = 500;
+var containerWidth = 400;
 var containerHeight = 200;
 var mapSize = 200;
 const containerScale = 1.4142135623730950488016887242097;
@@ -25,6 +25,8 @@ const usePerMapBorder = false;
 let zoom = 1;
 let rotation = [0, 0, 315];
 let rotIndex = 0;
+
+let firstMap;
 
 function GenerateCanvas() {
     console.log("generating canvas");
@@ -37,7 +39,10 @@ function GenerateCanvas() {
     // container.setAttribute('width', containerWidth);
     // container.setAttribute('height', containerHeight);
     document.body.appendChild(container);
-    // 
+
+    firstMap = true;
+    
+    // generate projections 
     RetrieveProjection('adams2');
     RetrieveProjection('adams1');
     RetrieveProjection('adams2');
@@ -69,14 +74,28 @@ function RetrieveProjection(projectionType) {
     }
     console.log("proj " + projectionType + " scale 2: " + projection.clipExtent());
 
-
+    // create geopath generator
     let geoGenerator = d3.geoPath()
         .projection(projection);
+    
+    // left offset (adjust first map size - use container width for right map cutoff)
+    let leftOffset = 0;
+    switch (projectionType) {
+        case 'adams1':
+        case 'adams2':
+            if (firstMap) {
+                leftOffset = mapSize * -0.5;
+            }
+            break;
+    }
+    firstMap = false;
 
+    // create the svg for the map
     let svg = d3.select("#container").append('svg')
         .attr("class", "map")
         .attr("width", mapSize)
-        .attr("height", mapSize);
+        .attr("height", mapSize)
+        .style("margin-left", leftOffset + 'px');
 
     // prepare relevant transformations 
     let transform;
