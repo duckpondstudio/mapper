@@ -3,7 +3,7 @@ import demoMap from './img/grieger-triptychial-political.png';
 // import geojson from './world.geojson';
 import geojson from './ne_50m_land.geojson';
 
-import * as Canvas from './canvas';
+import * as Canvas from './mapgen';
 import * as d3 from 'd3';
 import * as d3gp from 'd3-geo-projection';
 
@@ -11,8 +11,6 @@ var root = document.querySelector(':root');
 
 var container;
 
-var containerWidth = 400;
-var containerHeight = 200;
 var mapSize = 200;
 const containerScale = 1.4142135623730950488016887242097;
 const containerOffset = 0.70710678118654752440084436210485;
@@ -25,8 +23,22 @@ let rotIndex = 0;
 
 let firstMap;
 
-function GenerateCanvas() {
-    console.log("generating canvas");
+function CreateMap(mapProjection) {
+
+    if (mapProjection == null || mapProjection == "") {
+        console.error('null/empty map projection specified, cannot create');
+        return;
+    }
+
+    let containerWidth = mapSize;
+    let containerHeight = mapSize;
+    firstMap = true;
+
+    switch (mapProjection) {
+        case 'grieger':
+            containerWidth *= 2;
+            break;
+    }
 
     container = document.createElement('div');
     container.setAttribute('id', 'container');
@@ -35,18 +47,25 @@ function GenerateCanvas() {
     container.style.height = containerHeight + 'px';
     document.body.appendChild(container);
 
-    firstMap = true;
-    
     // generate projections 
-    RetrieveProjection('adams2');
-    RetrieveProjection('adams1');
-    RetrieveProjection('adams2');
+    switch (mapProjection) {
+        case 'grieger':
+            RetrieveProjection('adams2', mapProjection);
+            RetrieveProjection('adams1', mapProjection);
+            RetrieveProjection('adams2', mapProjection);
+            break;
+        default:
+            RetrieveProjection(mapProjection, mapProjection);
+            break;
+    }
+
 }
 
-function RetrieveProjection(projectionType) {
+function RetrieveProjection(projectionType, mapProjection) {
 
     if (projectionType == null || projectionType == "") {
-        projectionType = 'adams1';
+        console.error('null/empty map projection specified, cannot retrieve');
+        return;
     }
 
     let projection = GetProjection(projectionType);
@@ -71,12 +90,11 @@ function RetrieveProjection(projectionType) {
     // create geopath generator
     let geoGenerator = d3.geoPath()
         .projection(projection);
-    
+
     // left offset (adjust first map size - use container width for right map cutoff)
     let leftOffset = 0;
-    switch (projectionType) {
-        case 'adams1':
-        case 'adams2':
+    switch (mapProjection) {
+        case 'grieger':
             if (firstMap) {
                 leftOffset = mapSize * -0.5;
             }
@@ -214,4 +232,4 @@ function ShowDemoMap() {
     document.body.appendChild(img);
 }
 
-export { GenerateCanvas };
+export { CreateMap };
