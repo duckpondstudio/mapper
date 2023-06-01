@@ -5,8 +5,6 @@ import demoMap from './img/grieger-triptychial-political.png';
 // import geojson from './demo.geojson';
 // import geojson from './world.geojson';
 import geojson from './ne_50m_land.geojson';
-// import worldGeoJson from './world.geo.json';
-// const worldGeoJson = require('./world.geo.json');
 
 import * as Canvas from './canvas';
 import * as d3 from 'd3';
@@ -14,7 +12,7 @@ import * as d3gp from 'd3-geo-projection';
 
 var container;
 
-var containerWidth = 360;
+var containerWidth = 200;
 var containerHeight = containerWidth;
 const containerScale = 1.4142135623730950488016887242097;
 const containerOffset = 0.70710678118654752440084436210485;
@@ -29,17 +27,10 @@ function GenerateCanvas() {
     container = document.createElement('div');
     container.setAttribute('id', 'container');
     document.body.appendChild(container);
-
+    // 
+    RetrieveProjection('adams2');
     RetrieveProjection('adams1');
-    // RetrieveProjection('adams2');
-    // RetrieveProjection('adams1alt');
-    // RetrieveProjection('adams1alt');
-    // RetrieveProjection('adams1alt');
-    // RetrieveProjection('adams1alt');
-    // RetrieveProjection('adams1alt');
-    // RetrieveProjection('adams1alt');
-    // RetrieveProjection();
-    // RetrieveProjection('adams1alt');
+    RetrieveProjection('adams2');
 }
 
 var b = true;
@@ -52,6 +43,7 @@ function RetrieveProjection(projectionType) {
     let projection = GetProjection(projectionType);
     console.log("proj " + projectionType + " scale 1: " + projection.clipExtent());
 
+    // adjust projection scale
     switch (projectionType) {
         default:
             projection
@@ -87,21 +79,37 @@ function RetrieveProjection(projectionType) {
         .style("stroke-width", 2)
         ;
 
-    let g = svg.append('g')
-    .attr("transform", "rotate(225 " +
-        containerWidth * 1 + " " +
-        containerHeight * 1 + ") " +
-        "translate(" +
-        containerWidth * 1 + " " +
-        containerHeight * .4125 * containerOffset + ")")
+    // prepare relevant transformations 
+    let transform;
+    switch (projectionType) {
+        case "adams1":
+        case "adams2":
 
-        // .attr("transform", "rotate(225 " +
-        //     containerWidth * 1 + " " +
-        //     containerHeight * 1 + ") " +
-        //     "translate(" +
-        //     containerWidth * 1 + " " +
-        //     containerHeight * .4125 * containerOffset + ")")
-        
+            transform =
+                // horizontal, a1 NA facing up
+                "rotate(135 " +
+                containerWidth * 1 + " " +
+                containerHeight * 1 + ") " +
+                "translate(" +
+                containerWidth * (containerScale - 1) * containerOffset + " " +
+                containerHeight * containerScale * containerOffset + ")";
+
+                // vertical, a1 NA facing up
+                // "rotate(225 " +
+                // containerWidth * 1 + " " +
+                // containerHeight * 1 + ") " +
+                // "translate(" +
+                // containerWidth * 1 + " " +
+                // containerHeight * .4125 * containerOffset + ")";
+
+
+            break;
+    }
+
+    // apply data
+    let g = svg.append('g')
+
+        .attr("transform", transform)
         .selectAll('path')
         .data(geojson.features)
         .enter();
@@ -154,27 +162,18 @@ function GetProjection(projectionType) {
                 .rotate([0, 0, 315]);
 
         case "adams":
-            console.warn("Warning, should specify WHICH hemisphere. adams1 = atlantic, adams2 = pacific. Defaulting to adams1")
+            console.warn("Warning, \"adams\" is invalid projection, must specify WHICH hemisphere. " +
+                "\"adams1\" = atlantic, \"adams2\" = pacific. Returning null");
+            return null;
+            
         case "adams1":
             return d3gp.geoPeirceQuincuncial()
                 .rotate([0, 315, 45])
                 .clipAngle(90);
-            ;
-
-        case "adams1alt":
-            rotation[rotIndex] = nx * 45;
-            let d = d3gp.geoPeirceQuincuncial()
-                // .center([45,45])
-                .rotate(rotation)
-                // .rotate([45, 90,nx * 45 ])
-                // .rotate([0, 180, nx * 45])
-                ;
-            nx++;
-            return d;
 
         case "adams2":
             return d3gp.geoPeirceQuincuncial()
-                .rotate([180, 0, 315])
+                .rotate([0, 135, 315])
                 .clipAngle(90);
 
     }
