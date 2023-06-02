@@ -21,35 +21,30 @@ let zoom = 1;
 let rotation = [0, 0, 315];
 let rotIndex = 0;
 
-let firstMap;
+let projectionIndex = 0;
 
 function CreateMap(mapProjection) {
+
+    console.log("creating map: " + mapProjection);
 
     if (mapProjection == null || mapProjection == "") {
         console.error('null/empty map projection specified, cannot create');
         return;
     }
 
-    let containerWidth = mapSize;
-    let containerHeight = mapSize;
-    firstMap = true;
-
-    switch (mapProjection) {
-        case 'grieger':
-            containerWidth *= 2;
-            break;
-    }
+    projectionIndex = 0;
 
     container = document.createElement('div');
     container.setAttribute('id', 'container');
     container.setAttribute('class', 'container');
-    container.style.width = containerWidth + 'px';
-    container.style.height = containerHeight + 'px';
     document.body.appendChild(container);
 
     // generate projections 
     switch (mapProjection) {
         case 'grieger':
+            RetrieveProjection('peirce');
+            break;
+        case 'griegeralt':
             RetrieveProjection('adams2', mapProjection);
             RetrieveProjection('adams1', mapProjection);
             RetrieveProjection('adams2', mapProjection);
@@ -58,6 +53,23 @@ function CreateMap(mapProjection) {
             RetrieveProjection(mapProjection, mapProjection);
             break;
     }
+
+    // define container size based on map
+    let containerWidth = mapSize;
+    let containerHeight = mapSize; 
+    // check for special conditions
+    switch (mapProjection) {
+        case 'griegeralt':
+            containerWidth = mapSize * 2;
+            break;
+        default:
+            // by default, container width is determined by projection count
+            containerWidth = mapSize * projectionIndex;
+            break;
+    }
+    // assign size to container
+    container.style.width = containerWidth + 'px';
+    container.style.height = containerHeight + 'px';
 
 }
 
@@ -69,7 +81,6 @@ function RetrieveProjection(projectionType, mapProjection) {
     }
 
     let projection = GetProjection(projectionType);
-    console.log("proj " + projectionType + " scale 1: " + projection.clipExtent());
 
     // adjust projection scale
     switch (projectionType) {
@@ -85,8 +96,6 @@ function RetrieveProjection(projectionType, mapProjection) {
             // b = true;
             break;
     }
-    console.log("proj " + projectionType + " scale 2: " + projection.clipExtent());
-
     // create geopath generator
     let geoGenerator = d3.geoPath()
         .projection(projection);
@@ -94,13 +103,13 @@ function RetrieveProjection(projectionType, mapProjection) {
     // left offset (adjust first map size - use container width for right map cutoff)
     let leftOffset = 0;
     switch (mapProjection) {
-        case 'grieger':
-            if (firstMap) {
+        case 'griegeralt':
+            if (projectionIndex == 0) {
                 leftOffset = mapSize * -0.5;
             }
             break;
     }
-    firstMap = false;
+    projectionIndex++;
 
     // create the svg for the map
     let svg = d3.select("#container").append('svg')

@@ -4,7 +4,7 @@ import css from './css/style.css';
 window.addEventListener('load', function () {
     // window is loaded 
     console.log("loaded");
-    CreateMap('grieger');
+    CreateMap('griegeralt');
 });
 
 console.log("page init");
