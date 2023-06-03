@@ -1,7 +1,7 @@
 import demoMap from './img/grieger-triptychial-political.png';
-// import geojson from './demo.geojson';
-// import geojson from './world.geojson';
-import geojson from './ne_50m_land.geojson';
+// import geojson from './json/demo.geojson';
+// import geojson from './json/world.geojson';
+import geojson from './json/ne_50m_land.geojson';
 
 import * as Canvas from './mapgen';
 import * as d3 from 'd3';
