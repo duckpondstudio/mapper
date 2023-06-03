@@ -11,6 +11,7 @@ body {
 .container {
     margin-left: 12%;
     outline-color: rgb(196, 89, 114);
+    background-color: rgba(231, 167, 182, 0.213);
     outline-width: 1.5px;
     outline-style:solid;
     overflow: hidden;
