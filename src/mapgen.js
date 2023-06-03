@@ -128,11 +128,11 @@ function RetrieveProjection(projectionType) {
             }
             break;
     }
-    projectionIndex++;
 
     // create the svg for the map
     let svg = d3.select("#mapContainer").append('svg')
         .attr("class", "map")
+        .attr("id", "map" + projectionIndex)
         .attr("width", mapSize)
         .attr("height", mapSize)
         .style("margin-left", leftOffset + 'px');
@@ -208,9 +208,18 @@ function RetrieveProjection(projectionType) {
     }
 
     // apply map events
-    MapInput(svg);
+    MapInput(svg, projection);
+
+    // increment projection index 
+    projectionIndex++;
 }
 
+/**
+ * Returns geoprojection of the given projection type (with any manual modifications, 
+ * otherwise you can just directly call d3.myProjection() )
+ * @param {string} projectionType name of the projection type you want  
+ * @return {d3.GeoProjection} d3.GeoProjection data for the given name 
+ */
 function GetProjection(projectionType) {
 
     // nullcheck
