@@ -3,7 +3,8 @@ import demoMap from './img/grieger-triptychial-political.png';
 // import geojson from './json/world.geojson';
 import geojson from './json/ne_50m_land.geojson';
 
-import * as Canvas from './mapgen';
+import { MapInput } from './mapinput';
+
 import * as d3 from 'd3';
 import * as d3gp from 'd3-geo-projection';
 
@@ -36,7 +37,7 @@ function CreateMap(map) {
 
     projectionIndex = 0;
 
-    
+
     title = document.createElement("h1");
     title.setAttribute('id', 'titlecontainer');
     title.innerHTML = "Map Data Collector";
@@ -56,11 +57,10 @@ function CreateMap(map) {
             RetrieveProjection('adams1');
             RetrieveProjection('adams2');
             break;
-            case 'grieger-test':
-                rotIndex = 0;
-                RetrieveProjection('peirce');
-                RetrieveProjection('peirce');
-                break;
+        case 'grieger-test':
+            RetrieveProjection('peirce');
+            RetrieveProjection('peirce');
+            break;
         default:
             RetrieveProjection(mapProjection);
             break;
@@ -72,7 +72,7 @@ function CreateMap(map) {
     // check for special conditions
     switch (mapProjection) {
         case 'grieger':
-            case 'grieger-test':
+        case 'grieger-test':
             containerWidth = mapSize * 2;
             break;
         default:
@@ -88,33 +88,33 @@ function CreateMap(map) {
 
 function RetrieveProjection(projectionType) {
 
-    
+
     if (projectionType == null || projectionType == "") {
         console.error('null/empty projection type specified, cannot retrieve');
         return;
     }
     if (mapProjection == null || mapProjection == "") {
-        console.error('null/empty map projection specified, cannot create, ' + 
-        'ensure mapProjection is first defined by calling CreateMap');
+        console.error('null/empty map projection specified, cannot create, ' +
+            'ensure mapProjection is first defined by calling CreateMap');
         return;
     }
-    
+
     console.log('retrieving projection ' + projectionType + ' for map projection ' + mapProjection);
     let projection = GetProjection(projectionType);
-    
+
     let fitSize = 1;
     // adjust projection scale (zoom)
     switch (mapProjection) {
         case "grieger":
-            case 'grieger-test':
+        case 'grieger-test':
             // b = true;
             fitSize = containerScale;
             break;
     }
     projection
         .fitSize([mapSize * fitSize, mapSize * fitSize], geojson);
-    
-    
+
+
     // create geopath generator
     let geoGenerator = d3.geoPath()
         .projection(projection);
@@ -144,7 +144,7 @@ function RetrieveProjection(projectionType) {
     let rotation = 0;
     let translationX = 0;
     let translationY = 0;
-    
+
 
     // check for / apply per-map transformations
     switch (mapProjection) {
@@ -206,6 +206,9 @@ function RetrieveProjection(projectionType) {
             .style("stroke-width", 2)
             ;
     }
+
+    // apply map events
+    MapInput(svg);
 }
 
 function GetProjection(projectionType) {
