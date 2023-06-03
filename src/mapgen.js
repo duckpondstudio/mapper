@@ -7,11 +7,14 @@ import * as Canvas from './mapgen';
 import * as d3 from 'd3';
 import * as d3gp from 'd3-geo-projection';
 
-var root = document.querySelector(':root');
+let root = document.querySelector(':root');
+let body = document.body;
 
-var container;
+let title;
+let mapContainer;
 
-var mapSize = 200;
+
+let mapSize = 200;
 const containerScale = 1.4142135623730950488016887242097;
 const containerOffset = 0.70710678118654752440084436210485;
 
@@ -33,10 +36,18 @@ function CreateMap(map) {
 
     projectionIndex = 0;
 
-    container = document.createElement('div');
-    container.setAttribute('id', 'container');
-    container.setAttribute('class', 'container');
-    document.body.appendChild(container);
+    
+    title = document.createElement("h1");
+    title.setAttribute('id', 'titlecontainer');
+    title.innerHTML = "Map Data Collector";
+
+    body.appendChild(title);
+    // body.appendChild(title);
+
+    mapContainer = document.createElement('div');
+    mapContainer.setAttribute('id', 'mapContainer');
+    mapContainer.setAttribute('class', 'mapContainer');
+    body.appendChild(mapContainer);
 
     // generate projections 
     switch (mapProjection) {
@@ -55,7 +66,7 @@ function CreateMap(map) {
             break;
     }
 
-    // define container size based on map
+    // define mapContainer size based on map
     let containerWidth = mapSize;
     let containerHeight = mapSize;
     // check for special conditions
@@ -65,13 +76,13 @@ function CreateMap(map) {
             containerWidth = mapSize * 2;
             break;
         default:
-            // by default, container width is determined by projection count
+            // by default, mapContainer width is determined by projection count
             containerWidth = mapSize * projectionIndex;
             break;
     }
-    // assign size to container
-    container.style.width = containerWidth + 'px';
-    container.style.height = containerHeight + 'px';
+    // assign size to mapContainer
+    mapContainer.style.width = containerWidth + 'px';
+    mapContainer.style.height = containerHeight + 'px';
 
 }
 
@@ -108,7 +119,7 @@ function RetrieveProjection(projectionType) {
     let geoGenerator = d3.geoPath()
         .projection(projection);
 
-    // left offset (adjust first map size - use container width for right map cutoff)
+    // left offset (adjust first map size - use mapContainer width for right map cutoff)
     let leftOffset = 0;
     switch (mapProjection) {
         case 'grieger':
@@ -120,7 +131,7 @@ function RetrieveProjection(projectionType) {
     projectionIndex++;
 
     // create the svg for the map
-    let svg = d3.select("#container").append('svg')
+    let svg = d3.select("#mapContainer").append('svg')
         .attr("class", "map")
         .attr("width", mapSize)
         .attr("height", mapSize)
