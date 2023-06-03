@@ -17,13 +17,12 @@ const containerOffset = 0.70710678118654752440084436210485;
 
 const usePerMapBorder = false;
 
-let zoom = 1;
-let rotation = [0, 0, 315];
-let rotIndex = 0;
-
+let mapProjection;
 let projectionIndex = 0;
 
-function CreateMap(mapProjection) {
+function CreateMap(map) {
+
+    mapProjection = map;
 
     console.log("creating map: " + mapProjection);
 
@@ -42,24 +41,27 @@ function CreateMap(mapProjection) {
     // generate projections 
     switch (mapProjection) {
         case 'grieger':
-            RetrieveProjection('peirce');
+            RetrieveProjection('adams2');
+            RetrieveProjection('adams1');
+            RetrieveProjection('adams2');
             break;
-        case 'griegeralt':
-            RetrieveProjection('adams2', mapProjection);
-            RetrieveProjection('adams1', mapProjection);
-            RetrieveProjection('adams2', mapProjection);
-            break;
+            case 'grieger-test':
+                rotIndex = 0;
+                RetrieveProjection('peirce');
+                RetrieveProjection('peirce');
+                break;
         default:
-            RetrieveProjection(mapProjection, mapProjection);
+            RetrieveProjection(mapProjection);
             break;
     }
 
     // define container size based on map
     let containerWidth = mapSize;
-    let containerHeight = mapSize; 
+    let containerHeight = mapSize;
     // check for special conditions
     switch (mapProjection) {
-        case 'griegeralt':
+        case 'grieger':
+            case 'grieger-test':
             containerWidth = mapSize * 2;
             break;
         default:
@@ -73,29 +75,35 @@ function CreateMap(mapProjection) {
 
 }
 
-function RetrieveProjection(projectionType, mapProjection) {
+function RetrieveProjection(projectionType) {
 
+    
     if (projectionType == null || projectionType == "") {
-        console.error('null/empty map projection specified, cannot retrieve');
+        console.error('null/empty projection type specified, cannot retrieve');
         return;
     }
-
+    if (mapProjection == null || mapProjection == "") {
+        console.error('null/empty map projection specified, cannot create, ' + 
+        'ensure mapProjection is first defined by calling CreateMap');
+        return;
+    }
+    
+    console.log('retrieving projection ' + projectionType + ' for map projection ' + mapProjection);
     let projection = GetProjection(projectionType);
-
-    // adjust projection scale
-    switch (projectionType) {
-        default:
-            projection
-                .fitSize([mapSize, mapSize], geojson);
-            break;
-        case "adams1":
-        case "adams1alt":
-        case "adams2":
-            projection
-                .fitSize([mapSize * containerScale, mapSize * containerScale], geojson);
+    
+    let fitSize = 1;
+    // adjust projection scale (zoom)
+    switch (mapProjection) {
+        case "grieger":
+            case 'grieger-test':
             // b = true;
+            fitSize = containerScale;
             break;
     }
+    projection
+        .fitSize([mapSize * fitSize, mapSize * fitSize], geojson);
+    
+    
     // create geopath generator
     let geoGenerator = d3.geoPath()
         .projection(projection);
@@ -103,7 +111,7 @@ function RetrieveProjection(projectionType, mapProjection) {
     // left offset (adjust first map size - use container width for right map cutoff)
     let leftOffset = 0;
     switch (mapProjection) {
-        case 'griegeralt':
+        case 'grieger':
             if (projectionIndex == 0) {
                 leftOffset = mapSize * -0.5;
             }
@@ -125,8 +133,19 @@ function RetrieveProjection(projectionType, mapProjection) {
     let rotation = 0;
     let translationX = 0;
     let translationY = 0;
+    
 
-    // check for / apply transformations
+    // check for / apply per-map transformations
+    switch (mapProjection) {
+        case 'grieger-test':
+            applyTransformation = true;
+            rotation = 90;
+            // translationX = -(mapSize * (containerScale - 1) * containerOffset);
+            translationY = mapSize;
+            break;
+    }
+
+    // check for / apply per-projection transformations
     switch (projectionType) {
         case "adams1":
         case "adams2":
