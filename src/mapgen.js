@@ -12,7 +12,7 @@ let root = document.querySelector(':root');
 let body = document.body;
 
 let title;
-let mapContainer;
+let output;
 
 
 let mapSize = 200;
@@ -49,10 +49,12 @@ function CreateMap(map) {
     body.appendChild(title);
     // body.appendChild(title);
 
-    mapContainer = document.createElement('div');
-    mapContainer.setAttribute('id', 'mapContainer');
-    mapContainer.setAttribute('class', 'mapContainer');
-    body.appendChild(mapContainer);
+
+    // add output
+    output = document.createElement('p');
+    // output.setAttribute('id', 'output');
+    output.innerHTML = "Output goes here";
+    body.appendChild(output);
 
     // generate projections 
     switch (mapProjection) {
