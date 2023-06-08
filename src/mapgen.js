@@ -34,6 +34,10 @@ function CreateMap(map) {
         console.error('null/empty map projection specified, cannot create');
         return;
     }
+    if (typeof mapProjection !== 'string') {
+        console.error('map projection specified is invalid type, not string, cannot create. value: ' + mapProjection);
+        return;
+    }
 
     projectionIndex = 0;
 
