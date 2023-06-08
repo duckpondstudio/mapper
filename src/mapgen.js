@@ -11,73 +11,67 @@ import * as d3gp from 'd3-geo-projection';
 let root = document.querySelector(':root');
 let body = document.body;
 
-let mapContainer;
-let title;
-let projContainer;
-let output;
-
-
 let mapSize = 200;
 const containerScale = 1.4142135623730950488016887242097;
 const containerOffset = 0.70710678118654752440084436210485;
 
 const usePerMapBorder = false;
 
-let mapProjection;
-let projectionIndex = 0;
+let mapIndex = 0;
+let projectionIndex = 0; // not async 
 
 function CreateMap(map) {
 
-    mapProjection = map;
+    console.log("creating map: " + map);
 
-    console.log("creating map: " + mapProjection);
-
-    if (mapProjection == null || mapProjection == "") {
+    if (map == null || map == "") {
         console.error('null/empty map projection specified, cannot create');
         return;
     }
-    if (typeof mapProjection !== 'string') {
-        console.error('map projection specified is invalid type, not string, cannot create. value: ' + mapProjection);
+    if (typeof map !== 'string') {
+        console.error('map projection specified is invalid type, not string, cannot create. value: ' + map);
         return;
     }
 
     projectionIndex = 0;
 
-    mapContainer = document.createElement('div');
-    mapContainer.id = 'mapContainer_' + mapProjection;
+    let mapContainer = document.createElement('div');
+    mapContainer.id = 'mapContainer_' + mapIndex;
     body.appendChild(mapContainer);
 
-    title = document.createElement("h1");
-    title.setAttribute('id', 'titlecontainer');
+    let title = document.createElement("h1");
+    title.setAttribute('id', 'titleContainer_' + mapIndex);
     title.innerHTML = "Map Data Collector";
 
     mapContainer.appendChild(title);
     // body.appendChild(title);
 
-    projContainer = document.createElement('div');
-    projContainer.setAttribute('id', 'projectionContainer');
+    let projContainer = document.createElement('div');
+    projContainer.setAttribute('id', 'projectionContainer_' + mapIndex);
     projContainer.setAttribute('class', 'projectionContainer');
     mapContainer.appendChild(projContainer);
 
     // add output
-    output = document.createElement('p');
+    let output = document.createElement('p');
     // output.setAttribute('id', 'output');
     output.innerHTML = "Output goes here";
     mapContainer.appendChild(output);
 
+    let mapData = { map: map, output: output, projContainer: projContainer };
+
     // generate projections 
-    switch (mapProjection) {
+    switch (map) {
         case 'grieger':
-            RetrieveProjection('adams2');
-            RetrieveProjection('adams1');
-            RetrieveProjection('adams2');
+            RetrieveProjection('adams2', mapData);
+            RetrieveProjection('adams1', mapData);
+            RetrieveProjection('adams2', mapData);
             break;
         case 'grieger-test':
-            RetrieveProjection('peirce');
-            RetrieveProjection('peirce');
+            RetrieveProjection('peirce', mapData);
+            RetrieveProjection('peirce', mapData);
             break;
         default:
-            RetrieveProjection(mapProjection);
+            RetrieveProjection(map, mapData);
             break;
     }
 
@@ -85,7 +79,7 @@ function CreateMap(map) {
     let containerWidth = mapSize;
     let containerHeight = mapSize;
     // check for special conditions
-    switch (mapProjection) {
+    switch (map) {
         case 'grieger':
         case 'grieger-test':
             containerWidth = mapSize * 2;
@@ -99,27 +93,31 @@ function CreateMap(map) {
     projContainer.style.width = containerWidth + 'px';
     projContainer.style.height = containerHeight + 'px';
 
+    mapIndex++;
+
 }
 
-function RetrieveProjection(projectionType) {
+function RetrieveProjection(projectionType, mapData) {
 
+    let map = mapData.map;
+    let projContainer = mapData.projContainer;
 
     if (projectionType == null || projectionType == "") {
         console.error('null/empty projection type specified, cannot retrieve');
         return;
     }
-    if (mapProjection == null || mapProjection == "") {
+    if (map == null || map == "") {
         console.error('null/empty map projection specified, cannot create, ' +
-            'ensure mapProjection is first defined by calling CreateMap');
+            'ensure map is first defined by calling CreateMap');
         return;
     }
 
-    console.log('retrieving projection ' + projectionType + ' for map projection ' + mapProjection);
+    console.log('retrieving projection ' + projectionType + ' for map projection ' + map);
     let projection = GetProjection(projectionType);
 
     let fitSize = 1;
     // adjust projection scale (zoom)
-    switch (mapProjection) {
+    switch (map) {
         case "grieger":
         case 'grieger-test':
             // b = true;
@@ -134,9 +132,9 @@ function RetrieveProjection(projectionType) {
     let geoGenerator = d3.geoPath()
         .projection(projection);
 
-    // left offset (adjust first map size - use projectionContainer width for right map cutoff)
+    // left offset (adjust first map size - use projection width for right map cutoff)
     let leftOffset = 0;
-    switch (mapProjection) {
+    switch (map) {
         case 'grieger':
             if (projectionIndex == 0) {
                 leftOffset = mapSize * -0.5;
@@ -145,9 +143,9 @@ function RetrieveProjection(projectionType) {
     }
 
     // create the svg for the map
-    let svg = d3.select("#projectionContainer").append('svg')
+    let svg = d3.select(projContainer).append('svg')
         .attr("class", "map")
-        .attr("id", "map" + projectionIndex)
+        .attr("id", "map_" + map + "_projection_" + projectionIndex)
         .attr("width", mapSize)
         .attr("height", mapSize)
         .style("margin-left", leftOffset + 'px');
@@ -162,7 +160,7 @@ function RetrieveProjection(projectionType) {
 
 
     // check for / apply per-map transformations
-    switch (mapProjection) {
+    switch (map) {
         case 'grieger-test':
             applyTransformation = true;
             rotation = 90;
@@ -295,7 +293,7 @@ function ShowDemoMap() {
     const img = new Image();
     img.src = demoMap;
     img.width = 500;
-    document.body.appendChild(img);
+    body.appendChild(img);
 }
 
 export { CreateMap };

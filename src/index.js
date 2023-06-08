@@ -5,6 +5,7 @@ window.addEventListener('load', function () {
     // window is loaded 
     console.log("loaded");
     CreateMap('grieger');
+    CreateMap('grieger');
 });
 
 console.log("page init");
