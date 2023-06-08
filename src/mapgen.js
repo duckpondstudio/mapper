@@ -11,6 +11,7 @@ import * as d3gp from 'd3-geo-projection';
 let root = document.querySelector(':root');
 let body = document.body;
 
+let mapContainer;
 let title;
 let projContainer;
 let output;
@@ -42,24 +43,27 @@ function CreateMap(map) {
 
     projectionIndex = 0;
 
+    mapContainer = document.createElement('div');
+    mapContainer.id = 'mapContainer_' + mapProjection;
+    body.appendChild(mapContainer);
 
     title = document.createElement("h1");
     title.setAttribute('id', 'titlecontainer');
     title.innerHTML = "Map Data Collector";
 
-    body.appendChild(title);
+    mapContainer.appendChild(title);
     // body.appendChild(title);
 
     projContainer = document.createElement('div');
     projContainer.setAttribute('id', 'projectionContainer');
     projContainer.setAttribute('class', 'projectionContainer');
-    body.appendChild(projContainer);
+    mapContainer.appendChild(projContainer);
 
     // add output
     output = document.createElement('p');
     // output.setAttribute('id', 'output');
     output.innerHTML = "Output goes here";
-    body.appendChild(output);
+    mapContainer.appendChild(output);
 
     // generate projections 
     switch (mapProjection) {
