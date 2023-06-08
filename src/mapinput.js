@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import { parse, stringify } from 'transform-parser';
 
 /**
  * Apply input events to the supplied D3 map SVG
@@ -21,6 +22,7 @@ function MapInput(selectedSVG, projection, output) {
             transform = g.attr('transform');
             if (transform) {
                 // transform found, be sure to update mouse x/y accordingly
+                let t = parse(transform);
                 
             }
         }
