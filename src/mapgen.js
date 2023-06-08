@@ -12,6 +12,7 @@ let root = document.querySelector(':root');
 let body = document.body;
 
 let title;
+let projContainer;
 let output;
 
 
@@ -49,6 +50,10 @@ function CreateMap(map) {
     body.appendChild(title);
     // body.appendChild(title);
 
+    projContainer = document.createElement('div');
+    projContainer.setAttribute('id', 'projectionContainer');
+    projContainer.setAttribute('class', 'projectionContainer');
+    body.appendChild(projContainer);
 
     // add output
     output = document.createElement('p');
@@ -72,7 +77,7 @@ function CreateMap(map) {
             break;
     }
 
-    // define mapContainer size based on map
+    // define projectionContainer size based on map
     let containerWidth = mapSize;
     let containerHeight = mapSize;
     // check for special conditions
@@ -82,13 +87,13 @@ function CreateMap(map) {
             containerWidth = mapSize * 2;
             break;
         default:
-            // by default, mapContainer width is determined by projection count
+            // by default, projectionContainer width is determined by projection count
             containerWidth = mapSize * projectionIndex;
             break;
     }
-    // assign size to mapContainer
-    mapContainer.style.width = containerWidth + 'px';
-    mapContainer.style.height = containerHeight + 'px';
+    // assign size to projectionContainer
+    projContainer.style.width = containerWidth + 'px';
+    projContainer.style.height = containerHeight + 'px';
 
 }
 
@@ -125,7 +130,7 @@ function RetrieveProjection(projectionType) {
     let geoGenerator = d3.geoPath()
         .projection(projection);
 
-    // left offset (adjust first map size - use mapContainer width for right map cutoff)
+    // left offset (adjust first map size - use projectionContainer width for right map cutoff)
     let leftOffset = 0;
     switch (mapProjection) {
         case 'grieger':
@@ -136,7 +141,7 @@ function RetrieveProjection(projectionType) {
     }
 
     // create the svg for the map
-    let svg = d3.select("#mapContainer").append('svg')
+    let svg = d3.select("#projectionContainer").append('svg')
         .attr("class", "map")
         .attr("id", "map" + projectionIndex)
         .attr("width", mapSize)
