@@ -9,10 +9,27 @@ import * as d3 from 'd3';
 function MapInput(selectedSVG, projection, output) {
     // target is the clicked map, event is pointer info
     selectedSVG.on("click", function (event, target) {
-        var pointer = d3.pointer(event, target);
+        let pointer = d3.pointer(event, target);
+        let x = pointer[0];
+        let y = pointer[1];
         console.log("clicked " + selectedSVG.attr('id'));
         console.log("Pixel X/Y: " + pointer[0] + "/" + pointer[1]);
-        console.log("Long/Lat: " + projection.invert([pointer[1], pointer[0]]));
+
+        let transform;
+        let g = selectedSVG.select('g');
+        if (g) {
+            transform = g.attr('transform');
+            if (transform) {
+                // transform found, be sure to update mouse x/y accordingly
+                
+            }
+        }
+        console.log("transform: " + transform);
+        
+        let latLong = projection.invert([x, y]).reverse();
+
+        console.log('LatLong A: ' + latLong);
+
         // DONE give each map self-ref unique element ID
         // use that id along with target to determine click target
         // use mouse[0/1] as pixel points on that target

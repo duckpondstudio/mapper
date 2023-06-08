@@ -142,14 +142,6 @@ function RetrieveProjection(projectionType, mapData) {
             break;
     }
 
-    // create the svg for the map
-    let svg = d3.select(projContainer).append('svg')
-        .attr("class", "map")
-        .attr("id", "map_" + map + "_projection_" + projectionIndex)
-        .attr("width", mapSize)
-        .attr("height", mapSize)
-        .style("margin-left", leftOffset + 'px');
-
     // prepare relevant transformations 
     let transform;
 
@@ -175,6 +167,7 @@ function RetrieveProjection(projectionType, mapData) {
         case "adams2":
             applyTransformation = true;
             // horizontal, a1 NA facing up
+            // rotation = 2;
             rotation = 135;
             translationX = (mapSize * (containerScale - 1) * containerOffset);
             translationY = mapSize;
@@ -190,7 +183,16 @@ function RetrieveProjection(projectionType, mapData) {
         transform =
             "rotate(" + rotation + " " + mapSize + " " + mapSize + ") " +
             "translate(" + translationX + " " + translationY + ")";
+
     }
+
+    // create the svg for the map
+    let svg = d3.select(projContainer).append('svg')
+        .attr("class", "map")
+        .attr("id", "map_" + map + "_projection_" + projectionIndex)
+        .attr("width", mapSize)
+        .attr("height", mapSize)
+        .style("margin-left", leftOffset + 'px');
 
     // apply data
     let g = svg.append('g')
