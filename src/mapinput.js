@@ -41,4 +41,13 @@ function MapInput(selectedSVG, projection, output) {
     });
 }
 
+function RotateAround(pivotX, pivotY, pointX, pointY, angle) {
+    let radians = (Math.PI / 180) * angle;
+    let cos = Math.cos(radians);
+    let sin = Math.sin(radians);
+    let newX = (cos * (pointX - pivotX)) + (sin * (pointY - pivotY)) + pivotX;
+    let newY = (cos * (pointY - pivotY)) - (sin * (pointX - pivotX)) + pivotY;
+    return [newX, newY];
+}
+
 export { MapInput };
