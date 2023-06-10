@@ -53,7 +53,7 @@ function CreateMap(map) {
 
     // add output
     let output = document.createElement('p');
-    // output.setAttribute('id', 'output');
+    output.setAttribute('id', 'output_' + mapIndex);
     output.innerHTML = "Output goes here";
     mapContainer.appendChild(output);
 
