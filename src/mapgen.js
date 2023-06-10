@@ -11,7 +11,7 @@ import * as d3gp from 'd3-geo-projection';
 let root = document.querySelector(':root');
 let body = document.body;
 
-let mapSize = 200;
+export let mapSize = 200;
 const containerScale = 1.4142135623730950488016887242097;
 const containerOffset = 0.70710678118654752440084436210485;
 
@@ -120,7 +120,6 @@ function RetrieveProjection(projectionType, mapData) {
     switch (map) {
         case "grieger":
         case 'grieger-test':
-            // b = true;
             fitSize = containerScale;
             break;
     }
@@ -167,7 +166,6 @@ function RetrieveProjection(projectionType, mapData) {
         case "adams2":
             applyTransformation = true;
             // horizontal, a1 NA facing up
-            // rotation = 2;
             rotation = 135;
             translationX = (mapSize * (containerScale - 1) * containerOffset);
             translationY = mapSize;
@@ -177,13 +175,11 @@ function RetrieveProjection(projectionType, mapData) {
             // translationY = mapSize * (containerScale - 1) * containerOffset;
             break;
     }
-
     // if projection calls for transformation, apply it here
     if (applyTransformation) {
         transform =
-            "rotate(" + rotation + " " + mapSize + " " + mapSize + ") " +
-            "translate(" + translationX + " " + translationY + ")";
-
+            "rotate(" + rotation + "," + mapSize + "," + mapSize + ") " +
+            "translate(" + translationX + "," + translationY + ")";
     }
 
     // create the svg for the map

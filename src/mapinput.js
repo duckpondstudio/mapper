@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
 import { parse, stringify } from 'transform-parser';
+import { mapSize } from './mapgen';
 
 /**
  * Apply input events to the supplied D3 map SVG
@@ -13,6 +14,7 @@ function MapInput(selectedSVG, projection, output) {
         let pointer = d3.pointer(event, target);
         let x = pointer[0];
         let y = pointer[1];
+        let xy = [x, y];
         console.log("clicked " + selectedSVG.attr('id'));
         console.log("Pixel X/Y: " + pointer[0] + "/" + pointer[1]);
 
@@ -22,12 +24,31 @@ function MapInput(selectedSVG, projection, output) {
             transform = g.attr('transform');
             if (transform) {
                 // transform found, be sure to update mouse x/y accordingly
+                console.log("TEST");
+
                 let t = parse(transform);
-                
+                console.log("t.translate: " + t.translate);
+                console.log("t.rotate " + t.rotate);
+                console.log("t.rotate[1] " + t.rotate[1]);
+                console.log("typeof t trans: " + (typeof t.translate));
+                console.log("typeof t rotate: " + (typeof t.rotate));
+                // accommodate rotation 
+                if (t.rotate) {
+                    console.log("pre xy: " + xy);
+                    xy = RotateAround(mapSize, mapSize, x, y, t.rotate[0]);
+                    console.log("post xy: " + xy);
+                }
+                // accommodate translation 
+                if (t.translate) {
+                    xy[0] -= t.translate[0];
+                    xy[1] -= t.translate[1];
+                }
+                x = xy[0];
+                y = xy[1];
             }
         }
         console.log("transform: " + transform);
-        
+
         let latLong = projection.invert([x, y]).reverse();
 
         console.log('LatLong A: ' + latLong);
