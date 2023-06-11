@@ -3,7 +3,8 @@ import demoMap from './img/grieger-triptychial-political.png';
 // import geojson from './json/world.geojson';
 import geojson from './json/ne_50m_land.geojson';
 
-import { MapInput } from './mapinput';
+import { AssignInput } from './mapinput';
+import { MapData, ProjectionData } from './mapdata';
 
 import * as d3 from 'd3';
 import * as d3gp from 'd3-geo-projection';
@@ -16,6 +17,8 @@ const containerScale = 1.4142135623730950488016887242097;
 const containerOffset = 0.70710678118654752440084436210485;
 
 const usePerMapBorder = false;
+
+let maps = [];
 
 let mapIndex = 0;
 let projectionIndex = 0; // not async 
@@ -46,18 +49,24 @@ function CreateMap(map) {
     mapContainer.appendChild(title);
     // body.appendChild(title);
 
-    let projContainer = document.createElement('div');
-    projContainer.setAttribute('id', 'projectionContainer_' + mapIndex);
-    projContainer.setAttribute('class', 'projectionContainer');
-    mapContainer.appendChild(projContainer);
+    let projectionContainer = document.createElement('div');
+    projectionContainer.setAttribute('id', 'projectionContainer_' + mapIndex);
+    projectionContainer.setAttribute('class', 'projectionContainer');
+    mapContainer.appendChild(projectionContainer);
 
-    // add output
-    let output = document.createElement('p');
-    output.setAttribute('id', 'output_' + mapIndex);
-    output.innerHTML = "Output goes here";
-    mapContainer.appendChild(output);
+    // add data container
+    let dataContainer = document.createElement('div');
+    dataContainer.setAttribute('id', 'data_' + mapIndex);
+    mapContainer.appendChild(dataContainer);
 
-    let mapData = { map: map, output: output, projContainer: projContainer };
+
+    let mapData = new MapData(
+        map,
+        mapIndex,
+        dataContainer,
+        projectionContainer
+    );
+
 
     // generate projections 
     switch (map) {
@@ -90,17 +99,24 @@ function CreateMap(map) {
             break;
     }
     // assign size to projectionContainer
-    projContainer.style.width = containerWidth + 'px';
-    projContainer.style.height = containerHeight + 'px';
+    projectionContainer.style.width = containerWidth + 'px';
+    projectionContainer.style.height = containerHeight + 'px';
 
     mapIndex++;
+
+    maps.push(mapData);
 
 }
 
 function RetrieveProjection(projectionType, mapData) {
 
+    if (mapData == null) {
+        console.error("null mapData, can't retrieve projection, projectionType: " + projectionType);
+        return;
+    }
+
     let map = mapData.map;
-    let projContainer = mapData.projContainer;
+    let projectionContainer = mapData.projectionContainer;
 
     if (projectionType == null || projectionType == "") {
         console.error('null/empty projection type specified, cannot retrieve');
@@ -175,6 +191,7 @@ function RetrieveProjection(projectionType, mapData) {
             // translationY = mapSize * (containerScale - 1) * containerOffset;
             break;
     }
+
     // if projection calls for transformation, apply it here
     if (applyTransformation) {
         transform =
@@ -183,7 +200,7 @@ function RetrieveProjection(projectionType, mapData) {
     }
 
     // create the svg for the map
-    let svg = d3.select(projContainer).append('svg')
+    let svg = d3.select(projectionContainer).append('svg')
         .attr("class", "map")
         .attr("id", "map_" + map + "_projection_" + projectionIndex)
         .attr("width", mapSize)
@@ -197,7 +214,6 @@ function RetrieveProjection(projectionType, mapData) {
         .selectAll('path')
         .data(geojson.features)
         .enter();
-
 
     g.append('path')
         .attr('class', function (d) {
@@ -218,11 +234,18 @@ function RetrieveProjection(projectionType, mapData) {
             ;
     }
 
+    // create projection data container
+    let projectionData = new ProjectionData(
+        projection, projectionIndex, svg, mapData);
+
     // apply map events
-    MapInput(svg, projection, mapData.output);
+    AssignInput(projectionData);
 
     // increment projection index 
     projectionIndex++;
+
+    // add projectiondata to mapdata 
+    mapData.AddProjection(projectionData);
 }
 
 /**

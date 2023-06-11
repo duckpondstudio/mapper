@@ -1,14 +1,14 @@
 import * as d3 from 'd3';
 import { parse, stringify } from 'transform-parser';
 import { mapSize } from './mapgen';
+import { MapData, ProjectionData } from './mapdata';
 
-/**
- * Apply input events to the supplied D3 map SVG
- * @param {d3.Selection} selectedSVG D3 selection of generated map SVG to which input events will be applied
- * @param {d3.GeoProjection} projection Associated geoprojection data for this map 
- * @param {HTMLParagraphElement} output Element where output text is displayed
+/** Apply input events to the supplied D3 map SVG
+ * @param {ProjectionData} projectionData Contains all data refs for this specific projection 
  */
-function MapInput(selectedSVG, projection, output) {
+function AssignInput(projectionData) {
+    let selectedSVG = projectionData.svg;
+    let output = projectionData.mapData.output;
     // target is the clicked map, event is pointer info
     selectedSVG.on("click", function (event, target) {
         let pointer = d3.pointer(event, target);
@@ -38,10 +38,11 @@ function MapInput(selectedSVG, projection, output) {
                 y = xy[1];
             }
         }
-        let latLong = projection.invert([x, y]).reverse();
-        output.innerHTML =
-            "Clicked Latitude: " + latLong[0] + "<br>" + 
-            "Clicked Longitude: " + latLong[1];
+        let latLong = projectionData.projection.invert([x, y]).reverse();
+        projectionData.mapData.OutputText(
+            ("Clicked Latitude: " + latLong[0]).toString(),
+            "Clicked Longitude: " + latLong[1]
+        );
     });
 }
 
@@ -54,8 +55,4 @@ function RotateAround(pivotX, pivotY, pointX, pointY, angle) {
     return [newX, newY];
 }
 
-function OutputText(text) {
-    
-}
-
-export { MapInput };
+export { AssignInput };
