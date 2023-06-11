@@ -40,7 +40,7 @@ function MapInput(selectedSVG, projection, output) {
         }
         let latLong = projection.invert([x, y]).reverse();
         output.innerHTML =
-            "Clicked Latitude:" + latLong[0] + "<br>" + 
+            "Clicked Latitude: " + latLong[0] + "<br>" + 
             "Clicked Longitude: " + latLong[1];
     });
 }
