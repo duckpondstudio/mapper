@@ -24,19 +24,10 @@ function MapInput(selectedSVG, projection, output) {
             transform = g.attr('transform');
             if (transform) {
                 // transform found, be sure to update mouse x/y accordingly
-                console.log("TEST");
-
                 let t = parse(transform);
-                console.log("t.translate: " + t.translate);
-                console.log("t.rotate " + t.rotate);
-                console.log("t.rotate[1] " + t.rotate[1]);
-                console.log("typeof t trans: " + (typeof t.translate));
-                console.log("typeof t rotate: " + (typeof t.rotate));
                 // accommodate rotation 
                 if (t.rotate) {
-                    console.log("pre xy: " + xy);
                     xy = RotateAround(mapSize, mapSize, x, y, t.rotate[0]);
-                    console.log("post xy: " + xy);
                 }
                 // accommodate translation 
                 if (t.translate) {
@@ -47,18 +38,10 @@ function MapInput(selectedSVG, projection, output) {
                 y = xy[1];
             }
         }
-        console.log("transform: " + transform);
-
         let latLong = projection.invert([x, y]).reverse();
-
-        console.log('LatLong A: ' + latLong);
-
-        // DONE give each map self-ref unique element ID
-        // use that id along with target to determine click target
-        // use mouse[0/1] as pixel points on that target
-        // use pixel pts to get long/lat
-        // output long lat to console
-        // output long lat to screen
+        output.innerHTML =
+            "Clicked Latitude:" + latLong[0] + "<br>" + 
+            "Clicked Longitude: " + latLong[1];
     });
 }
 
@@ -69,6 +52,10 @@ function RotateAround(pivotX, pivotY, pointX, pointY, angle) {
     let newX = (cos * (pointX - pivotX)) + (sin * (pointY - pivotY)) + pivotX;
     let newY = (cos * (pointY - pivotY)) - (sin * (pointX - pivotX)) + pivotY;
     return [newX, newY];
+}
+
+function OutputText(text) {
+    
 }
 
 export { MapInput };

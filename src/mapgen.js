@@ -219,7 +219,7 @@ function RetrieveProjection(projectionType, mapData) {
     }
 
     // apply map events
-    MapInput(svg, projection);
+    MapInput(svg, projection, mapData.output);
 
     // increment projection index 
     projectionIndex++;
