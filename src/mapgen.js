@@ -12,7 +12,7 @@ import * as d3gp from 'd3-geo-projection';
 let root = document.querySelector(':root');
 let body = document.body;
 
-export let mapSize = 200;
+let mapSize = 200;
 const containerScale = 1.4142135623730950488016887242097;
 const containerOffset = 0.70710678118654752440084436210485;
 
@@ -236,7 +236,7 @@ function RetrieveProjection(projectionType, mapData) {
 
     // create projection data container
     let projectionData = new ProjectionData(
-        projection, projectionIndex, svg, mapData);
+        projection, projectionIndex, mapSize, svg, mapData);
 
     // apply map events
     AssignInput(projectionData);
