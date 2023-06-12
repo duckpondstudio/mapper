@@ -49,10 +49,10 @@ function CreateMap(map) {
     mapContainer.appendChild(title);
     // body.appendChild(title);
 
-    let projectionContainer = document.createElement('div');
-    projectionContainer.setAttribute('id', 'projectionContainer_' + mapIndex);
-    projectionContainer.setAttribute('class', 'projectionContainer');
-    mapContainer.appendChild(projectionContainer);
+    let projectionsContainer = document.createElement('div');
+    projectionsContainer.setAttribute('id', 'projectionsContainer_' + mapIndex);
+    projectionsContainer.setAttribute('class', 'projectionsContainer');
+    mapContainer.appendChild(projectionsContainer);
 
     // add data container
     let dataContainer = document.createElement('div');
@@ -64,7 +64,7 @@ function CreateMap(map) {
         map,
         mapIndex,
         dataContainer,
-        projectionContainer
+        projectionsContainer
     );
 
 
@@ -84,7 +84,7 @@ function CreateMap(map) {
             break;
     }
 
-    // define projectionContainer size based on map
+    // define projectionsContainer size based on map
     let containerWidth = mapSize;
     let containerHeight = mapSize;
     // check for special conditions
@@ -94,13 +94,13 @@ function CreateMap(map) {
             containerWidth = mapSize * 2;
             break;
         default:
-            // by default, projectionContainer width is determined by projection count
+            // by default, projectionsContainer width is determined by projection count
             containerWidth = mapSize * projectionIndex;
             break;
     }
-    // assign size to projectionContainer
-    projectionContainer.style.width = containerWidth + 'px';
-    projectionContainer.style.height = containerHeight + 'px';
+    // assign size to projectionsContainer
+    projectionsContainer.style.width = containerWidth + 'px';
+    projectionsContainer.style.height = containerHeight + 'px';
 
     mapIndex++;
 
@@ -116,7 +116,7 @@ function RetrieveProjection(projectionType, mapData) {
     }
 
     let map = mapData.map;
-    let projectionContainer = mapData.projectionContainer;
+    let projectionsContainer = mapData.projectionsContainer;
 
     if (projectionType == null || projectionType == "") {
         console.error('null/empty projection type specified, cannot retrieve');
@@ -199,17 +199,19 @@ function RetrieveProjection(projectionType, mapData) {
             "translate(" + translationX + "," + translationY + ")";
     }
 
+    
+    let svgContainerId = "map_" + map + "_projection_" + projectionIndex;
+    
     // create the svg for the map
-    let svg = d3.select(projectionContainer).append('svg')
+    let svg = d3.select(projectionsContainer).append('svg')
         .attr("class", "map")
-        .attr("id", "map_" + map + "_projection_" + projectionIndex)
+        .attr("id", svgContainerId)
         .attr("width", mapSize)
         .attr("height", mapSize)
         .style("margin-left", leftOffset + 'px');
 
     // apply data
     let g = svg.append('g')
-
         .attr("transform", transform)
         .selectAll('path')
         .data(geojson.features)
@@ -234,9 +236,12 @@ function RetrieveProjection(projectionType, mapData) {
             ;
     }
 
+    // get this projection container
+    let svgContainer = document.getElementById(svgContainerId);
+
     // create projection data container
     let projectionData = new ProjectionData(
-        projection, projectionIndex, projectionContainer, mapSize, svg, mapData);
+        projection, projectionIndex, svgContainer, svg, mapSize, mapData);
 
     // apply map events
     AssignInput(projectionData);

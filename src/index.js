@@ -7,5 +7,3 @@ window.addEventListener('load', function () {
     InputSetup();
     CreateMap('grieger');
 });
-
-console.log("page init");

@@ -27,12 +27,12 @@ function InputSetup() {
  * @param {MouseEvent} mouseEvent
  */
 function SetMousePosition(mouseEvent) {
-    pos.point[0] = mouseEvent.clientX;
-    pos.point[1] = mouseEvent.clientY;
-    console.log("X: " + pos.x + ", Y: " + pos.y);
+    cursor.point[0] = mouseEvent.clientX;
+    cursor.point[1] = mouseEvent.clientY;
 };
 
-const pos = {
+/** Object reference to the user's primary cursor position */
+export const cursor = {
     point: [0, 0],
     get x() { return this.point[0]; },
     get y() { return this.point[1]; }
