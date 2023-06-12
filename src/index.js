@@ -1,9 +1,10 @@
 import { CreateMap } from './mapgen';
 import css from './css/style.css';
+import { InputSetup } from './mapinput';
 
 window.addEventListener('load', function () {
     // window is loaded 
-    console.log("loaded");
+    InputSetup();
     CreateMap('grieger');
 });
 

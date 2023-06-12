@@ -13,4 +13,27 @@ function AssignInput(projectionData) {
     });
 }
 
+function InputSetup() {
+    // global monitor cursor movement
+    document.addEventListener('mouseenter', event => { SetMousePosition(event); });
+    document.addEventListener('mousemove', event => { SetMousePosition(event); });
+    document.addEventListener('mousedown', event => { SetMousePosition(event); });
+}
+
+/**
+ * Assigns the current mouse position based on the supplied mouseEvent
+ * @param {MouseEvent} mouseEvent
+ */
+function SetMousePosition(mouseEvent) {
+    pos.point[0] = mouseEvent.clientX;
+    pos.point[1] = mouseEvent.clientY;
+    console.log("X: " + pos.x + ", Y: " + pos.y);
+};
+
+const pos = {
+    point: [0, 0],
+    get x() { return this.point[0]; },
+    get y() { return this.point[1]; }
+}
+
 export { AssignInput };
