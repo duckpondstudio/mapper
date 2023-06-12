@@ -38,4 +38,4 @@ const pos = {
     get y() { return this.point[1]; }
 }
 
-export { AssignInput };
+export { AssignInput, InputSetup };
