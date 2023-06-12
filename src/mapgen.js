@@ -236,7 +236,7 @@ function RetrieveProjection(projectionType, mapData) {
 
     // create projection data container
     let projectionData = new ProjectionData(
-        projection, projectionIndex, mapSize, svg, mapData);
+        projection, projectionIndex, projectionContainer, mapSize, svg, mapData);
 
     // apply map events
     AssignInput(projectionData);

@@ -61,27 +61,36 @@ export class MapData {
 export class ProjectionData {
     projection;
     index;
+    projectionContainer;
     svg;
     projectionSize;
     mapData;
-    constructor(projection, index, projectionSize, svg, mapData) {
+    constructor(projection, index, projectionContainer, projectionSize, svg, mapData) {
         this.projection = projection;
         this.index = index;
+        this.projectionContainer = projectionContainer;
         this.projectionSize = projectionSize;
         this.svg = svg;
         this.mapData = mapData;
     }
 
     /**
-     * Outputs coordinate data for this projection at points X and Y
+     * Outputs coordinate data for this projection at points X and Y, 
+     * local to this projection's origin (0,0 = projection top left corner)
      *
      * @param {number} x X-axis coordinate 
      * @param {number} y Y-axis coordinate
      * @memberof ProjectionData
      */
     OutputXYData(x, y) {
+        console.log("X: " + x);
+        console.log("Y: " + y);
         let transform;
         let g = this.svg.select('g');
+        
+        var rect = this.projectionContainer.getBoundingClientRect();
+        console.log(rect.top, rect.right, rect.bottom, rect.left);
+
         if (g) {
             transform = g.attr('transform');
             if (transform) {
@@ -108,7 +117,8 @@ export class ProjectionData {
         );
     }
     /**
-     * Outputs coordinate data for this projection at point XY
+     * Outputs coordinate data for this projection at point XY, 
+     * local to this projection's origin (0,0 = projection top left corner)
      *
      * @param {number[]} xy Two-value num array where [0] is X and [1] is Y 
      * @memberof ProjectionData
