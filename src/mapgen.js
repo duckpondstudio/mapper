@@ -4,7 +4,7 @@ import demoMap from './img/grieger-triptychial-political.png';
 import geojson from './json/ne_50m_land.geojson';
 
 import { AssignInput } from './mapinput';
-import { MapData, ProjectionData } from './mapdata';
+import { MapData, ProjectionData } from './mapcont';
 
 import * as d3 from 'd3';
 import * as d3gp from 'd3-geo-projection';

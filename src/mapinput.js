@@ -1,6 +1,5 @@
 import * as d3 from 'd3';
-import { mapSize } from './mapgen';
-import { MapData, ProjectionData } from './mapdata';
+import { MapData, ProjectionData } from './mapcont';
 
 
 
