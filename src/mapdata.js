@@ -139,11 +139,6 @@ export class ProjectionData {
     GetContainerExtent() {
         let raw = this.GetContainerFullExtent();
         let cont = this.mapData.GetContainerExtent();
-        console.log("Ext: RAW: " + raw);
-        console.log("Ext: CONT: " + cont);
-        console.log("Ext: DIRECT: " + (
-            [this.#containerRect.right, this.#containerRect.bottom]
-        ));
         return [Math.min(raw[0],cont[0]), Math.min(raw[1],cont[1])];
     }
     GetContainerFullExtent() {
@@ -157,37 +152,6 @@ export class ProjectionData {
         xy[0] -= this.#containerRect.left;
         xy[1] -= this.#containerRect.top;
         return xy;
-    }
-
-    TEMP() {
-        let contOrigin = this.mapData.GetContainerOrigin();
-        let contSize = this.mapData.GetContainerSize();
-        let projOrigin = this.GetContainerOrigin();
-        let projSize = this.GetContainerFullSize();
-        // console.log("W: " + this.mapData.projectionsContainer.clientWidth);
-        // console.log("CONT ORI: " + contOrigin);
-        // console.log("PROJ ORI: " + projOrigin);
-        // console.log("CONT SIZE: " + contSize);
-        // console.log("PROJ SIZE: " + projSize);
-
-        console.log("ORI: " + this.GetContainerOrigin());
-        console.log("FOR: " + this.GetContainerFullOrigin());
-        console.log("EXT: " + this.GetContainerExtent());
-        console.log("FEX: " + this.GetContainerFullExtent());
-        console.log("COR: " + this.mapData.GetContainerOrigin());
-        console.log("CEX: " + this.mapData.GetContainerExtent());
-        console.log("SIZ: " + this.GetContainerSize());
-        console.log("FSZ: " + this.GetContainerFullSize());
-
-
-        // define in-container left
-        let insetLeft = projOrigin[0] - contOrigin[0];
-        let insetTop = projOrigin[1] - contOrigin[1];
-        let insetRight = contSize[0] - projSize[0];
-        let insetBottom = contSize[1] - projSize[1];
-
-        // console.log("IN L: " + insetLeft + ", IN T: " + insetTop);
-        // console.log("IN R: " + insetRight + ", IN B: " + insetBottom);
     }
 
     GetContainerSize() {
