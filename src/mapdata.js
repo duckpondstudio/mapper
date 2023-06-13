@@ -44,7 +44,7 @@ export class MapData {
     GetContainerExtent() {
         let xy = this.GetContainerOrigin();
         xy[0] += this.GetContainerWidth();
-        xy[0] += this.GetContainerHeight();
+        xy[1] += this.GetContainerHeight();
         return xy;
     }
 
@@ -129,19 +129,25 @@ export class ProjectionData {
     }
 
     GetContainerOrigin() {
+        let raw = this.GetContainerFullOrigin();
+        let cont = this.mapData.GetContainerOrigin();
+        return [Math.max(raw[0],cont[0]), Math.max(raw[1],cont[1])];
+    }
+    GetContainerFullOrigin() {
         return [this.#containerRect.left, this.#containerRect.top];
     }
     GetContainerExtent() {
-        let xy = this.GetContainerOrigin();
-        xy[0] += this.GetContainerWidth();
-        xy[0] += this.GetContainerHeight();
-        return xy;
+        let raw = this.GetContainerFullExtent();
+        let cont = this.mapData.GetContainerExtent();
+        console.log("Ext: RAW: " + raw);
+        console.log("Ext: CONT: " + cont);
+        console.log("Ext: DIRECT: " + (
+            [this.#containerRect.right, this.#containerRect.bottom]
+        ));
+        return [Math.min(raw[0],cont[0]), Math.min(raw[1],cont[1])];
     }
     GetContainerFullExtent() {
-        let xy = this.GetContainerOrigin();
-        xy[0] += this.GetContainerFullWidth();
-        xy[0] += this.GetContainerFullHeight();
-        return xy;
+        return [this.#containerRect.right, this.#containerRect.bottom];
     }
 
     GetContainerCursorOffset() {
@@ -153,16 +159,26 @@ export class ProjectionData {
         return xy;
     }
 
-    GetContainerWidth() {
+    TEMP() {
         let contOrigin = this.mapData.GetContainerOrigin();
         let contSize = this.mapData.GetContainerSize();
         let projOrigin = this.GetContainerOrigin();
         let projSize = this.GetContainerFullSize();
-        console.log("W: " + this.mapData.projectionsContainer.clientWidth);
-        console.log("CONT ORI: " + contOrigin);
-        console.log("PROJ ORI: " + projOrigin);
-        console.log("CONT SIZE: " + contSize);
-        console.log("PROJ SIZE: " + projSize);
+        // console.log("W: " + this.mapData.projectionsContainer.clientWidth);
+        // console.log("CONT ORI: " + contOrigin);
+        // console.log("PROJ ORI: " + projOrigin);
+        // console.log("CONT SIZE: " + contSize);
+        // console.log("PROJ SIZE: " + projSize);
+
+        console.log("ORI: " + this.GetContainerOrigin());
+        console.log("FOR: " + this.GetContainerFullOrigin());
+        console.log("EXT: " + this.GetContainerExtent());
+        console.log("FEX: " + this.GetContainerFullExtent());
+        console.log("COR: " + this.mapData.GetContainerOrigin());
+        console.log("CEX: " + this.mapData.GetContainerExtent());
+        console.log("SIZ: " + this.GetContainerSize());
+        console.log("FSZ: " + this.GetContainerFullSize());
+
 
         // define in-container left
         let insetLeft = projOrigin[0] - contOrigin[0];
@@ -170,9 +186,18 @@ export class ProjectionData {
         let insetRight = contSize[0] - projSize[0];
         let insetBottom = contSize[1] - projSize[1];
 
-        console.log("IN L: " + insetLeft + ", IN T: " + insetTop);
-        console.log("IN R: " + insetRight + ", IN B: " + insetBottom);
+        // console.log("IN L: " + insetLeft + ", IN T: " + insetTop);
+        // console.log("IN R: " + insetRight + ", IN B: " + insetBottom);
     }
+
+    GetContainerSize() {
+        let ori = this.GetContainerOrigin(); 
+        let ext = this.GetContainerExtent();
+        return [ext[0] - ori[0], ext[1] - ori[1]];
+    }
+    GetContainerWidth() { return this.GetContainerSize()[0]; }
+    GetContainerHeight() { return this.GetContainerSize()[1]; }
+
     GetContainerFullWidth() {
         return this.#containerRect.right - this.#containerRect.left;
     }
@@ -198,15 +223,6 @@ export class ProjectionData {
         let g = this.svg.select('g');
 
         var rect = this.svgContainer.getBoundingClientRect();
-        // console.log(rect.top, rect.right, rect.bottom, rect.left);
-
-        console.log("Click Relative X: " + x);
-        console.log("Click Relative Y: " + y);
-        console.log("Screen Cursor XY: " + cursor.point);
-        console.log("Proj. Origin XY: " + this.GetContainerOrigin());
-        console.log("Container size: " + this.GetContainerWidth());
-        console.log("W2: " + this.svgContainer.clientWidth);
-        console.log("L2: " + this.svgContainer.clientLeft);
 
         if (g) {
             transform = g.attr('transform');
