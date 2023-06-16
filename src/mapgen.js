@@ -42,12 +42,11 @@ function CreateMap(module) {
     mapContainer.id = 'mapContainer_' + mapIndex;
     module.container.appendChild(mapContainer);
 
-    let title = document.createElement("h1");
-    title.setAttribute('id', 'titleContainer_' + mapIndex);
-    title.innerHTML = "Map Data Collector";
+    // let title = document.createElement("h1");
+    // title.setAttribute('id', 'titleContainer_' + mapIndex);
+    // title.innerHTML = "Map Data Collector";
 
-    mapContainer.appendChild(title);
-    // module.container.appendChild(title);
+    // mapContainer.appendChild(title);
 
     let projectionsContainer = document.createElement('div');
     projectionsContainer.setAttribute('id', 'projectionsContainer_' + mapIndex);
