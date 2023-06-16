@@ -9,9 +9,6 @@ import { MapData, ProjectionData } from './mapcont';
 import * as d3 from 'd3';
 import * as d3gp from 'd3-geo-projection';
 
-let root = document.querySelector(':root');
-let body = document.body;
-
 let mapSize = 200;
 const containerScale = 1.4142135623730950488016887242097;
 const containerOffset = 0.70710678118654752440084436210485;
@@ -23,7 +20,9 @@ let maps = [];
 let mapIndex = 0;
 let projectionIndex = 0; // not async 
 
-function CreateMap(map) {
+function CreateMap(module) {
+
+    let map = module.map;
 
     console.log("creating map: " + map);
 
@@ -40,14 +39,14 @@ function CreateMap(map) {
 
     let mapContainer = document.createElement('div');
     mapContainer.id = 'mapContainer_' + mapIndex;
-    body.appendChild(mapContainer);
+    module.container.appendChild(mapContainer);
 
     let title = document.createElement("h1");
     title.setAttribute('id', 'titleContainer_' + mapIndex);
     title.innerHTML = "Map Data Collector";
 
     mapContainer.appendChild(title);
-    // body.appendChild(title);
+    // module.container.appendChild(title);
 
     let projectionsContainer = document.createElement('div');
     projectionsContainer.setAttribute('id', 'projectionsContainer_' + mapIndex);
@@ -319,7 +318,7 @@ function ShowDemoMap() {
     const img = new Image();
     img.src = demoMap;
     img.width = 500;
-    body.appendChild(img);
+    document.body.appendChild(img);
 }
 
 export { CreateMap };
