@@ -4,6 +4,14 @@ export const adams2 = 'adams2';
 export const peirce = 'peirce';
 export const equirectangular = 'equirectangular';
 
+/** 
+ * @type {string[][]} 2D array holding all built-in map projection names. 
+ * @example
+ *      maps[i][0] // [0] is the full name of the map projection,
+ *      maps[i][1] // [1] is const property of the name (top of maps.js),
+ *      maps[i][2] // [2...] and beyond are alternate supported names
+ * 
+ */
 const maps = [
     ['Grieger Triptychial',
         grieger, 'grieger triptychial', 'triptychial'],
@@ -17,6 +25,12 @@ const maps = [
         equirectangular, 'geoequirectangular', 'geoequi', 'equirect']
 ];
 
+/**
+ * Gets the const reference name of the given map property (accommodating for alternate names). Returns null if not found.
+ *
+ * @param {string} map name of map projection you want
+ * @return {string} map projection name, per const refs at top of maps.js
+ */
 export function ParseMap(map) {
     let id = GetMapID(map);
     if (id < 0) {
@@ -25,6 +39,12 @@ export function ParseMap(map) {
     }
     return maps[id][1];
 }
+/**
+ * Gets the full name of the given map (eg, supplying 'grieger' will return 'Grieger Triptychial')
+ *
+ * @param {string} map name of map projection you want
+ * @return {string} full name of the map projection 
+ */
 export function GetMapFullName(map) {
     let id = GetMapID(map);
     if (id < 0) {
@@ -34,6 +54,12 @@ export function GetMapFullName(map) {
     return maps[id][0];
 }
 
+/**
+ * Gets the array index of the given map projection for const maps[][]. Returns -1 if not found
+ *
+ * @param {string} map name of map projection you want
+ * @return {number} array index of the given map projection. Returns -1 if not found
+ */
 function GetMapID(map) {
     for (let i = 0; i < maps.length; i++) {
         // ensure entries valid 
