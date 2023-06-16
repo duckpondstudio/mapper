@@ -23,7 +23,7 @@ export function ParseMap(map) {
         console.error("ERROR: could not parse map " + map + ", invalid ID " + id + ", returning null");
         return null;
     }
-    return maps[i][1];
+    return maps[id][1];
 }
 export function GetMapFullName(map) {
     let id = GetMapID(map);
@@ -31,7 +31,7 @@ export function GetMapFullName(map) {
         console.error("ERROR: could not parse map " + map + ", invalid ID " + id + ", returning null");
         return null;
     }
-    return maps[i][0];
+    return maps[id][0];
 }
 
 function GetMapID(map) {
