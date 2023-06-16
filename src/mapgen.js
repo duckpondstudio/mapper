@@ -5,6 +5,7 @@ import geojson from './json/ne_50m_land.geojson';
 
 import { AssignInput } from './mapinput';
 import { MapData, ProjectionData } from './mapcont';
+import * as m from './maps';
 
 import * as d3 from 'd3';
 import * as d3gp from 'd3-geo-projection';
@@ -69,14 +70,10 @@ function CreateMap(module) {
 
     // generate projections 
     switch (map) {
-        case 'grieger':
-            RetrieveProjection('adams2', mapData);
-            RetrieveProjection('adams1', mapData);
-            RetrieveProjection('adams2', mapData);
-            break;
-        case 'grieger-test':
-            RetrieveProjection('peirce', mapData);
-            RetrieveProjection('peirce', mapData);
+        case m.grieger:
+            RetrieveProjection(m.adams2, mapData);
+            RetrieveProjection(m.adams1, mapData);
+            RetrieveProjection(m.adams2, mapData);
             break;
         default:
             RetrieveProjection(map, mapData);
@@ -88,7 +85,7 @@ function CreateMap(module) {
     let containerHeight = mapSize;
     // check for special conditions
     switch (map) {
-        case 'grieger':
+        case m.grieger:
         case 'grieger-test':
             containerWidth = mapSize * 2;
             break;
@@ -133,8 +130,7 @@ function RetrieveProjection(projectionType, mapData) {
     let fitSize = 1;
     // adjust projection scale (zoom)
     switch (map) {
-        case "grieger":
-        case 'grieger-test':
+        case m.grieger:
             fitSize = containerScale;
             break;
     }
@@ -149,7 +145,7 @@ function RetrieveProjection(projectionType, mapData) {
     // left offset (adjust first map size - use projection width for right map cutoff)
     let leftOffset = 0;
     switch (map) {
-        case 'grieger':
+        case m.grieger:
             if (projectionIndex == 0) {
                 leftOffset = mapSize * -0.5;
             }
@@ -166,19 +162,19 @@ function RetrieveProjection(projectionType, mapData) {
 
 
     // check for / apply per-map transformations
-    switch (map) {
-        case 'grieger-test':
-            applyTransformation = true;
-            rotation = 90;
-            // translationX = -(mapSize * (containerScale - 1) * containerOffset);
-            translationY = mapSize;
-            break;
-    }
+    // switch (map) { // obsolete - keeping for ref 
+    //     case 'grieger-test':
+    //         applyTransformation = true;
+    //         rotation = 90;
+    //         // translationX = -(mapSize * (containerScale - 1) * containerOffset);
+    //         translationY = mapSize;
+    //         break;
+    // }
 
     // check for / apply per-projection transformations
     switch (projectionType) {
-        case "adams1":
-        case "adams2":
+        case m.adams1:
+        case m.adams2:
             applyTransformation = true;
             // horizontal, a1 NA facing up
             rotation = 135;
@@ -280,32 +276,22 @@ function GetProjection(projectionType) {
     switch (projectionType) {
 
         default:
-            console.log("Unsupported projection type " + projectionType + ", returning geoEquirectangular");
+            console.log("Unsupported projection type " + projectionType + ", refer to maps.js, returning geoEquirectangular");
             return d3.geoEquirectangular();
-        case "geoequirectangular":
-        case "equirectangular":
+        
+        case m.equirectangular:
             return d3.geoEquirectangular();
 
-        case "pierce":
-            console.warn("Warning, common misspelling of Peirce, E before I in this name my dude! Returning correct, but check spelling.");
-            return GetProjection('peirce');
-
-        case "peirce":
-        case "peircequincuncial":
+        case m.peirce:
             return d3gp.geoPeirceQuincuncial()
                 .rotate([0, 0, 315]);
 
-        case "adams":
-            console.warn("Warning, \"adams\" is invalid projection, must specify WHICH hemisphere. " +
-                "\"adams1\" = atlantic, \"adams2\" = pacific. Returning null");
-            return null;
-
-        case "adams1":
+        case m.adams1:
             return d3gp.geoPeirceQuincuncial()
                 .rotate([0, 315, 45])
                 .clipAngle(90);
 
-        case "adams2":
+        case m.adams2:
             return d3gp.geoPeirceQuincuncial()
                 .rotate([0, 135, 315])
                 .clipAngle(90);

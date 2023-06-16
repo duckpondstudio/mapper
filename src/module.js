@@ -1,4 +1,5 @@
 import { CreateMap } from "./mapgen";
+import * as m from './maps';
 
 export class Module {
     map;
@@ -7,7 +8,7 @@ export class Module {
     constructor(map) {
         
         // metadata setup 
-        this.map = map;
+        this.map = m.ParseMap(map);
         this.moduleId = Module.moduleCount;
         
         // create container 
@@ -28,10 +29,7 @@ export class Module {
 
 export function CreateMapModule(map) {
 
-    console.log("building map module, " + map);
-
     let module = new Module(map);
-
     CreateMap(module);
 
 }
