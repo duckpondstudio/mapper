@@ -39,21 +39,24 @@ h1 {
 .module.titleBar {
     width: 100%;
     display: inline-block;
-    background-color: rgb(251, 226, 183);
+    color: var(--color-text-title);
+    /* background-color: rgb(251, 226, 183); */
 }
 
 .module.titleBar .contents {
+    padding-left: 2px;
     display: inline-block;
     vertical-align: middle;
+}
+
+.module.titleBar .contents.text {
+    white-space: normal;
 }
 
 .module.titleBar .contents.icon {
     padding-left: 8px;
     padding-right: 6px;
-    padding-bottom: 2px;
-    fill: rgb(203, 161, 220);
-    stroke: rgb(203, 40, 88);
-    color:  rgb(203, 40, 88);
+    margin-bottom: 2px;
 }
 
 .module.submodule {

@@ -1,5 +1,7 @@
 import { CreateMap } from "./mapgen";
 import * as m from './maps';
+const feather = require('feather-icons')
+
 
 import svgGlobe from './svg/globe.svg';
 
@@ -35,20 +37,21 @@ export class Module {
         this.titleBar.setAttribute('class', 'module titleBar');
         this.container.appendChild(this.titleBar);
 
-        let icon = document.createElement('img');
-        icon.src = svgGlobe;
+        let icon = document.createElement('div');
+        // icon.src = svgGlobe;
+        icon.innerHTML = feather.icons.globe.toSvg();
         icon.setAttribute('class', 'contents icon');
         this.titleBar.appendChild(icon);
 
         let title = document.createElement("h1");
         title.setAttribute('id', 'titleContainer_' + this.moduleId);
         title.innerHTML = m.GetMapFullName(map);
-        title.setAttribute('class', 'contents');
+        title.setAttribute('class', 'contents text');
         this.titleBar.appendChild(title);
 
         document.body.appendChild(this.container);
 
-        this.mapSubMod
+        // this.mapSubMod
 
         // increment static module counter, ensure all unique
         Module.moduleCount++;

@@ -4,7 +4,8 @@
     /* ---     CSS COLORS     --- */
     /* -------------------------- */
 
-    --color-text-body: rgb(74, 40, 88);
+    --color-text-title: rgb(73, 5, 60);
+    --color-text-body: rgb(57, 28, 68);
 
     --color-bg-solid: rgb(251, 226, 183);
     --color-bg-gradient-1: rgb(252, 213, 213);
