@@ -40,7 +40,7 @@ h1 {
     width: 100%;
     display: inline-block;
     color: var(--color-text-title);
-    /* background-color: rgb(251, 226, 183); */
+    background-color: rgb(251, 226, 183);
 }
 
 .module.titleBar .contents {
@@ -87,6 +87,6 @@ h1 {
 }
 
 .projectionsContainer .map .water {
-    fill: var(--color-map-water-fill);
-    stroke: var(--color-map-water-stroke);
+    fill: var(--color-map-water);
+    stroke: var(--color-map-water);
 }

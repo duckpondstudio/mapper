@@ -23,8 +23,7 @@
     --color-map-land-fill: rgb(236, 195, 252);
     --color-map-land-stroke: rgb(131, 105, 136);
 
-    --color-map-water-fill: rgb(213, 255, 232);
-    --color-map-water-stroke: rgb(253, 128, 203);
+    --color-map-water: rgb(213, 255, 232);
 
     
 }
