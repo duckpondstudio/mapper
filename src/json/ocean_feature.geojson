@@ -1,0 +1,40 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Ocean",
+                "water": true,
+                "devnote": "Manually added ocean to avoid auto-zooming on land-only SVG projection"
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            -179.99999,
+                            -89.99999
+                        ],
+                        [
+                            -179.99999,
+                            89.99999
+                        ],
+                        [
+                            179.99999,
+                            89.99999
+                        ],
+                        [
+                            179.99999,
+                            -89.99999
+                        ],
+                        [
+                            -179.99999,
+                            -89.99999
+                        ]
+                    ]
+                ]
+            }
+        }
+    ]
+}
