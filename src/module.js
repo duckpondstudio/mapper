@@ -38,7 +38,6 @@ export class Module {
         this.container.appendChild(this.titleBar);
 
         let icon = document.createElement('div');
-        // icon.src = svgGlobe;
         icon.innerHTML = feather.icons.globe.toSvg();
         icon.setAttribute('class', 'contents icon');
         this.titleBar.appendChild(icon);
