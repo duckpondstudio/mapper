@@ -2,7 +2,7 @@ body {
     height: 100%;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    font-family: "Helvetica Neue", Helvetica, sans-serif;
+    font-family: 'Rockford Sans', 'Helvetica Neue', Helvetica, sans-serif;
     font-size: 14px;
     color: rgb(74, 40, 88);
     background-color: rgb(251, 226, 183);
@@ -10,23 +10,23 @@ body {
 }
 
 h1 {
+    font-family: 'Isidora Soft', 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     margin-block-start: 0.32em;
     margin-block-end: 0.4em;
 }
 
 .module {
-    display:block;
+    display: block;
     width: min(600px, calc(100% - 96px));
 }
 
-.module.background
-{
+.module.background {
     padding: 5px;
     margin: 32px;
     outline-color: rgb(196, 89, 114);
     background-color: rgb(255, 231, 231);
     outline-width: 1.5px;
-    outline-style:solid;
+    outline-style: solid;
     overflow: hidden;
     white-space: nowrap;
     border-radius: 4px;
@@ -34,9 +34,8 @@ h1 {
 }
 
 .module.titleBar {
-    width:100%;
-    display:inline-block;
-    /* padding-left: 0px; */
+    width: 100%;
+    display: inline-block;
     background-color: rgb(251, 226, 183);
 }
 
@@ -49,18 +48,19 @@ h1 {
     padding-left: 8px;
     padding-right: 6px;
     padding-bottom: 2px;
+    fill: rgb(203, 161, 220);
+    stroke: rgb(203, 40, 88);
+    color:  rgb(203, 40, 88);
 }
 
-.module.submodule {
-
-}
+.module.submodule {}
 
 .projectionsContainer {
     display: block;
     outline-color: rgb(196, 89, 114);
     background-color: rgba(231, 167, 182, 0.213);
     outline-width: 1.5px;
-    outline-style:solid;
+    outline-style: solid;
     overflow: hidden;
     white-space: nowrap;
     border-radius: 4px;
@@ -71,7 +71,7 @@ h1 {
     margin-right: 0px;
     fill: rgb(213, 213, 213);
     stroke: rgb(69, 69, 69);
- }
+}
 
 .projectionsContainer .map .land {
     fill: rgb(236, 195, 252);

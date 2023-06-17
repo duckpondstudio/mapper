@@ -1,0 +1,52 @@
+@font-face {
+    font-family: 'Isidora Soft';
+    src: url('../fonts/isidorasoft-bold-webfont.woff2') format('woff2'),
+         url('../fonts/isidorasoft-bold-webfont.woff') format('woff'),
+         url('../fonts/isidorasoft-bold.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'Rockford Sans';
+    src: url('../fonts/rockfordsans-regular-webfont.woff2') format('woff2'),
+         url('../fonts/rockfordsans-regular-webfont.woff') format('woff'),
+         url('../fonts/rockfordsans-regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Rockford Sans';
+    src: url('../fonts/rockfordsans-bold-webfont.woff2') format('woff2'),
+         url('../fonts/rockfordsans-bold-webfont.woff') format('woff'),
+         url('../fonts/rockfordsans-bold.otf') format('opentype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Rockford Sans';
+    src: url('../fonts/rockfordsans-regularitalic-webfont.woff2') format('woff2'),
+         url('../fonts/rockfordsans-regularitalic-webfont.woff') format('woff'),
+         url('../fonts/rockfordsans-regularitalic.otf') format('opentype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Rockford Sans';
+    src: url('../fonts/rockfordsans-bolditalic-webfont.woff2') format('woff2'),
+         url('../fonts/rockfordsans-bolditalic-webfont.woff') format('woff'),
+         url('../fonts/rockfordsans-bolditalic.otf') format('opentype');
+    font-weight: bold;
+    font-style: italic;
+}
+
+b {
+    font-weight: bold;
+    /* font-family: 'CustomFont', sans-serif; */
+}
+
+i {
+    font-style: italic;
+    /* font-family: 'CustomFont', sans-serif; */
+}

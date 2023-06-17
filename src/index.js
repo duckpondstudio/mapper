@@ -1,5 +1,6 @@
 import { CreateMap } from './mapgen';
-import css from './css/style.css';
+import cssFonts from './css/fonts.css';
+import cssStyle from './css/style.css';
 import { InputSetup } from './mapinput';
 import { CreateMapModule } from './module';
 import * as m from './maps';
