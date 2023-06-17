@@ -1,0 +1,29 @@
+:root {
+
+    /* -------------------------- */
+    /* ---     CSS COLORS     --- */
+    /* -------------------------- */
+
+    --color-text-body: rgb(74, 40, 88);
+
+    --color-bg-solid: rgb(251, 226, 183);
+    --color-bg-gradient-1: rgb(252, 213, 213);
+    --color-bg-gradient-2: rgb(246, 246, 182);
+    
+    --color-shadow: rgba(69, 42, 100, 0.169);
+    
+    --color-window-border: rgb(196, 89, 114);
+    --color-window-background: rgb(255, 231, 231);
+    --color-window-background-alpha: rgba(231, 167, 182, 0.213);
+    
+    --color-map-default-fill: rgb(213, 213, 213);
+    --color-map-default-stroke: rgb(69, 69, 69);
+    
+    --color-map-land-fill: rgb(236, 195, 252);
+    --color-map-land-stroke: rgb(131, 105, 136);
+
+    --color-map-water-fill: rgb(213, 255, 232);
+    --color-map-water-stroke: rgb(253, 128, 203);
+
+    
+}
