@@ -9,6 +9,7 @@ import oceangeojson from './json/ocean_feature.geojson';
 
 import { AssignInput } from './mapinput';
 import { MapData, ProjectionData } from './mapcont';
+import { GetGeoJSON } from './mapjson';
 import * as m from './maps';
 
 import * as d3 from 'd3';
@@ -26,6 +27,8 @@ let mapIndex = 0;
 let projectionIndex = 0; // not async 
 
 function CreateMap(module) {
+
+    GetGeoJSON();
 
     let map = module.map;
 
@@ -139,7 +142,7 @@ function RetrieveProjection(projectionType, mapData) {
     }
     projection
         .fitSize([mapSize * fitSize, mapSize * fitSize], oceangeojson);
-    // using ocean geojson here because it extends all the way to the edges of lat/long, -180/-90 to 180/90, eg max size
+    // using ocean JSON here because it extends all the way to the edges of lat/long, -180/-90 to 180/90, eg max size
 
 
     // create geopath generator
@@ -198,9 +201,9 @@ function RetrieveProjection(projectionType, mapData) {
             "translate(" + translationX + "," + translationY + ")";
     }
 
-    
+
     let svgContainerId = "map_" + map + "_projection_" + projectionIndex;
-    
+
     // create the svg for the map
     let svg = d3.select(projectionsContainer).append('svg')
         .attr("class", "map")
@@ -208,18 +211,28 @@ function RetrieveProjection(projectionType, mapData) {
         .attr("width", mapSize)
         .attr("height", mapSize)
         .style("margin-left", leftOffset + 'px');
+    
+    
 
     // apply data
     let g = svg.append('g')
-        .attr("transform", transform)
-        .selectAll('path')
+        .attr("transform", transform);
+
+    g.selectAll('path')
         .data(geojson.features)
         .enter();
 
+    // apply data
+    // g = svg.append('g')
+    //     .attr("transform", transform)
+    //     .selectAll('path')
+    //     .data(oceangeojson.features)
+    //     .enter();
+
     g.append('path')
-        .attr('class', function (d) {
-            return 'map' + (d.properties && d.properties.water === true ? ' water' : ' land');
-        })
+        // .attr('class', function (d) {
+        //     return 'map' + (d.properties && d.properties.water === true ? ' water' : ' land');
+        // })
         .attr('d', geoGenerator);
 
     // per-map border
@@ -282,7 +295,7 @@ function GetProjection(projectionType) {
         default:
             console.log("Unsupported projection type " + projectionType + ", refer to maps.js, returning geoEquirectangular");
             return d3.geoEquirectangular();
-        
+
         case m.equirectangular:
             return d3.geoEquirectangular();
 
