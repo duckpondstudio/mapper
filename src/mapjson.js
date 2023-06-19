@@ -22,6 +22,14 @@ export function GetGeoJSON() {
 
     // console.log("json: " + geoEarth.toString());
 
+
+    let a = [1, 2, 3];
+    let b = [4, 5, 6];
+    console.log('a1 ', a);
+    Array.prototype.push.apply(a, b);
+
+    console.log('a2 ', a);
+
     console.log('geoOcean');
     console.log(Object.keys(geoOcean));
 
@@ -167,12 +175,39 @@ export function GetGeoJSON() {
                     if (combinedType == '') {
                         // found target type, assign combined type 
                         combinedType = geoType;
+                        // determine collection type
+                        //      note that isFeatureCollection is false even if invalid, so it doesn't 
+                        //      necessarily mean that it IS a geometrycollection 
                         isFeatureCollection = geoType == 'featurecollection';
-                        // check loose collections
+                        // check loose feature collections
                         if (looseFeatureCollection.length > 0) {
+                            // yep, loose features found, confirm we're if a feature collection 
                             if (isFeatureCollection) {
                                 // valid, add feature collection 
+                                Array.prototype.push.apply(combinedCollection, looseFeatureCollection);
+                            } else {
+                                // invalid, discard feature collection 
+                                console.warn('Collection type is determined as GeometryCollection',
+                                'but uncollected features have already been found and must be discarded. ',
+                                'GeoJSON types FeatureCollection and GeometryCollection cannot be combined. Discarding ',
+                                looseFeatureCollection.length, (looseFeatureCollection.length == 1 ? ' feature.' : 'features.'));
                             }
+                            looseFeatureCollection = [];
+                        }
+                        // check loose geometry collections
+                        if (looseGeometryCollection.length > 0) {
+                            // yep, loose geometries found, confirm we're if a geometry collection 
+                            if (!isFeatureCollection) {
+                                // valid, add geometrycollection 
+                                Array.prototype.push.apply(combinedCollection, looseGeometryCollection);
+                            } else {
+                                // invalid, discard geometrycollection 
+                                console.warn('Collection type is determined as FeatureCollection',
+                                'but uncollected features have already been found and must be discarded. ',
+                                'GeoJSON types FeatureCollection and GeometryCollection cannot be combined. Discarding ',
+                                looseGeometryCollection.length, (looseGeometryCollection.length == 1 ? ' feature.' : 'features.'));
+                            }
+                            looseGeometryCollection = [];
                         }
                     } else if (combinedType == geoType) {
                         // matching type to base type, check for contents 
