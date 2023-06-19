@@ -20,34 +20,34 @@ export function GetGeoJSON() {
 
 
 
-    // console.log("json: " + geoEarth.toString());
+    console.group('geoOcean');
+    console.log(geoOcean);
+    console.log('keys: ', Object.keys(geoOcean));
+    console.log('type: ', geoOcean['type']);
+    console.log('features: ', geoOcean['features']);
+    console.log('typeof features: ', typeof geoOcean['features']);
+    console.log('features length: ', geoOcean['features'].length);
+    console.groupEnd();
+    
+    console.group('geoEarth');
+    console.log(geoEarth);
+    console.log('keys: ', Object.keys(geoEarth));
+    console.log('type: ', geoEarth['type']);
+    console.log('features: ', geoEarth['features']);
+    console.log('typeof features: ', typeof geoEarth['features']);
+    console.log('features length: ', geoEarth['features'].length);
+    console.groupEnd();
 
-
-    let a = [1, 2, 3];
-    let b = [4, 5, 6];
-    console.log('a1 ', a);
-    Array.prototype.push.apply(a, b);
-
-    console.log('a2 ', a);
-
-    console.log('geoOcean');
-    console.log(Object.keys(geoOcean));
-
-    console.log(geoOcean['type']);
-    console.log(geoOcean['features']);
-    console.log(typeof geoOcean['features']);
-    console.log('is array: ', Array.isArray(geoOcean['features']));
-    console.log(geoOcean['features'].length);
-
-
-    console.log(typeof geoOcean);
-    console.log(typeof geoOcean === 'object');
-    let t = '';
-    console.log(typeof t);
-    console.log(typeof t == 'string');
-    console.log(typeof t === 'string');
-    console.log(typeof t == 'object');
-    console.log(typeof t === 'object');
+    let geoCombined = CombineGeoJSON(geoOcean, geoEarth);
+    
+    console.group('geoCombined');
+    console.log(geoCombined);
+    console.log('keys: ', Object.keys(geoCombined));
+    console.log('type: ', geoCombined['type']);
+    console.log('features: ', geoCombined['features']);
+    console.log('typeof features: ', typeof geoCombined['features']);
+    console.log('features length: ', geoCombined['features'].length);
+    console.groupEnd();
 
 
     function CombineGeoJSON(...geo) {
