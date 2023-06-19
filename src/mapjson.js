@@ -3,15 +3,15 @@ import geoEarth from './json/ne_50m_land.geojson';
 import geoOcean from './json/ocean_feature.geojson';
 
 // GeoJSON geo-types per the GeoJSON spec at https://rdrr.io/cran/geoops/man/geojson-types.html June 18 2023
-/** Collection geo-types (non-singular-objects) in GeoJSON format (generally containing collections) */
+/** Collection geo-types (non-singular-objects) in GeoJSON format (generally containing collections), lowercase */
 const geoJsonCollections = ['featurecollection', 'geometrycollection'];
-/** Feature object geo-types (found in a featurecollection) in GeoJSON format */
+/** Feature object geo-types (found in a featurecollection) in GeoJSON format, lowercase */
 const geoJsonFeatureTypes = ['feature'];
-/** Geometry object geo-types (found in a geometrycollection) in GeoJSON format */
+/** Geometry object geo-types (found in a geometrycollection) in GeoJSON format, lowercase */
 const geoJsonGeometryTypes = ['point', 'linestring', 'polygon', 'multipoint', 'multilinestring', 'multipolygon'];
-/** All single object geo-types (non-collections) in GeoJSON format */
+/** All single object geo-types (non-collections) in GeoJSON format, lowercase */
 const geoJsonObjectTypes = [...geoJsonFeatureTypes, ...geoJsonGeometryTypes];
-/** All geo-types in the GeoJSON spec */
+/** All geo-types in the GeoJSON spec, lowercase */
 const geoJsonTypes = [...geoJsonCollections, ...geoJsonObjectTypes];
 
 
@@ -168,13 +168,42 @@ export function GetGeoJSON() {
                                 'Cannot combine this file, skipping. Index: ', ix, ', keys: ' + keys);
                             continue;
                         }
-
+                        // ensure collection is an array 
+                        if (!Array.isArray(geo[i][collectionName])) {
+                            // not an array 
+                            console.warn('GeoJSON object to be combined is of valid type ', combinedType,
+                                ', but key ', collectionName, ' is not an array, and thus has no valid contents. ',
+                                'Cannot combine this file, skipping. Index: ', ix, ', key type: ', typeof geo[i][collectionName]);
+                            continue;
+                        } else if (geo[i][collectionName].length == 0) {
+                            // it IS an array, but has no values. no point in including, skipping silently 
+                            continue;
+                        }
+                        // valid type, valid collection name, valid & populated array - work with it!
+                        
+                        //TODO: combine
+                        
+                    } else {
+                        // type mismatch, cannot include 
+                        console.warn("GeoJSON files of different types cannot be combined. Assigned type ", combinedType,
+                            " is based off of the first-read GeoJSON object, and files of type ", geo[i]['type'],
+                            ' cannot be mixed. Ensure you combine only GeoJSON files of the same type. Skipping this file.',
+                            ' Index ', ix, ', collection length: ' + geo[i][collectionName].length);
+                        continue;
                     }
                     break;
                 default:
-                    // it IS a default type, just a non-collection
+                    // check if it IS a default type, just a non-collection
                     if (geoJsonObjectTypes.contains(geo[i].type)) {
+                        // check if geo[i] is an array 
+                        // valid type, check if feature 
+                        let isFeature = geo[i].type == 'feature';
+                        if (combinedType == '') {
+                            // type not yet set, collect both features/geometries 
 
+                        }
+                    } else {
+                        // invalid type 
                     }
                     continue;
             }
