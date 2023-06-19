@@ -215,7 +215,8 @@ export function GetGeoJSON() {
                             }
                             looseGeometryCollection = [];
                         }
-                    } else if (combinedType == geoType) {
+                    }
+                    if (combinedType == geoType) {
                         // matching type to base type, check for contents 
                         let collectionName = combinedType == "featurecollection" ? 'features' : 'geometries';
                         if (!keys.includes(collectionName)) {
