@@ -5,7 +5,7 @@ import demoMap from './img/grieger-triptychial-political.png';
 import geojson from './json/ne_50m_land.geojson';
 // TODO: allow multiple geojson files to be imported onto a single map (eg to load land + ocean + lat/long lines separately)
 // TODO: allow separate geojson files on the same map to be independently toggled on/off (ideally without recalculating the same map)
-import oceangeojson from './json/ocean_feature.geojson';
+import overlayGeo from './json/ocean_feature.geojson';
 
 import { AssignInput } from './mapinput';
 import { MapData, ProjectionData } from './mapcont';
@@ -141,7 +141,7 @@ function RetrieveProjection(projectionType, mapData) {
             break;
     }
     projection
-        .fitSize([mapSize * fitSize, mapSize * fitSize], oceangeojson);
+        .fitSize([mapSize * fitSize, mapSize * fitSize], overlayGeo);
     // using ocean JSON here because it extends all the way to the edges of lat/long, -180/-90 to 180/90, eg max size
 
 
