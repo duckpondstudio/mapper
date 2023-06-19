@@ -318,6 +318,8 @@ export function GetGeoJSON() {
                             'There is an equal number of both, ', looseFeatureCollection.length, '. Discarding geometries, ',
                             'defaulting to FeatureCollection. Types cannot be mixed - use only Features OR Geometries.');
                         Array.prototype.push.apply(combinedCollection, looseFeatureCollection);
+                        combinedType = 'featurecollection';
+                        isFeatureCollection = true;
                         looseFeatureCollection = [];
                     } else if (looseFeatureCollection.length > looseGeometryCollection.length) {
                         // more features than geometries 
@@ -325,6 +327,8 @@ export function GetGeoJSON() {
                             'There are more features, ', looseFeatureCollection.length, ', than geometries, ', looseGeometryCollection.length,
                             '. Disicarding geometries, defaulting to FeatureCollection. Types cannot be mixed - use only Features OR Geometries.')
                         Array.prototype.push.apply(combinedCollection, looseFeatureCollection);
+                        combinedType = 'featurecollection';
+                        isFeatureCollection = true;
                         looseFeatureCollection = [];
                     } else {
                         // more geometries than features 
@@ -332,6 +336,8 @@ export function GetGeoJSON() {
                             'There are more geometries, ', looseGeometryCollection.length, ', than features, ', looseFeatureCollection.length,
                             '. Disicarding features, defaulting to GeometryCollection. Types cannot be mixed - use only Features OR Geometries.')
                         Array.prototype.push.apply(combinedCollection, looseGeometryCollection);
+                        combinedType = 'geometrycollection';
+                        isFeatureCollection = false;
                         looseGeometryCollection = [];
                     }
                 } else {
@@ -342,6 +348,8 @@ export function GetGeoJSON() {
                             combinedCollection, looseFeatureCollection, geo);
                     }
                     Array.prototype.push.apply(combinedCollection, looseFeatureCollection);
+                    combinedType = 'featurecollection';
+                    isFeatureCollection = true;
                     looseFeatureCollection = [];
                 }
             } else if (looseGeometryCollection.length > 0) {
@@ -352,8 +360,30 @@ export function GetGeoJSON() {
                         combinedCollection, looseGeometryCollection, geo);
                 }
                 Array.prototype.push.apply(combinedCollection, looseGeometryCollection);
+                combinedType = 'geometrycollection';
+                isFeatureCollection = false;
                 looseGeometryCollection = [];
             }
+        }
+
+        // create and return merged GeoJSON
+        switch (combinedType) {
+            case 'featurecollection':
+                return {
+                    type: 'FeatureCollection',
+                    features: combinedCollection
+                };
+            case 'geometrycollection':
+                return {
+                    type: 'GeometryCollection',
+                    geometries: combinedCollection
+                };
+            default:
+                // invalid combined type 
+                console.warn('Final GeoJSON combinedType is invalid: ', combinedType, ', cannot return merged GeoJSON file. ',
+                    'Investigate source code. Returning null. Combined collection length: ', combinedCollection.length,
+                    ', combined collection: ', combinedCollection, ', geo params: ', geo);
+                return null;
         }
 
     }
