@@ -4,11 +4,11 @@ import geoOcean from './json/ocean_feature.geojson';
 
 // GeoJSON geo-types per the GeoJSON spec at https://rdrr.io/cran/geoops/man/geojson-types.html June 18 2023
 /** Collection geo-types (non-singular-objects) in GeoJSON format (generally containing collections) */
-const geoJsonCollections = ['FeatureCollection', 'GeometryCollection'];
-/** Feature object geo-types (found in a FeatureCollection) in GeoJSON format */
-const geoJsonFeatureTypes = ['Feature'];
-/** Geometry object geo-types (found in a GeometryCollection) in GeoJSON format */
-const geoJsonGeometryTypes = ['Point', 'LineString', 'Polygon', 'MultiPoint', 'MultiLineString', 'MultiPolygon'];
+const geoJsonCollections = ['featurecollection', 'geometrycollection'];
+/** Feature object geo-types (found in a featurecollection) in GeoJSON format */
+const geoJsonFeatureTypes = ['feature'];
+/** Geometry object geo-types (found in a geometrycollection) in GeoJSON format */
+const geoJsonGeometryTypes = ['point', 'linestring', 'polygon', 'multipoint', 'multilinestring', 'multipolygon'];
 /** All single object geo-types (non-collections) in GeoJSON format */
 const geoJsonObjectTypes = [...geoJsonFeatureTypes, ...geoJsonGeometryTypes];
 /** All geo-types in the GeoJSON spec */
@@ -44,19 +44,19 @@ export function GetGeoJSON() {
 
     function CombineGeoJSON(...geo) {
 
-        let type = '';
+        let combinedType = '';
         let featureCollection = [];
         let geoCollection = [];
 
         // determine first type of collection
         for (let i = 0; i < geo.length; i++) {
 
-            /** shorthand index container showing full size, index/length (eg 3/8) */
-            let ix = i + '/' + geo.length;
-            
             // first, THOROUGH type validation to ensure we validly combine different GeoJSON files.
             // fastidious overengineering? No, dangit, we want it to just work regardless of user competency, 
             // if the files are parsably valid! We're going beyond user-friendly - we're going user-empathetic <3 
+
+            /** shorthand index container showing full size, index/length (eg 3/8) */
+            let ix = i + '/' + geo.length;
 
             // nullcheck 
             if (geo[i] == null) { continue; }
@@ -78,6 +78,8 @@ export function GetGeoJSON() {
                     continue;
                 }
             }
+            // ensure geo keys are lowercase for string comparison 
+            geo = ObjectKeysToLower(geo);
             // ensure object has key 'type'
             let keys = Object.keys(geo);
             if (!keys.contains('type')) {
@@ -109,37 +111,37 @@ export function GetGeoJSON() {
                         } else {
                             // both have same # of values 
                             console.warn('GeoJSON to be combined has both features AND geometries but no specified type, however ',
-                                'both have the same number of values. Defaulting to type FeatureCollection, adding type key. ',
+                                'both have the same number of values. Defaulting to type featurecollection, adding type key. ',
                                 'Check to ensure your .geojson files are properly formatted. Index ', ix, ', object: ', geo[i]);
-                            geo[i]['type'] = 'FeatureCollection';
+                            geo[i]['type'] = 'featurecollection';
                         }
                     } else if (geo[i]['features'].length > geo[i]['geometries'].length) {
                         // has more features than geometries 
                         console.warn("GeoJSON to be combined has both features AND geometries but no specified type, however ",
-                            'it has more features than geometries. Assigning type FeatureCollection, adding type key. ',
-                            'Check to ensure your .geojson files are properly formatted. ', 
+                            'it has more features than geometries. Assigning type featurecollection, adding type key. ',
+                            'Check to ensure your .geojson files are properly formatted. ',
                             'Index ', ix, ', object: ', geo[i], ', features length: ', geo[i]['features'].length,
                             ', geometries length: ', geo[i]['geometries'].length);
-                        geo[i]['type'] = 'FeatureCollection';
+                        geo[i]['type'] = 'featurecollection';
                     } else {
                         // has more geometries than features 
                         console.warn("GeoJSON to be combined has both features AND geometries but no specified type, however ",
-                            'it has more geometries than features. Assigning type GeometryCollection, adding type key. ',
-                            'Check to ensure your .geojson files are properly formatted. ', 
+                            'it has more geometries than features. Assigning type geometrycollection, adding type key. ',
+                            'Check to ensure your .geojson files are properly formatted. ',
                             'Index ', ix, ', object: ', geo[i], ', features length: ', geo[i]['features'].length,
                             ', geometries length: ', geo[i]['geometries'].length);
-                        geo[i]['type'] = 'GeometryCollection';
+                        geo[i]['type'] = 'geometrycollection';
                     }
                 } else if (hasFeatures) {
-                    // FeatureCollection type
+                    // featurecollection type
                     console.warn('GeoJSON object at index ', ix, ' does not have a type, but it DOES have features. ',
-                        'Assigning type FeatureCollection, adding type key. Check to ensure your .geojson files are properly formatted.');
-                        geo[i]['type'] = 'FeatureCollection';
+                        'Assigning type featurecollection, adding type key. Check to ensure your .geojson files are properly formatted.');
+                    geo[i]['type'] = 'featurecollection';
                 } else if (hasGeometries) {
-                    // GeometryCollection type
+                    // geometrycollection type
                     console.warn('GeoJSON object at index ', ix, ' does not have a type, but it DOES have geometries. ',
-                    'Assigning type GeometryCollection, adding type key. Check to ensure your .geojson files are properly formatted.');
-                    geo[i]['type'] = 'GeometryCollection';
+                        'Assigning type geometrycollection, adding type key. Check to ensure your .geojson files are properly formatted.');
+                    geo[i]['type'] = 'geometrycollection';
                 } else {
                     // invalid type 
                     console.warn('GeoJSON object at index ', ix, ' does not have a type parameter, nor does it have ',
@@ -151,19 +153,19 @@ export function GetGeoJSON() {
 
             // determined type validity, iterate based on type 
             switch (geo[i]['type']) {
-                case 'FeatureCollection':
-                case 'GeometryCollection':
+                case 'featurecollection':
+                case 'geometrycollection':
                     // valid collection type 
-                    if (type == '') {
-                        type = geo[i]['type'];
-                    } else if (type == geo[i]['type']) {
+                    if (combinedType == '') {
+                        combinedType = geo[i]['type'];
+                    } else if (combinedType == geo[i]['type']) {
                         // matching type to base type, check for contents 
-                        let collectionName = type == "FeatureCollection" ? 'features' : 'geometries';
+                        let collectionName = combinedType == "featurecollection" ? 'features' : 'geometries';
                         if (!keys.includes(collectionName)) {
                             // does not include a collection of the valid name 
-                            console.warn('GeoJSON object to be combined is of valid type ', type,
+                            console.warn('GeoJSON object to be combined is of valid type ', combinedType,
                                 ', but does not include key ', collectionName, ', and thus has no valid contents. ',
-                                'Cannot combine this file, skipping. Index: ', i, '/', );
+                                'Cannot combine this file, skipping. Index: ', ix, ', keys: ' + keys);
                             continue;
                         }
 
