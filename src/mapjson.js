@@ -98,7 +98,7 @@ export function GetGeoJSON() {
                 }
             }
             // ensure geo keys are lowercase for string comparison 
-            geo[i] = ObjectKeysToLower(geo[i]);
+            geo[i] = ObjectKeysToLowerAndTrim(geo[i]);
             // ensure object has key 'type'
             let keys = Object.keys(geo[i]);
             // check for type key (ensure it's non-null, non-whitespace)
@@ -170,8 +170,10 @@ export function GetGeoJSON() {
                     continue;
                 }
             }
+
+
             // determined type validity, iterate based on type 
-            let geoType = geo[i]['type'].toLowerCase();
+            let geoType = geo[i]['type'].toLowerCase().trim();
             switch (geoType) {
                 case 'featurecollection':
                 case 'geometrycollection':
@@ -365,17 +367,17 @@ export function GetGeoJSON() {
                 looseGeometryCollection = [];
             }
         }
-
+        
         // create and return merged GeoJSON
         switch (combinedType) {
             case 'featurecollection':
                 return {
-                    type: 'FeatureCollection',
+                    type: 'FeatureCollection', // NOT lowercase, final output uses GeoJSON standard capitalization 
                     features: combinedCollection
                 };
             case 'geometrycollection':
                 return {
-                    type: 'GeometryCollection',
+                    type: 'GeometryCollection', // NOT lowercase, final output uses GeoJSON standard capitalization 
                     geometries: combinedCollection
                 };
             default:
@@ -391,19 +393,19 @@ export function GetGeoJSON() {
 }
 
 /**
- * Duplicates the given object and returns it, with all its keys lowercase 
+ * Duplicates the given object and returns it, with all its keys lowercase and trimmed 
  * @param {object} obj Object who's keys you want to render lowercase 
  * @return {object} New object with duplicate values, with lowercase keys 
  * @author https://stackoverflow.com/a/12540603/12888769
  */
-function ObjectKeysToLower(obj) {
+function ObjectKeysToLowerAndTrim(obj) {
     if (obj == null) { return null; }
     var key, keys = Object.keys(obj);
     var n = keys.length;
     var newObj = {}
     while (n--) {
         key = keys[n];
-        newObj[key.toLowerCase()] = obj[key];
+        newObj[key.toLowerCase().trim()] = obj[key];
     }
     return newObj;
 }
