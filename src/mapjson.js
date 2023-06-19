@@ -18,38 +18,8 @@ const geoJsonTypes = [...geoJsonCollections, ...geoJsonObjectTypes];
 
 export function GetGeoJSON() {
 
-
-
-    console.group('geoOcean');
-    console.log(geoOcean);
-    console.log('keys: ', Object.keys(geoOcean));
-    console.log('type: ', geoOcean['type']);
-    console.log('features: ', geoOcean['features']);
-    console.log('typeof features: ', typeof geoOcean['features']);
-    console.log('features length: ', geoOcean['features'].length);
-    console.groupEnd();
-    
-    console.group('geoEarth');
-    console.log(geoEarth);
-    console.log('keys: ', Object.keys(geoEarth));
-    console.log('type: ', geoEarth['type']);
-    console.log('features: ', geoEarth['features']);
-    console.log('typeof features: ', typeof geoEarth['features']);
-    console.log('features length: ', geoEarth['features'].length);
-    console.groupEnd();
-
     let geoCombined = CombineGeoJSON(geoOcean, geoEarth);
     
-    console.group('geoCombined');
-    console.log(geoCombined);
-    console.log('keys: ', Object.keys(geoCombined));
-    console.log('type: ', geoCombined['type']);
-    console.log('features: ', geoCombined['features']);
-    console.log('typeof features: ', typeof geoCombined['features']);
-    console.log('features length: ', geoCombined['features'].length);
-    console.groupEnd();
-
-
     function CombineGeoJSON(...geo) {
 
         // check length minimums 
