@@ -102,16 +102,16 @@ export function GetGeoJSON() {
             // ensure object has key 'type'
             let keys = Object.keys(geo[i]);
             // check for type key (ensure it's non-null, non-whitespace)
-            if (!keys.contains('type') || geo[i]['type'] == null || geo[i]['type'] == '') {
+            if (!keys.includes('type') || geo[i]['type'] == null || geo[i]['type'] == '') {
                 // check if it contains a features or geometries key, from which we can infer the type
-                let hasFeatures = keys.contains('features');
+                let hasFeatures = keys.includes('features');
                 // ensure features IS an array
                 if (hasFeatures && !Array.isArray(geo[i]['features'])) {
                     console.warn('GeoJSON object at index ', ix, ' has a features object but it is NOT an array, invalid. ',
                         'Typeof: ', typeof geo[i]['features'], ' value: ', geo[i]['features']);
                     hasFeatures = false;
                 }
-                let hasGeometries = keys.contains('geometries');
+                let hasGeometries = keys.includes('geometries');
                 // ensure geometries IS an array
                 if (hasGeometries && !Array.isArray(geo[i]['geometries'])) {
                     console.warn('GeoJSON object at index ', ix, ' has a geometries object but it is NOT an array, invalid. ',
