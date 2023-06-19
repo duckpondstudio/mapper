@@ -52,6 +52,10 @@ export function GetGeoJSON() {
 
     function CombineGeoJSON(...geo) {
 
+        // check length minimums 
+        if (geo.length == 0) { console.warn("Cannot combine GeoJSON files - no files provided"); return null; }
+        else if (geo.length == 1) { return geo[0]; }
+
         let isFeatureCollection = false;
         let combinedType = '';
         let combinedCollection = [];
@@ -188,9 +192,9 @@ export function GetGeoJSON() {
                             } else {
                                 // invalid, discard feature collection 
                                 console.warn('Collection type is determined as GeometryCollection',
-                                'but uncollected features have already been found and must be discarded. ',
-                                'GeoJSON types FeatureCollection and GeometryCollection cannot be combined. Discarding ',
-                                looseFeatureCollection.length, (looseFeatureCollection.length == 1 ? ' feature.' : 'features.'));
+                                    'but uncollected features have already been found and must be discarded. ',
+                                    'GeoJSON types FeatureCollection and GeometryCollection cannot be combined. Discarding ',
+                                    looseFeatureCollection.length, (looseFeatureCollection.length == 1 ? ' feature.' : 'features.'));
                             }
                             looseFeatureCollection = [];
                         }
@@ -203,9 +207,9 @@ export function GetGeoJSON() {
                             } else {
                                 // invalid, discard geometrycollection 
                                 console.warn('Collection type is determined as FeatureCollection',
-                                'but uncollected features have already been found and must be discarded. ',
-                                'GeoJSON types FeatureCollection and GeometryCollection cannot be combined. Discarding ',
-                                looseGeometryCollection.length, (looseGeometryCollection.length == 1 ? ' feature.' : 'features.'));
+                                    'but uncollected features have already been found and must be discarded. ',
+                                    'GeoJSON types FeatureCollection and GeometryCollection cannot be combined. Discarding ',
+                                    looseGeometryCollection.length, (looseGeometryCollection.length == 1 ? ' feature.' : 'features.'));
                             }
                             looseGeometryCollection = [];
                         }
@@ -231,9 +235,7 @@ export function GetGeoJSON() {
                             continue;
                         }
                         // valid type, valid collection name, valid & populated array - work with it!
-
-                        //TODO: combine files 
-
+                        Array.prototype.push.apply(combinedCollection, geo[i][collectionName]);
                     } else {
                         // type mismatch, cannot include 
                         console.warn("GeoJSON files of different types cannot be combined. Assigned type ", combinedType,
@@ -301,6 +303,56 @@ export function GetGeoJSON() {
                             ', must be a valid GeoJSON geo-type. Index ', ix, ', skipping file')
                         continue;
                     }
+            }
+        }
+
+        // done iterating through files, check if type was assigned properly / any loose collections 
+        if (combinedType == '') {
+            // no type found 
+            if (looseFeatureCollection.length > 0) {
+                if (looseGeometryCollection.length > 0) {
+                    // both loose features AND geometry found, select larger amount 
+                    if (looseFeatureCollection.length == looseGeometryCollection.length) {
+                        // equal amounts of both - default to geometries 
+                        console.warn('Could not find a set GeoJSON collection type, but found both loose features and geometries. ',
+                            'There is an equal number of both, ', looseFeatureCollection.length, '. Discarding geometries, ',
+                            'defaulting to FeatureCollection. Types cannot be mixed - use only Features OR Geometries.');
+                        Array.prototype.push.apply(combinedCollection, looseFeatureCollection);
+                        looseFeatureCollection = [];
+                    } else if (looseFeatureCollection.length > looseGeometryCollection.length) {
+                        // more features than geometries 
+                        console.warn('Could not find a set GeoJSON collection type, but found both loose features and geometries. ',
+                            'There are more features, ', looseFeatureCollection.length, ', than geometries, ', looseGeometryCollection.length,
+                            '. Disicarding geometries, defaulting to FeatureCollection. Types cannot be mixed - use only Features OR Geometries.')
+                        Array.prototype.push.apply(combinedCollection, looseFeatureCollection);
+                        looseFeatureCollection = [];
+                    } else {
+                        // more geometries than features 
+                        console.warn('Could not find a set GeoJSON collection type, but found both loose features and geometries. ',
+                            'There are more geometries, ', looseGeometryCollection.length, ', than features, ', looseFeatureCollection.length,
+                            '. Disicarding features, defaulting to GeometryCollection. Types cannot be mixed - use only Features OR Geometries.')
+                        Array.prototype.push.apply(combinedCollection, looseGeometryCollection);
+                        looseGeometryCollection = [];
+                    }
+                } else {
+                    // loose features found 
+                    if (combinedCollection.length > 0) {
+                        console.warn('GeoJSON combined collection has values, yet combined type was not assigned. ',
+                            'This should be impossible. Investigate. For now, assigning found loose features. ',
+                            combinedCollection, looseFeatureCollection, geo);
+                    }
+                    Array.prototype.push.apply(combinedCollection, looseFeatureCollection);
+                    looseFeatureCollection = [];
+                }
+            } else if (looseGeometryCollection.length > 0) {
+                // loose geometry found 
+                if (combinedCollection.length > 0) {
+                    console.warn('GeoJSON combined collection has values, yet combined type was not assigned. ',
+                        'This should be impossible. Investigate. For now, assigning found loose geometries. ',
+                        combinedCollection, looseGeometryCollection, geo);
+                }
+                Array.prototype.push.apply(combinedCollection, looseGeometryCollection);
+                looseGeometryCollection = [];
             }
         }
 
