@@ -181,3 +181,21 @@ export function GetGeoJSON() {
     }
 
 }
+
+/**
+ * Duplicates the given object and returns it, with all its keys lowercase 
+ * @param {object} obj Object who's keys you want to render lowercase 
+ * @return {object} New object with duplicate values, with lowercase keys 
+ * @author https://stackoverflow.com/a/12540603/12888769
+ */
+function ObjectKeysToLower(obj) {
+    if (obj == null) { return null; }
+    var key, keys = Object.keys(obj);
+    var n = keys.length;
+    var newObj = {}
+    while (n--) {
+        key = keys[n];
+        newObj[key.toLowerCase()] = obj[key];
+    }
+    return newObj;
+}
