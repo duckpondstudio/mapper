@@ -44,10 +44,11 @@ export function GetGeoJSON() {
 
     function CombineGeoJSON(...geo) {
 
+        let isFeatureCollection = false;
         let combinedType = '';
         let combinedCollection = [];
-        let featureCollection = [];
-        let geoCollection = [];
+        let looseFeatureCollection = [];
+        let looseGeometryCollection = [];
 
         let decrementFailsafe = 0;
 
@@ -162,9 +163,17 @@ export function GetGeoJSON() {
             switch (geoType) {
                 case 'featurecollection':
                 case 'geometrycollection':
-                    // valid collection type 
+                    // valid collection type, check if first setting combined type 
                     if (combinedType == '') {
+                        // found target type, assign combined type 
                         combinedType = geoType;
+                        isFeatureCollection = geoType == 'featurecollection';
+                        // check loose collections
+                        if (looseFeatureCollection.length > 0) {
+                            if (isFeatureCollection) {
+                                // valid, add feature collection 
+                            }
+                        }
                     } else if (combinedType == geoType) {
                         // matching type to base type, check for contents 
                         let collectionName = combinedType == "featurecollection" ? 'features' : 'geometries';
@@ -188,7 +197,7 @@ export function GetGeoJSON() {
                         }
                         // valid type, valid collection name, valid & populated array - work with it!
 
-                        //TODO: combine
+                        //TODO: combine files 
 
                     } else {
                         // type mismatch, cannot include 
@@ -205,8 +214,27 @@ export function GetGeoJSON() {
                         // valid type, check if feature 
                         let isFeature = geoType == 'feature';
                         if (combinedType == '') {
-                            // type not yet set, collect both features/geometries 
-
+                            // type not yet set, collect both features/geometries, wait to combine them
+                            if (isFeature) {
+                                looseFeatureCollection.push(geo[i]);
+                            } else {
+                                looseGeometryCollection.push(geo[i]);
+                            }
+                        } else {
+                            // combined type is set, check for validity 
+                            if (isFeatureCollection == isFeature) {
+                                // correct type, add feature to combined collection 
+                                combinedCollection.push(geo[i]);
+                            } else {
+                                // invalid type, cannot combine 
+                                console.warn('Cannot merge different collection types into one GeoJSON file. ',
+                                    'Combined file is type ', (isFeatureCollection ? 'Feature' : 'Geometry'),
+                                    ' while current file attempting to merge is type ', (isFeature ? 'Feature' : 'Geometry'),
+                                    '. Type is determined by the first valid GeoJSON collection found. Check the order ',
+                                    'you are loading files in, and ensure you only load files of one type. ',
+                                    'Index ', ix, ', cannot merge, skipping file.');
+                                continue;
+                            }
                         }
                     } else if (geoJsonCollections.contains(geoType)) {
                         // theoretically impossible to get here? failsafe accommodation 
