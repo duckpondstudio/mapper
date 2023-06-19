@@ -2,7 +2,7 @@ import demoMap from './img/grieger-triptychial-political.png';
 // import geojson from './json/demo.geojson';
 // import geojson from './json/world.geojson';
 // import geojson from './json/ne_50m_land_with_ocean.geojson';
-import geojson from './json/ne_50m_land.geojson';
+// import geojson from './json/ne_50m_land.geojson';
 // TODO: allow multiple geojson files to be imported onto a single map (eg to load land + ocean + lat/long lines separately)
 // TODO: allow separate geojson files on the same map to be independently toggled on/off (ideally without recalculating the same map)
 import overlayGeo from './json/ocean_feature.geojson';
@@ -23,12 +23,12 @@ const usePerMapBorder = false;
 
 let maps = [];
 
+let geojson = GetGeoJSON();
+
 let mapIndex = 0;
 let projectionIndex = 0; // not async 
 
 function CreateMap(module) {
-
-    GetGeoJSON();
 
     let map = module.map;
 
@@ -223,16 +223,16 @@ function RetrieveProjection(projectionType, mapData) {
         .enter();
 
     // apply data
-    // g = svg.append('g')
-    //     .attr("transform", transform)
-    //     .selectAll('path')
-    //     .data(oceangeojson.features)
-    //     .enter();
+    g = svg.append('g')
+        .attr("transform", transform)
+        .selectAll('path')
+        .data(geojson.features)
+        .enter();
 
     g.append('path')
-        // .attr('class', function (d) {
-        //     return 'map' + (d.properties && d.properties.water === true ? ' water' : ' land');
-        // })
+        .attr('class', function (d) {
+            return 'map' + (d.properties && d.properties.water === true ? ' water' : ' land');
+        })
         .attr('d', geoGenerator);
 
     // per-map border
