@@ -45,8 +45,11 @@ export function GetGeoJSON() {
     function CombineGeoJSON(...geo) {
 
         let combinedType = '';
+        let combinedCollection = [];
         let featureCollection = [];
         let geoCollection = [];
+
+        let decrementFailsafe = 0;
 
         // determine first type of collection
         for (let i = 0; i < geo.length; i++) {
@@ -57,6 +60,9 @@ export function GetGeoJSON() {
 
             /** shorthand index container showing full size, index/length (eg 3/8) */
             let ix = i + '/' + geo.length;
+
+            // reset failsafe if needed 
+            if (decrementFailsafe > 0) { decrementFailsafe--; }
 
             // nullcheck 
             if (geo[i] == null) { continue; }
@@ -79,10 +85,11 @@ export function GetGeoJSON() {
                 }
             }
             // ensure geo keys are lowercase for string comparison 
-            geo = ObjectKeysToLower(geo);
+            geo[i] = ObjectKeysToLower(geo[i]);
             // ensure object has key 'type'
-            let keys = Object.keys(geo);
-            if (!keys.contains('type')) {
+            let keys = Object.keys(geo[i]);
+            // check for type key (ensure it's non-null, non-whitespace)
+            if (!keys.contains('type') || geo[i]['type'] == null || geo[i]['type'] == '') {
                 // check if it contains a features or geometries key, from which we can infer the type
                 let hasFeatures = keys.contains('features');
                 // ensure features IS an array
@@ -150,15 +157,15 @@ export function GetGeoJSON() {
                     continue;
                 }
             }
-
             // determined type validity, iterate based on type 
-            switch (geo[i]['type']) {
+            let geoType = geo[i]['type'].toLowerCase();
+            switch (geoType) {
                 case 'featurecollection':
                 case 'geometrycollection':
                     // valid collection type 
                     if (combinedType == '') {
-                        combinedType = geo[i]['type'];
-                    } else if (combinedType == geo[i]['type']) {
+                        combinedType = geoType;
+                    } else if (combinedType == geoType) {
                         // matching type to base type, check for contents 
                         let collectionName = combinedType == "featurecollection" ? 'features' : 'geometries';
                         if (!keys.includes(collectionName)) {
@@ -180,13 +187,13 @@ export function GetGeoJSON() {
                             continue;
                         }
                         // valid type, valid collection name, valid & populated array - work with it!
-                        
+
                         //TODO: combine
-                        
+
                     } else {
                         // type mismatch, cannot include 
                         console.warn("GeoJSON files of different types cannot be combined. Assigned type ", combinedType,
-                            " is based off of the first-read GeoJSON object, and files of type ", geo[i]['type'],
+                            " is based off of the first-read GeoJSON object, and files of type ", geoType,
                             ' cannot be mixed. Ensure you combine only GeoJSON files of the same type. Skipping this file.',
                             ' Index ', ix, ', collection length: ' + geo[i][collectionName].length);
                         continue;
@@ -194,18 +201,43 @@ export function GetGeoJSON() {
                     break;
                 default:
                     // check if it IS a default type, just a non-collection
-                    if (geoJsonObjectTypes.contains(geo[i].type)) {
-                        // check if geo[i] is an array 
+                    if (geoJsonObjectTypes.contains(geoType)) {
                         // valid type, check if feature 
-                        let isFeature = geo[i].type == 'feature';
+                        let isFeature = geoType == 'feature';
                         if (combinedType == '') {
                             // type not yet set, collect both features/geometries 
 
                         }
+                    } else if (geoJsonCollections.contains(geoType)) {
+                        // theoretically impossible to get here? failsafe accommodation 
+                        if (geoType.includes('f')) {
+                            // featurecollection, assign proper name, decrement+redo iteration 
+                            geo[i]['type'] = 'featurecollection';
+                        } else if (geoType.includes('g')) {
+                            // geometrycollection, assign proper name, decrement+redo iteration 
+                            geo[i]['type'] = 'geometrycollection';
+                        } else {
+                            // impossible?
+                            console.warn('Failsafe, impossible GeoJSON type found: ', geoType,
+                                ', check source code for errors (spelling?). Check const array vars. ',
+                                'Index ', ix, ', cannot combine GeoJSON file, continuing');
+                            continue;
+                        }
+                        // modified / corrected type setting, decrement+redo iteration
+                        if (decrementFailsafe > 0) {
+                            // do NOT decrement if we've hit failsafe more than once 
+                            console.error("ERROR: hit impossible failsafe twice, investigate. Skipping file", geo[i]);
+                        } else {
+                            decrementFailsafe = 2;// set to 2 so it'll still be flagged on next iteration, but reset afterwards 
+                            i--;
+                        }
+                        continue;
                     } else {
                         // invalid type 
+                        console.warn('Cannot combine GeoJSON file of invalid type ', geoType,
+                            ', must be a valid GeoJSON geo-type. Index ', ix, ', skipping file')
+                        continue;
                     }
-                    continue;
             }
         }
 
