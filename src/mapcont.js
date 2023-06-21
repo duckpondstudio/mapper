@@ -5,30 +5,34 @@ import { cursor } from './mapinput';
 /** Container for all data related to displaying a map */
 export class MapData {
     map;
+    module;
     index = -1;
-    dataContainer;
     projectionsContainer;
     projections = [];
     #output;
     #containerRect;
     constructor(
-        map, index, dataContainer, projectionsContainer, projections = []) {
-        this.map = map;
-        this.index = index;
-        this.dataContainer = dataContainer;
-        this.projectionsContainer = projectionsContainer;
-        this.projections = projections;
-        if (!dataContainer) {
-            console.error("Cannot create MapData properly without dataContainer");
-            return;
-        }
+        module, projections = []) {
+        this.map = module.map;
+        this.module = module;
+        this.index = this.module.moduleId;
+
+        // create projections container 
+        this.projectionsContainer = document.createElement('div');
+        this.projectionsContainer.setAttribute('id', 'mod' + this.module.moduleId + '_projectionsCont');
+        this.projectionsContainer.setAttribute('class', 'projectionsContainer');
+        this.module.mapSubModule.appendChild(this.projectionsContainer);
+
         // define container rect
         this.#containerRect = this.projectionsContainer.getBoundingClientRect();
         // create output 
         this.#output = document.createElement('p');
-        this.#output.setAttribute('id', 'output_' + this.index);
-        this.dataContainer.appendChild(this.#output);
+        this.#output.setAttribute('id', 'mod' + module.moduleId + '_map' + 1 + '_output_' + this.index);
+        this.module.dataSubModule.appendChild(this.#output);
         this.OutputText("Output goes here");
+        for (let i = 0; i < projections.length; i++) {
+            this.AddProjection(projections[i]);
+        }
     }
     AddProjection(projection) {
         if (!projection) { return; }

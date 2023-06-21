@@ -45,32 +45,11 @@ function CreateMap(module) {
 
     projectionIndex = 0;
 
-    let mapContainer = document.createElement('div');
-    mapContainer.id = 'mapContainer_' + mapIndex;
-    module.container.appendChild(mapContainer);
-
-    // let title = document.createElement("h1");
-    // title.setAttribute('id', 'titleContainer_' + mapIndex);
-    // title.innerHTML = "Map Data Collector";
-
     // mapContainer.appendChild(title);
-
-    let projectionsContainer = document.createElement('div');
-    projectionsContainer.setAttribute('id', 'projectionsContainer_' + mapIndex);
-    projectionsContainer.setAttribute('class', 'projectionsContainer');
-    mapContainer.appendChild(projectionsContainer);
-
-    // add data container
-    let dataContainer = document.createElement('div');
-    dataContainer.setAttribute('id', 'data_' + mapIndex);
-    mapContainer.appendChild(dataContainer);
 
 
     let mapData = new MapData(
-        map,
-        mapIndex,
-        dataContainer,
-        projectionsContainer
+        module
     );
 
 
@@ -101,8 +80,8 @@ function CreateMap(module) {
             break;
     }
     // assign size to projectionsContainer
-    projectionsContainer.style.width = containerWidth + 'px';
-    projectionsContainer.style.height = containerHeight + 'px';
+    mapData.projectionsContainer.style.width = containerWidth + 'px';
+    mapData.projectionsContainer.style.height = containerHeight + 'px';
 
     mapIndex++;
 
@@ -118,7 +97,6 @@ function RetrieveProjection(projectionType, mapData) {
     }
 
     let map = mapData.map;
-    let projectionsContainer = mapData.projectionsContainer;
 
     if (projectionType == null || projectionType == "") {
         console.error('null/empty projection type specified, cannot retrieve');
@@ -205,7 +183,7 @@ function RetrieveProjection(projectionType, mapData) {
     let svgContainerId = "map_" + map + "_projection_" + projectionIndex;
 
     // create the svg for the map
-    let svg = d3.select(projectionsContainer).append('svg')
+    let svg = d3.select(mapData.projectionsContainer).append('svg')
         .attr("class", "map")
         .attr("id", svgContainerId)
         .attr("width", mapSize)
