@@ -17,7 +17,10 @@ const geoJsonTypes = [...geoJsonCollections, ...geoJsonObjectTypes];
 
 
 export function GetGeoJSON() {
-    return CombineGeoJSON(geoOcean, geoEarth);
+    return CombineGeoJSON(
+        geoOcean,
+        geoEarth,
+    );
 }
 
 function CombineGeoJSON(...geo) {

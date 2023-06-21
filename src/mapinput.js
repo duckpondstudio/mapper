@@ -4,6 +4,8 @@ import { MapData, ProjectionData } from './mapcont';
 const keyEventDown = 'keyEventDown';
 const keyEventUp = 'keyEventUp';
 
+let debugKeys = true;
+
 let pressedKeyCodes = [];
 
 /** Apply input events to the supplied D3 map SVG
@@ -45,14 +47,19 @@ function SetMousePosition(mouseEvent) {
  * @see {@link InputSetup} calls this method
  */
 function KeyEvent(keyEvent, type) {
-    let index = -1;
     let key = keyEvent.key;
+    let index = pressedKeyCodes.indexOf(key);
+    let initialDown = type == keyEventDown && index == -1;
+    let debugValid = debugKeys && (type != keyEventDown || initialDown);
+    if (debugValid) {
+        console.log("Begin KeyEvent %s, key: %s, pressedKeyCodes: %o", type, key, pressedKeyCodes)
+    }
     switch (type) {
         case keyEventDown:
-            index = pressedKeyCodes.indexOf(key);
-            if (index == -1) {
+            if (initialDown) {
                 // key pressed initially 
                 pressedKeyCodes.push(key);
+                initialDown = true;
             } else {
                 // key pressed + held
             }
@@ -60,7 +67,6 @@ function KeyEvent(keyEvent, type) {
             break;
         case keyEventUp:
             // key released 
-            index = pressedKeyCodes.indexOf(key);
             if (index >= 0) {
                 // key released
                 pressedKeyCodes.splice(index, 1);
@@ -73,6 +79,9 @@ function KeyEvent(keyEvent, type) {
         default:
             console.warn("Invalid KeyEvent type %s, cannot process KeyEvent, key: %s", type, key);
             break;
+    }
+    if (debugValid) {
+        console.log("Complete KeyEvent %s, key: %s, pressedKeyCodes: %o", type, key, pressedKeyCodes)
     }
 }
 
