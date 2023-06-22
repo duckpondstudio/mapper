@@ -1,17 +1,14 @@
 import(/* webpackPreload: true */ './css/fonts.css');
 import(/* webpackPreload: true */ './css/style.css');
-import { CreateMapModule } from './module';
+import { CreateModule } from './module';
 import { InputSetup } from './mapinput';
 import * as m from './maps';
 
-export let modules = [];
-
 window.addEventListener('load', function () {
     // window is loaded 
-    console.time("mapLoad");
     InputSetup();
-    modules.push(CreateMapModule(m.grieger));
-    console.timeEnd("mapLoad");
+    CreateModule(m.grieger);
+    // CreateModule(m.equirectangular);
 });
 
 

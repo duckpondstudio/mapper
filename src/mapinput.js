@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
-import { MapData, ProjectionData } from './mapcont';
-import { modules } from './index';
+import { MapData, ProjectionData } from './mapdata';
+import { modules } from './module';
 
 const keyEventDown = 'keyEventDown';
 const keyEventUp = 'keyEventUp';
@@ -10,36 +10,28 @@ let debugKeys = false;
 let mouseHeld = false;
 let pressedKeyCodes = [];
 
-/** Apply input events to the supplied D3 map SVG
- * @param {ProjectionData} projectionData Contains all data refs for this specific projection 
- */
-function AssignInput(projectionData) {
-    // target is the clicked map, event is pointer info
-    projectionData.svg.on("click", function (event, target) {
-        let pointer = d3.pointer(event, target);
-        console.log('pointer', pointer);
-        console.log('cursor.point', cursor.point);
-        projectionData.OutputDataAtXY(pointer[0], pointer[1]);
-    });
-}
-
-function UpdateCoordinates(mouseEvent) {
-    
+function UpdateCoordinates() {
     for (let i = 0; i < modules.length; i++) {
+        // console.log("updatinig...");
         if (modules[i].mapData.IsPointWithinContainer(cursor.point)) {
-            modules[i].mapData.GetProjectionAtPoint(cursor.point).
-                OutputDataAtPoint(cursor.point);
+            let projection = modules[i].mapData.GetProjectionAtPoint(cursor.point);
+            if (projection != null) {
+                projection.OutputDataAtPoint(cursor.point);
+            }
         }
     }
 }
 
 
-function InputSetup() {
+export function InputSetup() {
     // global monitor cursor movement
     document.addEventListener('mouseenter', event => { MouseMove(event); });
     document.addEventListener('mousemove', event => { MouseMove(event); });
     document.addEventListener('mousedown', event => { MouseDown(event); });
     window.addEventListener('mouseup', event => { MouseUp(event); });
+    document.addEventListener('drag', event => { DragMove(event); })
+    document.addEventListener('dragstart', event => { DragStart(event); })
+    document.addEventListener('dragend', event => { DragEnd(event); })
     // loss-of-focus events
     window.addEventListener('blur', event => { LossOfFocusEvent(event); });
     document.addEventListener('visibilitychange', event => {
@@ -51,6 +43,20 @@ function InputSetup() {
     // keyboard iniput 
     document.addEventListener('keydown', event => { KeyEvent(event, keyEventDown); });
     document.addEventListener('keyup', event => { KeyEvent(event, keyEventUp); });
+}
+
+/**
+ * Triggers a mouse movement event
+ * @param {MouseEvent} mouseEvent MouseEvent data
+ * @see {@link InputSetup} calls this method
+ * @see {cursor} for current mouse position
+ */
+function MouseMove(mouseEvent) {
+    SetMousePosition(mouseEvent);
+
+    if (mouseHeld) {
+        UpdateCoordinates();
+    }
 }
 
 /**
@@ -76,39 +82,65 @@ function MouseDown(mouseEvent) {
  */
 function MouseUp(mouseEvent) {
     SetMousePosition(mouseEvent);
-    
+
     if (mouseEvent.button === 0) {
         mouseHeld = false;
     }
 }
 
 /**
- * Triggers a mouse movement event
- * @param {MouseEvent} mouseEvent MouseEvent data
+ * Triggers a current drag movement event
+ * @param {DragEvent} dragEvent 
  * @see {@link InputSetup} calls this method
  * @see {cursor} for current mouse position
  */
-function MouseMove(mouseEvent) {
-    SetMousePosition(mouseEvent);
-
-    if (mouseHeld) {
-        UpdateCoordinates(mouseEvent);
-    }
+function DragMove(dragEvent) {
+    SetMousePosition(dragEvent);
+    mouseHeld = false;
+}
+/**
+ * Triggers a drag start event
+ * @param {DragEvent} dragEvent 
+ * @see {@link InputSetup} calls this method
+ * @see {cursor} for current mouse position
+ */
+function DragStart(dragEvent) {
+    SetMousePosition(dragEvent);
+    mouseHeld = false;
+}
+/**
+ * Triggers a drag end event
+ * @param {DragEvent} dragEvent 
+ * @see {@link InputSetup} calls this method
+ * @see {cursor} for current mouse position
+ */
+function DragEnd(dragEvent) {
+    SetMousePosition(dragEvent);
+    mouseHeld = false;// disable regardless of button, to accommodate weird right-click tomfoolery 
 }
 
 function LossOfFocusEvent(event) {
+    console.log("LOSS OF FOCUS");
     mouseHeld = false;
 }
 
 /**
- * Assigns the current mouse position based on the supplied mouseEvent
+ * Assigns the current cursor position based on the supplied mouseEvent's mouse position 
  * @param {MouseEvent} mouseEvent MouseEvent data
  * @see {@link InputSetup} calls this method
  */
 function SetMousePosition(mouseEvent) {
-    cursor.point[0] = mouseEvent.clientX;
-    cursor.point[1] = mouseEvent.clientY;
+    SetCursorPosition(mouseEvent.clientX, mouseEvent.clientY);
 };
+/**
+ * Assigns the current cursor position based on the supplied XY coordinates 
+ * @param {number} x X coordinate
+ * @param {number} y Y coordinate
+ */
+function SetCursorPosition(x, y) {
+    cursor.point[0] = x;
+    cursor.point[1] = y;
+}
 
 /**
  * Process a keyboard event
@@ -170,5 +202,3 @@ export const cursor = {
     get x() { return this.point[0]; },
     get y() { return this.point[1]; }
 }
-
-export { AssignInput, InputSetup };

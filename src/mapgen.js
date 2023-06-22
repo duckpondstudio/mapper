@@ -7,8 +7,7 @@ import demoMap from './img/grieger-triptychial-political.png';
 // TODO: allow separate geojson files on the same map to be independently toggled on/off (ideally without recalculating the same map)
 import overlayGeo from './json/ocean_feature.geojson';
 
-import { AssignInput } from './mapinput';
-import { MapData, ProjectionData } from './mapcont';
+import { MapData, ProjectionData } from './mapdata';
 import { GetGeoJSON } from './mapjson';
 import * as m from './maps';
 
@@ -54,6 +53,7 @@ function CreateMap(module) {
 
 
     // generate projections 
+    console.log(1);
     setTimeout(() => {
         switch (map) {
             case m.grieger:
@@ -62,28 +62,31 @@ function CreateMap(module) {
                 RetrieveProjection(m.adams2, mapData);
                 break;
             default:
+                console.log(2);
                 RetrieveProjection(map, mapData);
+                console.log(3);
                 break;
         }
-    }, 0);
 
-    // define projectionsContainer size based on map
-    let containerWidth = mapSize;
-    let containerHeight = mapSize;
-    // check for special conditions
-    switch (map) {
-        case m.grieger:
-        case 'grieger-test':
-            containerWidth = mapSize * 2;
-            break;
-        default:
-            // by default, projectionsContainer width is determined by projection count
-            containerWidth = mapSize * projectionIndex;
-            break;
-    }
-    // assign size to projectionsContainer
-    mapData.projectionsContainer.style.width = containerWidth + 'px';
-    mapData.projectionsContainer.style.height = containerHeight + 'px';
+        // define projectionsContainer size based on map
+        let containerWidth = mapSize;
+        let containerHeight = mapSize;
+        // check for special conditions
+        switch (map) {
+            case m.grieger:
+            case 'grieger-test':
+                containerWidth = mapSize * 2;
+                break;
+            default:
+                // by default, projectionsContainer width is determined by projection count
+                containerWidth = mapSize * projectionIndex;
+                break;
+        }
+        // assign size to projectionsContainer
+        mapData.projectionsContainer.style.width = containerWidth + 'px';
+        mapData.projectionsContainer.style.height = containerHeight + 'px';
+        
+    }, 0);
 
     mapIndex++;
 
@@ -223,7 +226,7 @@ function CreateMap(module) {
                 .selectAll('path')
                 .data(geojson.features)
                 .enter();
-
+            let v = 0;
             g.append('path')
                 .attr('class', function (d) {
                     let isWater = d.properties && d.properties.water === true;
@@ -238,9 +241,6 @@ function CreateMap(module) {
             // create projection data container
             let projectionData = new ProjectionData(
                 projection, projectionIndex, svgContainer, svg, mapSize, mapData);
-
-            // apply map events
-            AssignInput(projectionData);
 
             // add projectiondata to mapdata 
             mapData.AddProjection(projectionData);

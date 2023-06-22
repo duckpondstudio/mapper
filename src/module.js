@@ -2,21 +2,25 @@ import { CreateMap } from "./mapgen";
 import * as m from './maps';
 const feather = require('feather-icons')
 
+/** Array containing all loaded {@link Module modules}
+ * @type {Module[]} */
+export let modules = [];
+
 /**
  * Create a new map module & submodules for the given projection
  * @see {@link maps.js} for a list of valid projections
  * @param {string} map Name of the map projection you want to load. 
- *  
  */
-export function CreateMapModule(map) {
-
+export function CreateModule(map) {
     let module = new Module(map);
     module.mapData = CreateMap(module);
+    modules.push(module);
     return module;
 }
 
-
-
+/**
+ * Basic display and data container for everything maps and data! 
+ */
 export class Module {
     map;
     container;

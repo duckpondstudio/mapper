@@ -65,8 +65,6 @@ export class MapData {
     }
 
     /** Find the XY offset of the current cursor position from this container's origin
-     * @param {number[]} xy two-value number array for the XY coords
-     * of the point you want to find offset from this container
      * @return {number[]} two-value number array representing the XY coords 
      * offset from this container 
      * @memberof MapData
@@ -82,9 +80,33 @@ export class MapData {
      * @memberof MapData
      */
     GetContainerPointOffset(xy) {
-        xy[0] -= this.#containerRect.left;
-        xy[1] -= this.#containerRect.top;
-        return xy;
+        return [this.GetContainerXOffset(xy[0]), this.GetContainerYOffset(xy[1])];
+    }
+    /** Find the XY offset of the given XY coords from this container's origin
+     * @param {number} x X-coord you want to find offset from this container for
+     * @param {number} y Y-coord you want to find offset from this container for
+     * @return {number[]} two-value number array representing the XY coords 
+     * offset from this container 
+     * @memberof MapData
+     */
+    GetContainerXYOffset(x, y) {
+        return [this.GetContainerXOffset(x), this.GetContainerYOffset(y)];
+    }
+    /** Find the X offset of the given point from this container's origin
+     * @param {number} x X-coord you want to find offset from this container for
+     * @return {number} value of the X offset from this container 
+     * @memberof MapData
+     */
+    GetContainerXOffset(x) {
+        return x - this.#containerRect.left;
+    }
+    /** Find the Y offset of the given point from this container's origin
+     * @param {number} y Y-coord you want to find offset from this container for
+     * @return {number} value of the Y offset from this container 
+     * @memberof MapData
+     */
+    GetContainerYOffset(y) {
+        return y - this.#containerRect.top;
     }
 
     GetContainerWidth() {
@@ -97,21 +119,25 @@ export class MapData {
         return [this.GetContainerWidth(), this.GetContainerHeight()];
     }
 
-    IsXYWithinContainer(x, y) {
+    IsXYWithinContainer(x, y, offsetToProjection = false) {
+        // offsetToProjection should usually be FALSE here, this by default works with screenspace coords
+        if (offsetToProjection) { x = this.GetContainerXOffset(x); y = this.GetContainerYOffset(y); }
         let origin = this.GetContainerOrigin();
         if (x < origin[0] || y < origin[1]) { return false; }
         let extent = this.GetContainerExtent();
         if (x > extent[0] || y > extent[1]) { return false; }
         return true;
     }
-    IsPointWithinContainer(xy) {
-        return this.IsXYWithinContainer(xy[0], xy[1]);
+    IsPointWithinContainer(xy, offsetToProjection = false) {
+        // offsetToProjection should usually be FALSE here, this by default works with screenspace coords
+        return this.IsXYWithinContainer(xy[0], xy[1], offsetToProjection);
     }
 
-    GetXYRatio(x, y) {
-        return [this.GetXRatio(x), this.GetYRatio(y)];
+    GetXYRatio(x, y, offsetToProjection = true) {
+        return [this.GetXRatio(x, offsetToProjection), this.GetYRatio(y, offsetToProjection)];
     }
-    GetXRatio(x) {
+    GetXRatio(x, offsetToProjection = true) {
+        if (offsetToProjection) { x = this.GetContainerXOffset(x); }
         let rX = 0;
         let origin = this.GetContainerOriginX();
         let extent = this.GetContainerExtentX();
@@ -122,7 +148,8 @@ export class MapData {
         }
         return rX;
     }
-    GetYRatio(y) {
+    GetYRatio(y, offsetToProjection = true) {
+        if (offsetToProjection) { y = this.GetContainerYOffset(y); }
         let rY = 0;
         let origin = this.GetContainerOriginY();
         let extent = this.GetContainerExtentY();
@@ -133,15 +160,21 @@ export class MapData {
         }
         return rY;
     }
-    GetPointRatio(xy) {
-        return this.GetPointRatio(xy[0], xy[1]);
+
+    GetPointRatio(xy, offsetToProjection = true) {
+        return this.GetPointRatio(xy[0], xy[1], offsetToProjection);
     }
 
-    GetProjectionAtPoint(xy) {
-        return this.GetProjectionAtXY(xy[0], xy[1]);
+    GetProjectionAtPoint(xy, offsetToProjection = false) {
+        // offsetToProjection should usually be FALSE here, this by default works with screenspace coords
+        return this.GetProjectionAtXY(xy[0], xy[1], offsetToProjection);
     }
 
-    GetProjectionAtXY(x, y) {
+    GetProjectionAtXY(x, y, offsetToProjection = false) {
+        // offsetToProjection should usually be FALSE here, this by default works with screenspace coords
+        
+        if (offsetToProjection) { x = this.GetContainerXOffset(x); y = this.GetContainerYOffset(y); }
+
         // let nX = NormalizeValue(x, this.GetContainerOriginX(), this.GetContainerExtentX(), false);
         // let nY = NormalizeValue(y, this.GetContainerOriginY(), this.GetContainerExtentY(), false);
         // return this.GetProjectionAtXYNormalized(nX, nY);
@@ -168,7 +201,7 @@ export class MapData {
         switch (projectionsFound.length) {
             case 0:
                 // none found, return no projections 
-                return [];
+                return null;
             case 1:
                 // one found, return that projection 
                 return projectionsFound[0];
@@ -180,7 +213,10 @@ export class MapData {
         }
     }
 
-    GetProjectionAtXYNormalized(x, y) {
+    GetProjectionAtXYNormalized(x, y, offsetToProjection = false) {
+        // offsetToProjection should usually be FALSE here, this by default works with screenspace coords
+        
+        if (offsetToProjection) { x = this.GetContainerXOffset(x); y = this.GetContainerYOffset(y); }
         let iX = InvertNormalizedValue(x, this.GetContainerOriginX(), this.GetContainerExtentX(), false);
         let iY = InvertNormalizedValue(y, this.GetContainerOriginY(), this.GetContainerExtentY(), false);
         return this.GetProjectionAtXY(iX, iY);
@@ -214,6 +250,8 @@ export class MapData {
     }
 }
 
+const debugClickProjection = true;
+
 /** Container for all data for an individual projection within a map */
 export class ProjectionData {
     projection;
@@ -231,6 +269,15 @@ export class ProjectionData {
         this.svg = svg;
         this.mapData = mapData;
         this.#containerRect = this.svgContainer.getBoundingClientRect();
+        // check for debug on click functionality 
+        if (debugClickProjection) {
+            // target is the clicked map, event is pointer info
+            let projectionReference = this;
+            this.svg.on("click", function (event, target) {
+                let pointer = d3.pointer(event, target);
+                projectionReference.OutputDataAtPoint(pointer, false);
+            });
+        }
     }
 
     GetContainerOrigin() {
@@ -254,9 +301,16 @@ export class ProjectionData {
         return this.GetContainerPointOffset(cursor.point);
     }
     GetContainerPointOffset(xy) {
-        xy[0] -= this.#containerRect.left;
-        xy[1] -= this.#containerRect.top;
-        return xy;
+        return [this.GetContainerXOffset(xy[0]), this.GetContainerYOffset(xy[1])];
+    }
+    GetContainerXYOffset(x, y) {
+        return [this.GetContainerXOffset(x), this.GetContainerYOffset(y)];
+    }
+    GetContainerXOffset(x) {
+        return x - this.#containerRect.left;
+    }
+    GetContainerYOffset(y) {
+        return y - this.#containerRect.top;
     }
 
     GetContainerSize() {
@@ -284,11 +338,17 @@ export class ProjectionData {
      *
      * @param {number} x X-axis coordinate, normalized to this projection (0 - 1, 0 = left, 1 = right)
      * @param {number} y Y-axis coordinate, normalized to this projection (0 - 1, 0 = top, 1 = bottom)
+     * @param {boolean} offsetToProjection Optional, default true. Offsets the given point relative 
+     * to the projection we're reading data from. Necessary if passing in XY coordinates directly,
+     * eg from mouse position (eg {@link cursor}), should disable if passing in already-converted
+     * coordinates (eg {@link d3.pointer})
      * @return {number[]} Two-value number[] array, where [0] = Latitude and [1] = Longitude
      * @memberof ProjectionData
      */
-    LatLongAtXY(x, y) {
-        console.log("get latlong at x: " + x + ", y: " + y);
+    LatLongAtXY(x, y, offsetToProjection = true) {
+
+        if (offsetToProjection) { x = this.GetContainerXOffset(x); y = this.GetContainerYOffset(y); }
+
         let transform;
         let g = this.svg.select('g');
 
@@ -319,10 +379,15 @@ export class ProjectionData {
      * @param {number[]} xy Two-value number array where [0] is X and [1] is Y.
      * Both coordinates are normalized, where a value of 0=top/left, and 1=bottom/right
      * @return {number[]} Two-value number[] array, where [0] = Latitude and [1] = Longitude
+     * @param {boolean} offsetToProjection Optional, default true. Offsets the given point relative 
+     * to the projection we're reading data from. Necessary if passing in XY coordinates directly,
+     * eg from mouse position (eg {@link cursor}), should disable if passing in already-converted
+     * coordinates (eg {@link d3.pointer})
      * @memberof ProjectionData
      */
-    LatLongAtPoint(xy) {
-        return this.LatLongAtXY(xy[0], xy[1]);
+    LatLongAtPoint(xy, offsetToProjection = true) {
+        if (offsetToProjection) { xy = this.GetContainerXYOffset(xy);}
+        return this.LatLongAtXY(xy[0], xy[1], offsetToProjection);
     }
 
 
@@ -332,11 +397,14 @@ export class ProjectionData {
      *
      * @param {number} x X-axis coordinate, normalized to this projection (0 - 1, 0 = left, 1 = right)
      * @param {number} y Y-axis coordinate, normalized to this projection (0 - 1, 0 = top, 1 = bottom)
+     * @param {boolean} offsetToProjection Optional, default true. Offsets the given point relative 
+     * to the projection we're reading data from. Necessary if passing in XY coordinates directly,
+     * eg from mouse position (eg {@link cursor}), should disable if passing in already-converted
+     * coordinates (eg {@link d3.pointer})
      * @memberof ProjectionData
      */
-    OutputDataAtXY(x, y) {
-
-        let latLong = this.LatLongAtXY(x, y);
+    OutputDataAtXY(x, y, offsetToProjection = true) {
+        let latLong = this.LatLongAtXY(x, y, offsetToProjection);
         this.mapData.OutputText(
             ("Clicked Latitude: " + latLong[0]),
             "Clicked Longitude: " + latLong[1]
@@ -349,9 +417,13 @@ export class ProjectionData {
      *
      * @param {number[]} xy Two-value number array where [0] is X and [1] is Y.
      * Both coordinates are normalized, where a value of 0=top/left, and 1=bottom/right
+     * @param {boolean} offsetToProjection Optional, default true. Offsets the given point relative 
+     * to the projection we're reading data from. Necessary if passing in XY coordinates directly,
+     * eg from mouse position (eg {@link cursor}), should disable if passing in already-converted
+     * coordinates (eg {@link d3.pointer})
      * @memberof ProjectionData
      */
-    OutputDataAtPoint(xy) { this.OutputDataAtXY(xy[0], xy[1]); }
+    OutputDataAtPoint(xy, offsetToProjection = true) { this.OutputDataAtXY(xy[0], xy[1], offsetToProjection); }
 }
 
 /**
