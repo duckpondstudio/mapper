@@ -8,13 +8,21 @@ import * as m from './maps';
 
 window.addEventListener('load', function () {
     // window is loaded 
-    InputSetup();
     console.time("mapLoad");
+    InputSetup();
     CreateMapModule(m.grieger);
     console.timeEnd("mapLoad");
-    PromiseFunction(HeavyScript);
 });
 
+
+
+
+
+
+
+
+
+//TODO: potentially useful, test / make snippet
 let debugPromiseFunction = true;
 function PromiseFunction(functionToExecute) {
     // Execute heavy function asynchronously
@@ -43,20 +51,4 @@ function PromiseFunction(functionToExecute) {
             }, 0);
         });
     }
-}
-
-
-
-
-function HeavyScript() {
-    console.log("start heavy script");
-
-    setInterval
-    const date = Date.now();
-        let currentDate = null;
-        do {
-            currentDate = Date.now();
-        } while (currentDate - date < 2500);
-
-    console.log("done heavy script");
 }
