@@ -43,13 +43,22 @@ export class MapData {
 
 
     GetContainerOrigin() {
-        return [this.#containerRect.left, this.#containerRect.top];
+        return [this.GetContainerOriginX(), this.GetContainerOriginY()];
+    }
+    GetContainerOriginX() {
+        return this.#containerRect.left;
+    }
+    GetContainerOriginY() {
+        return this.#containerRect.top;
     }
     GetContainerExtent() {
-        let xy = this.GetContainerOrigin();
-        xy[0] += this.GetContainerWidth();
-        xy[1] += this.GetContainerHeight();
-        return xy;
+        return [this.GetContainerExtentX(), this.GetContainerExtentY()];
+    }
+    GetContainerExtentX() {
+        return this.GetContainerOriginX() + this.GetContainerWidth();
+    }
+    GetContainerExtentY() {
+        return this.GetContainerOriginY() + this.GetContainerHeight();
     }
 
     /** Find the XY offset of the current cursor position from this container's origin
