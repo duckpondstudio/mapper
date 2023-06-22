@@ -4,11 +4,13 @@ import { CreateMapModule } from './module';
 import { InputSetup } from './mapinput';
 import * as m from './maps';
 
+export let modules = [];
+
 window.addEventListener('load', function () {
     // window is loaded 
     console.time("mapLoad");
     InputSetup();
-    CreateMapModule(m.grieger);
+    modules.push(CreateMapModule(m.grieger));
     console.timeEnd("mapLoad");
 });
 

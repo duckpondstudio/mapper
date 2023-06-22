@@ -257,6 +257,8 @@ function CreateMap(module) {
         // increment projection index 
         projectionIndex++;
     }
+
+    return mapData;
 }
 
 /**

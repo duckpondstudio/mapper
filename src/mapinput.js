@@ -1,10 +1,11 @@
 import * as d3 from 'd3';
 import { MapData, ProjectionData } from './mapcont';
+import { modules } from './index';
 
 const keyEventDown = 'keyEventDown';
 const keyEventUp = 'keyEventUp';
 
-let debugKeys = true;
+let debugKeys = false;
 
 let pressedKeyCodes = [];
 
@@ -60,6 +61,14 @@ function KeyEvent(keyEvent, type) {
                 // key pressed initially 
                 pressedKeyCodes.push(key);
                 initialDown = true;
+
+                switch (key) {
+                    case ' ':
+                        // pressed space 
+                        modules[0].mapData.GetProjectionAtPoint(0.5, 0.5);
+                        break;
+                }
+
             } else {
                 // key pressed + held
             }

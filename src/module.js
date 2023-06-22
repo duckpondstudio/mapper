@@ -2,14 +2,26 @@ import { CreateMap } from "./mapgen";
 import * as m from './maps';
 const feather = require('feather-icons')
 
+/**
+ * Create a new map module & submodules for the given projection
+ * @see {@link maps.js} for a list of valid projections
+ * @param {string} map Name of the map projection you want to load. 
+ *  
+ */
+export function CreateMapModule(map) {
 
-import svgGlobe from './svg/globe.svg';
+    let module = new Module(map);
+    module.mapData = CreateMap(module);
+    return module;
+}
+
 
 
 export class Module {
     map;
     container;
     moduleId;
+    mapData;    
 
     titleBar;
 
@@ -68,17 +80,4 @@ export class Module {
     /** @static Singleton counter for all instantiated modules
      * @memberof Module */
     static moduleCount = 0;
-}
-
-/**
- * Create a new map module & submodules for the given projection
- * @see {@link maps.js} for a list of valid projections
- * @param {string} map Name of the map projection you want to load. 
- *  
- */
-export function CreateMapModule(map) {
-
-    let module = new Module(map);
-    CreateMap(module);
-
 }

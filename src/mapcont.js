@@ -85,6 +85,10 @@ export class MapData {
         return [this.GetContainerWidth(), this.GetContainerHeight()];
     }
 
+    GetProjectionAtPoint(x, y) {
+        console.log("GETTING PROJECTION AT POINT: x%f / y%f", x, y);
+    }
+
 
     /**
      * Write the given values (single var or array) as text in this map's output field
@@ -135,7 +139,7 @@ export class ProjectionData {
     GetContainerOrigin() {
         let raw = this.GetContainerFullOrigin();
         let cont = this.mapData.GetContainerOrigin();
-        return [Math.max(raw[0],cont[0]), Math.max(raw[1],cont[1])];
+        return [Math.max(raw[0], cont[0]), Math.max(raw[1], cont[1])];
     }
     GetContainerFullOrigin() {
         return [this.#containerRect.left, this.#containerRect.top];
@@ -143,7 +147,7 @@ export class ProjectionData {
     GetContainerExtent() {
         let raw = this.GetContainerFullExtent();
         let cont = this.mapData.GetContainerExtent();
-        return [Math.min(raw[0],cont[0]), Math.min(raw[1],cont[1])];
+        return [Math.min(raw[0], cont[0]), Math.min(raw[1], cont[1])];
     }
     GetContainerFullExtent() {
         return [this.#containerRect.right, this.#containerRect.bottom];
@@ -159,7 +163,7 @@ export class ProjectionData {
     }
 
     GetContainerSize() {
-        let ori = this.GetContainerOrigin(); 
+        let ori = this.GetContainerOrigin();
         let ext = this.GetContainerExtent();
         return [ext[0] - ori[0], ext[1] - ori[1]];
     }
@@ -179,18 +183,17 @@ export class ProjectionData {
 
 
     /**
-     * Outputs coordinate data for this projection at points X and Y, 
-     * local to this projection's origin (0,0 = projection top left corner)
+     * Gets the latitude and longitude of this projection at the given normalized XY coordinate
      *
-     * @param {number} x X-axis coordinate 
-     * @param {number} y Y-axis coordinate
+     * @param {number} x X-axis coordinate, normalized to this projection (0 - 1, 0 = left, 1 = right)
+     * @param {number} y Y-axis coordinate, normalized to this projection (0 - 1, 0 = top, 1 = bottom)
+     * @return {number[]} Two-value number[] array, where [0] = Latitude and [1] = Longitude
      * @memberof ProjectionData
      */
-    OutputXYData(x, y) {
+    LatLongAtPoint(x, y) {
+        console.log("get latlong at x: " + x + ", y: " + y);
         let transform;
         let g = this.svg.select('g');
-
-        var rect = this.svgContainer.getBoundingClientRect();
 
         if (g) {
             transform = g.attr('transform');
@@ -211,17 +214,44 @@ export class ProjectionData {
             }
         }
 
-        let latLong = this.projection.invert([x, y]).reverse();
+        return this.projection.invert([x, y]).reverse();
+    }
+    /**
+     * Gets the latitude and longitude of this projection at the given normalized XY coordinate
+     *
+     * @param {number[]} xy Two-value number array where [0] is X and [1] is Y.
+     * Both coordinates are normalized, where a value of 0=top/left, and 1=bottom/right
+     * @return {number[]} Two-value number[] array, where [0] = Latitude and [1] = Longitude
+     * @memberof ProjectionData
+     */
+    LatLongAtPoint(xy) {
+        return this.LatLongAtPoint(xy[0], xy[1]);
+    }
+
+
+    /**
+     * Outputs coordinate data for this projection at points X and Y, 
+     * local to this projection's origin (0,0 = projection top left corner)
+     *
+     * @param {number} x X-axis coordinate, normalized to this projection (0 - 1, 0 = left, 1 = right)
+     * @param {number} y Y-axis coordinate, normalized to this projection (0 - 1, 0 = top, 1 = bottom)
+     * @memberof ProjectionData
+     */
+    OutputXYData(x, y) {
+
+        let latLong = this.LatLongAtPoint(x, y);
         this.mapData.OutputText(
-            ("Clicked Latitude: " + latLong[0]).toString(),
+            ("Clicked Latitude: " + latLong[0]),
             "Clicked Longitude: " + latLong[1]
         );
     }
+
     /**
      * Outputs coordinate data for this projection at point XY, 
      * local to this projection's origin (0,0 = projection top left corner)
      *
-     * @param {number[]} xy Two-value num array where [0] is X and [1] is Y 
+     * @param {number[]} xy Two-value number array where [0] is X and [1] is Y.
+     * Both coordinates are normalized, where a value of 0=top/left, and 1=bottom/right
      * @memberof ProjectionData
      */
     OutputPointData(xy) { this.OutputXYData(xy[0], xy[1]); }
