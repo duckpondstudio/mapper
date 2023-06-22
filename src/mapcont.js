@@ -34,6 +34,9 @@ export class MapData {
             this.AddProjection(projections[i]);
         }
     }
+
+    /** Add the given ProjectionData as a child of this MapData 
+     * @param {ProjectionData} projection ProjectionData to add to this MapData */
     AddProjection(projection) {
         if (!projection) { return; }
         this.projections.push(projection);
@@ -94,8 +97,98 @@ export class MapData {
         return [this.GetContainerWidth(), this.GetContainerHeight()];
     }
 
-    GetProjectionAtPoint(x, y) {
-        console.log("GETTING PROJECTION AT POINT: x%f / y%f", x, y);
+    IsXYWithinContainer(x, y) {
+        let origin = this.GetContainerOrigin();
+        if (x < origin[0] || y < origin[1]) { return false; }
+        let extent = this.GetContainerExtent();
+        if (x > extent[0] || y > extent[1]) { return false; }
+        return true;
+    }
+    IsPointWithinContainer(xy) {
+        return this.IsXYWithinContainer(xy[0], xy[1]);
+    }
+
+    GetXYRatio(x, y) {
+        let rX = GetXRatio(x);
+        let rY = GetYRatio(y);
+        console.log("Point Ratio, x", x, '/y', y, ', rX', rX, '/rY', rY);
+        console.log('origin: ', origin);
+        console.log('extent: ', extent);
+        return true;
+    }
+    GetXRatio(x) {
+        let rX = 0;
+        let origin = this.GetContainerOriginX();
+        let extent = this.GetContainerExtentX();
+        // ensure x is within container 
+        if (x < origin || x > extent) { rX = -1; } else {
+            // x is within bounds 
+            rX = NormalizeValue(x, origin, extent, false);
+        }
+        return rX;
+    }
+    GetYRatio(y) {
+        let rY = 0;
+        let origin = this.GetContainerOriginY();
+        let extent = this.GetContainerExtentY();
+        // ensure y is within container 
+        if (y < origin || y > extent) { rY = -1; } else {
+            // y is within bounds 
+            rY = NormalizeValue(y, origin, extent, false);
+        }
+        return rY;
+    }
+    GetPointRatio(xy) {
+        return this.GetPointRatio(xy[0], xy[1]);
+    }
+
+    GetProjectionAtPoint(xy) {
+        return this.GetProjectionAtXY(xy[0], xy[1]);
+    }
+
+    GetProjectionAtXY(x, y) {
+        // let nX = NormalizeValue(x, this.GetContainerOriginX(), this.GetContainerExtentX(), false);
+        // let nY = NormalizeValue(y, this.GetContainerOriginY(), this.GetContainerExtentY(), false);
+        // return this.GetProjectionAtXYNormalized(nX, nY);
+
+        // get all elements at the given point, filter to type SVG and class map
+        let elements = document.elementsFromPoint(x, y).filter(function (e) {
+            return e.nodeName === 'svg' && e.getAttribute('class') === 'map';
+        });
+        // iterate over them
+        let projectionsFound = [];
+        for (let i = 0; i < elements.length; i++) {
+            // compare against projections (note that svgContainer is the node)
+            for (let j = 0; j < this.projections.length; j++) {
+                if (elements[i] == this.projections[j].svgContainer) {
+                    // yup! found it, ensure we didn't somehow collect it twice 
+                    if (!projectionsFound.includes(this.projections[j])) {
+                        projectionsFound.push(this.projections[j]);
+                    }
+                }
+            }
+        }
+
+        // check for found projections 
+        switch (projectionsFound.length) {
+            case 0:
+                // none found, return no projections 
+                return [];
+            case 1:
+                // one found, return that projection 
+                return projectionsFound[0];
+            default:
+                //multiple found, return projection of highest index
+                return projectionsFound.reduce((highest, current) => {
+                    return current.index > highest.Type ? current : highest;
+                });
+        }
+    }
+
+    GetProjectionAtXYNormalized(x, y) {
+        let iX = InvertNormalizedValue(x, this.GetContainerOriginX(), this.GetContainerExtentX(), false);
+        let iY = InvertNormalizedValue(y, this.GetContainerOriginY(), this.GetContainerExtentY(), false);
+        return this.GetProjectionAtXY(iX, iY);
     }
 
 
@@ -199,7 +292,7 @@ export class ProjectionData {
      * @return {number[]} Two-value number[] array, where [0] = Latitude and [1] = Longitude
      * @memberof ProjectionData
      */
-    LatLongAtPoint(x, y) {
+    LatLongAtXY(x, y) {
         console.log("get latlong at x: " + x + ", y: " + y);
         let transform;
         let g = this.svg.select('g');
@@ -234,7 +327,7 @@ export class ProjectionData {
      * @memberof ProjectionData
      */
     LatLongAtPoint(xy) {
-        return this.LatLongAtPoint(xy[0], xy[1]);
+        return this.LatLongAtXY(xy[0], xy[1]);
     }
 
 
@@ -246,9 +339,9 @@ export class ProjectionData {
      * @param {number} y Y-axis coordinate, normalized to this projection (0 - 1, 0 = top, 1 = bottom)
      * @memberof ProjectionData
      */
-    OutputXYData(x, y) {
+    OutputDataAtXY(x, y) {
 
-        let latLong = this.LatLongAtPoint(x, y);
+        let latLong = this.LatLongAtXY(x, y);
         this.mapData.OutputText(
             ("Clicked Latitude: " + latLong[0]),
             "Clicked Longitude: " + latLong[1]
@@ -263,7 +356,7 @@ export class ProjectionData {
      * Both coordinates are normalized, where a value of 0=top/left, and 1=bottom/right
      * @memberof ProjectionData
      */
-    OutputPointData(xy) { this.OutputXYData(xy[0], xy[1]); }
+    OutputDataAtPoint(xy) { this.OutputDataAtXY(xy[0], xy[1]); }
 }
 
 /**

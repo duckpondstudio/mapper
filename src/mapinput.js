@@ -65,7 +65,7 @@ function KeyEvent(keyEvent, type) {
                 switch (key) {
                     case ' ':
                         // pressed space 
-                        modules[0].mapData.GetProjectionAtPoint(0.5, 0.5);
+                        console.log(modules[0].mapData.GetProjectionAtXYNormalized(0.5, 0.5));
                         break;
                 }
 

@@ -79,6 +79,7 @@ h1 {
     fill: var(--color-map-default-fill);
     stroke: var(--color-map-default-stroke);
 }
+/* note that GetProjectionAtXY in mapcont.js is dependent on the classname "map" */ 
 
 .projectionsContainer .map .land {
     fill: var(--color-map-land-fill);
