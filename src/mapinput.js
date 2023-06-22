@@ -7,6 +7,7 @@ const keyEventUp = 'keyEventUp';
 
 let debugKeys = false;
 
+let mouseHeld = false;
 let pressedKeyCodes = [];
 
 /** Apply input events to the supplied D3 map SVG
@@ -16,20 +17,76 @@ function AssignInput(projectionData) {
     // target is the clicked map, event is pointer info
     projectionData.svg.on("click", function (event, target) {
         let pointer = d3.pointer(event, target);
-        projectionData.OutputXYData(pointer[0], pointer[1]);
+        console.log('pointer', pointer);
+        console.log('cursor.point', cursor.point);
+        projectionData.OutputDataAtXY(pointer[0], pointer[1]);
     });
 }
 
+function UpdateCoordinates(mouseEvent) {
+    
+    for (let i = 0; i < modules.length; i++) {
+        if (modules[i].mapData.IsPointWithinContainer(cursor.point)) {
+            modules[i].mapData.GetProjectionAtPoint(cursor.point).
+                OutputDataAtPoint(cursor.point);
+        }
+    }
+}
+
+
 function InputSetup() {
     // global monitor cursor movement
-    document.addEventListener('mouseenter', event => { SetMousePosition(event); });
-    document.addEventListener('mousemove', event => { SetMousePosition(event); });
-    document.addEventListener('mousedown', event => { SetMousePosition(event); });
+    document.addEventListener('mouseenter', event => { MouseMove(event); });
+    document.addEventListener('mousemove', event => { MouseMove(event); });
+    document.addEventListener('mousedown', event => { MouseDown(event); });
+    window.addEventListener('mouseup', event => { MouseUp(event); });
     // keyboard iniput 
     document.addEventListener('keydown', event => { KeyEvent(event, keyEventDown); });
     document.addEventListener('keyup', event => { KeyEvent(event, keyEventUp); });
 }
 
+/**
+ * Triggers a mouse down event
+ * @param {MouseEvent} mouseEvent MouseEvent data
+ * @see {@link InputSetup} calls this method
+ * @see {cursor} for current mouse position
+ */
+function MouseDown(mouseEvent) {
+    SetMousePosition(mouseEvent);
+
+    if (mouseEvent.button === 0) {
+        mouseHeld = true;
+
+        UpdateCoordinates();
+    }
+}
+/**
+ * Triggers a mouse up event
+ * @param {MouseEvent} mouseEvent MouseEvent data
+ * @see {@link InputSetup} calls this method
+ * @see {cursor} for current mouse position
+ */
+function MouseUp(mouseEvent) {
+    SetMousePosition(mouseEvent);
+    
+    if (mouseEvent.button === 0) {
+        mouseHeld = false;
+    }
+}
+
+/**
+ * Triggers a mouse movement event
+ * @param {MouseEvent} mouseEvent MouseEvent data
+ * @see {@link InputSetup} calls this method
+ * @see {cursor} for current mouse position
+ */
+function MouseMove(mouseEvent) {
+    SetMousePosition(mouseEvent);
+
+    if (mouseHeld) {
+        UpdateCoordinates(mouseEvent);
+    }
+}
 /**
  * Assigns the current mouse position based on the supplied mouseEvent
  * @param {MouseEvent} mouseEvent MouseEvent data
