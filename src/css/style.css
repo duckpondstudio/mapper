@@ -8,8 +8,7 @@ body {
     font-size: 14px;
     color: var(--color-text-body);
     background-color: var(--color-bg-solid);
-    background-image: linear-gradient(
-        var(--color-bg-gradient-1), var(--color-bg-gradient-2));
+    background-image: linear-gradient(var(--color-bg-gradient-1), var(--color-bg-gradient-2));
 }
 
 h1 {
@@ -20,7 +19,7 @@ h1 {
 
 .module {
     display: block;
-    width: min(600px, calc(100% - 96px));
+    width: var(--module-width);
 }
 
 .module.background {
@@ -59,8 +58,8 @@ h1 {
     margin-bottom: 2px;
 }
 
-.module.submodule {
-
+.submodule {
+    min-height: var(--submodule-height-min);
 }
 
 .projectionsContainer {

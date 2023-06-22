@@ -48,11 +48,13 @@ export class Module {
 
         // add map submodule 
         this.mapSubModule = document.createElement('div');
+        this.mapSubModule.setAttribute('class', 'submodule map');
         this.mapSubModule.id = 'mod' + this.moduleId + '_mapCont';
         this.container.appendChild(this.mapSubModule);
         
         // add data container
         this.dataSubModule = document.createElement('div');
+        this.dataSubModule.setAttribute('class', 'submodule data');
         this.dataSubModule.setAttribute('id', 'mod' + this.moduleId + '_dataCont');
         this.container.appendChild(this.dataSubModule);
 
