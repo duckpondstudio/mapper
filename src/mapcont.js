@@ -109,12 +109,7 @@ export class MapData {
     }
 
     GetXYRatio(x, y) {
-        let rX = GetXRatio(x);
-        let rY = GetYRatio(y);
-        console.log("Point Ratio, x", x, '/y', y, ', rX', rX, '/rY', rY);
-        console.log('origin: ', origin);
-        console.log('extent: ', extent);
-        return true;
+        return [this.GetXRatio(x), this.GetYRatio(y)];
     }
     GetXRatio(x) {
         let rX = 0;
