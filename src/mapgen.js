@@ -226,7 +226,8 @@ function CreateMap(module) {
 
             g.append('path')
                 .attr('class', function (d) {
-                    return 'map' + (d.properties && d.properties.water === true ? ' water' : ' land');
+                    let isWater = d.properties && d.properties.water === true;
+                    return 'map' + (isWater ? ' water' : ' land');
                 })
                 .attr('d', geoGenerator);
 
