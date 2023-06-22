@@ -54,16 +54,18 @@ function CreateMap(module) {
 
 
     // generate projections 
-    switch (map) {
-        case m.grieger:
-            RetrieveProjection(m.adams2, mapData);
-            RetrieveProjection(m.adams1, mapData);
-            RetrieveProjection(m.adams2, mapData);
-            break;
-        default:
-            RetrieveProjection(map, mapData);
-            break;
-    }
+    setTimeout(() => {
+        switch (map) {
+            case m.grieger:
+                RetrieveProjection(m.adams2, mapData);
+                RetrieveProjection(m.adams1, mapData);
+                RetrieveProjection(m.adams2, mapData);
+                break;
+            default:
+                RetrieveProjection(map, mapData);
+                break;
+        }
+    }, 0);
 
     // define projectionsContainer size based on map
     let containerWidth = mapSize;
@@ -204,48 +206,53 @@ function CreateMap(module) {
                 ;
         }
 
-        // apply data
-        let g = svg.append('g')
-            .attr("transform", transform);
 
-        g.selectAll('path')
-            .data(geojson.features)
-            .enter();
+        setTimeout(() => {
 
-        // apply data
-        g = svg.append('g')
-            .attr("transform", transform)
-            .selectAll('path')
-            .data(geojson.features)
-            .enter();
+            // apply data
+            let g = svg.append('g')
+                .attr("transform", transform);
 
-        g.append('path')
-            .attr('class', function (d) {
-                return 'map' + (d.properties && d.properties.water === true ? ' water' : ' land');
-            })
-            .attr('d', geoGenerator);
+            g.selectAll('path')
+                .data(geojson.features)
+                .enter();
+
+            // apply data
+            g = svg.append('g')
+                .attr("transform", transform)
+                .selectAll('path')
+                .data(geojson.features)
+                .enter();
+
+            g.append('path')
+                .attr('class', function (d) {
+                    return 'map' + (d.properties && d.properties.water === true ? ' water' : ' land');
+                })
+                .attr('d', geoGenerator);
 
 
-        // get this projection container
-        let svgContainer = document.getElementById(svgContainerId);
+            // get this projection container
+            let svgContainer = document.getElementById(svgContainerId);
 
-        // create projection data container
-        let projectionData = new ProjectionData(
-            projection, projectionIndex, svgContainer, svg, mapSize, mapData);
+            // create projection data container
+            let projectionData = new ProjectionData(
+                projection, projectionIndex, svgContainer, svg, mapSize, mapData);
 
-        // apply map events
-        AssignInput(projectionData);
+            // apply map events
+            AssignInput(projectionData);
 
-        // add projectiondata to mapdata 
-        mapData.AddProjection(projectionData);
+            // add projectiondata to mapdata 
+            mapData.AddProjection(projectionData);
 
-        // decrement projection load index 
-        loadedProjections--;
+            // decrement projection load index 
+            loadedProjections--;
 
-        if (loadedProjections == 0) {
-            // done loading projections! 
-            console.log("Done!");
-        }
+            if (loadedProjections == 0) {
+                // done loading projections! 
+                console.log("Done!");
+            }
+
+        }, 50);// nominal delay to ENSURE loadedProjections is incremented properly
 
         // increment projection index 
         projectionIndex++;
