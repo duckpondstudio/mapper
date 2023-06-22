@@ -40,6 +40,14 @@ function InputSetup() {
     document.addEventListener('mousemove', event => { MouseMove(event); });
     document.addEventListener('mousedown', event => { MouseDown(event); });
     window.addEventListener('mouseup', event => { MouseUp(event); });
+    // loss-of-focus events
+    window.addEventListener('blur', event => { LossOfFocusEvent(event); });
+    document.addEventListener('visibilitychange', event => {
+        if (document.visibilityState === 'hidden') { LossOfFocusEvent(event); }
+    });
+    document.addEventListener('focusout', function (event) {
+        if (event.target === document || event.target === window) { LossOfFocusEvent(event); }
+    });
     // keyboard iniput 
     document.addEventListener('keydown', event => { KeyEvent(event, keyEventDown); });
     document.addEventListener('keyup', event => { KeyEvent(event, keyEventUp); });
@@ -87,6 +95,11 @@ function MouseMove(mouseEvent) {
         UpdateCoordinates(mouseEvent);
     }
 }
+
+function LossOfFocusEvent(event) {
+    mouseHeld = false;
+}
+
 /**
  * Assigns the current mouse position based on the supplied mouseEvent
  * @param {MouseEvent} mouseEvent MouseEvent data
