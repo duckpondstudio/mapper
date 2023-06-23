@@ -10,18 +10,6 @@ let debugKeys = false;
 let mouseHeld = false;
 let pressedKeyCodes = [];
 
-function UpdateCoordinates() {
-    for (let i = 0; i < modules.length; i++) {
-        // console.log("updatinig...");
-        if (modules[i].mapData.IsPointWithinContainer(cursor.point)) {
-            let projection = modules[i].mapData.GetProjectionAtPoint(cursor.point);
-            if (projection != null) {
-                projection.OutputDataAtPoint(cursor.point);
-            }
-        }
-    }
-}
-
 
 export function InputSetup() {
     // global monitor cursor movement
@@ -55,7 +43,7 @@ function MouseMove(mouseEvent) {
     SetMousePosition(mouseEvent);
 
     if (mouseHeld) {
-        UpdateCoordinates();
+        TestUpdateCursorCoordinates();
     }
 }
 
@@ -71,7 +59,7 @@ function MouseDown(mouseEvent) {
     if (mouseEvent.button === 0) {
         mouseHeld = true;
 
-        UpdateCoordinates();
+        TestUpdateCursorCoordinates();
     }
 }
 /**
@@ -201,4 +189,22 @@ export const cursor = {
     point: [0, 0],
     get x() { return this.point[0]; },
     get y() { return this.point[1]; }
+}
+
+
+
+/** Uses {@link ProjectionData}'s OutputDataAtPoint to display long/lat coordinate information at the cursor */
+function TestUpdateCursorCoordinates() {
+    // iterate thru all modules 
+    for (let i = 0; i < modules.length; i++) {
+        // check if the current module's mapData contains the cursor 
+        if (modules[i].mapData.IsPointWithinContainer(cursor.point)) {
+            // get which, if any, projection is under the cursor 
+            let projection = modules[i].mapData.GetProjectionAtPoint(cursor.point);
+            if (projection != null) {
+                // update that projection's lat/long info 
+                projection.OutputDataAtPoint(cursor.point);
+            }
+        }
+    }
 }
