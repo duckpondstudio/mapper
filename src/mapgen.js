@@ -90,6 +90,9 @@ function CreateMap(module) {
 
     function RetrieveProjection(projectionType, mapData) {
 
+        // store current projection index, because ProjectionIndex iterates on an async timer 
+        let currentProjectionIndex = projectionIndex;
+
         if (mapData == null) {
             console.error("null mapData, can't retrieve projection, projectionType: " + projectionType);
             return;
@@ -133,7 +136,7 @@ function CreateMap(module) {
         let leftOffset = 0;
         switch (map) {
             case m.grieger:
-                if (projectionIndex == 0) {
+                if (currentProjectionIndex == 0) {
                     leftOffset = mapSize * -0.5;
                 }
                 break;
@@ -182,7 +185,7 @@ function CreateMap(module) {
         }
 
 
-        let svgContainerId = "map_" + map + "_projection_" + projectionIndex;
+        let svgContainerId = "map_" + map + "_projection_" + currentProjectionIndex;
 
         // create the svg for the map
         let svg = d3.select(mapData.projectionsContainer).append('svg')
@@ -236,7 +239,7 @@ function CreateMap(module) {
 
             // create projection data container
             let projectionData = new ProjectionData(
-                projection, projectionIndex, svgContainer, svg, mapSize, mapData);
+                projection, currentProjectionIndex, svgContainer, svg, mapSize, mapData);
 
             // add projectiondata to mapdata 
             mapData.AddProjection(projectionData);
