@@ -7,6 +7,8 @@ const keyEventUp = 'keyEventUp';
 
 let debugKeys = false;
 
+let mouseDragUpdatesCoords = true;
+
 let mouseHeld = false;
 let pressedKeyCodes = [];
 
@@ -42,7 +44,7 @@ export function InputSetup() {
 function MouseMove(mouseEvent) {
     SetMousePosition(mouseEvent);
 
-    if (mouseHeld) {
+    if (mouseHeld && mouseDragUpdatesCoords) {
         TestUpdateCursorCoordinates();
     }
 }
