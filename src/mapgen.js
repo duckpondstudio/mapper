@@ -52,7 +52,6 @@ function CreateMap(module) {
 
 
     // generate projections 
-    console.log(1);
     setTimeout(() => {
         switch (map) {
             case m.grieger:
@@ -61,9 +60,7 @@ function CreateMap(module) {
                 RetrieveProjection(m.adams2, mapData);
                 break;
             default:
-                console.log(2);
                 RetrieveProjection(map, mapData);
-                console.log(3);
                 break;
         }
 
