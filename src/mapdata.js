@@ -2,7 +2,9 @@ import * as d3 from 'd3';
 import { parse, stringify } from 'transform-parser';
 import { cursor } from './mapinput';
 
-// see bottom for code examples 
+// see bottom for code examples
+
+//TODO: move sizing logic (GetContainerSize, etc) into a parent class for both MapData and ProjectionData
 
 /** Container for all data related to displaying a map */
 export class MapData {

@@ -1,0 +1,250 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Ocean",
+                "water": true,
+                "devnote": "Multiple polygons for the ocean/border at multiple accuracy variations, to minimize rendering issues when converting to D3 SVG. Starting with default"
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            -180,
+                            -90
+                        ],
+                        [
+                            -180,
+                            90
+                        ],
+                        [
+                            180,
+                            90
+                        ],
+                        [
+                            180,
+                            -90
+                        ],
+                        [
+                            -180,
+                            -90
+                        ]
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Ocean",
+                "water": true,
+                "devnote": "Flattened latitude"
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            -179.9999999,
+                            -90
+                        ],
+                        [
+                            -179.99999,
+                            90
+                        ],
+                        [
+                            179.99999,
+                            90
+                        ],
+                        [
+                            179.99999,
+                            -90
+                        ],
+                        [
+                            -179.9999999,
+                            -90
+                        ]
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Ocean",
+                "water": true,
+                "devnote": "Flattened longitude"
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            -180,
+                            -89.9999999
+                        ],
+                        [
+                            -180,
+                            89.99999
+                        ],
+                        [
+                            180,
+                            89.99999
+                        ],
+                        [
+                            180,
+                            -89.99999
+                        ],
+                        [
+                            -180,
+                            -89.9999999
+                        ]
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Ocean",
+                "water": true,
+                "devnote": "Alternating 1, every other coordinate"
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            -179.9999999,
+                            -89.9999999
+                        ],
+                        [
+                            -180,
+                            90
+                        ],
+                        [
+                            179.99999,
+                            89.99999
+                        ],
+                        [
+                            180,
+                            -90
+                        ],
+                        [
+                            -179.9999999,
+                            -89.9999999
+                        ]
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Ocean",
+                "water": true,
+                "devnote": "Alternating 2A, middle and ends"
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            -180,
+                            -90
+                        ],
+                        [
+                            -179.99999,
+                            89.99999
+                        ],
+                        [
+                            180,
+                            90
+                        ],
+                        [
+                            179.99999,
+                            -89.99999
+                        ],
+                        [
+                            -180,
+                            -90
+                        ]
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Ocean",
+                "water": true,
+                "devnote": "Alternating 2B, middle only"
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            -179.9999999,
+                            -89.9999999
+                        ],
+                        [
+                            -179.99999,
+                            89.99999
+                        ],
+                        [
+                            180,
+                            90
+                        ],
+                        [
+                            179.99999,
+                            -89.99999
+                        ],
+                        [
+                            -179.9999999,
+                            -89.9999999
+                        ]
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Ocean",
+                "water": true,
+                "devnote": "Basic"
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            -179.9999999,
+                            -89.9999999
+                        ],
+                        [
+                            -179.99999,
+                            89.99999
+                        ],
+                        [
+                            179.99999,
+                            89.99999
+                        ],
+                        [
+                            179.99999,
+                            -89.99999
+                        ],
+                        [
+                            -179.9999999,
+                            -89.9999999
+                        ]
+                    ]
+                ]
+            }
+        }
+    ]
+}

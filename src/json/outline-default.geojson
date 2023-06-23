@@ -6,31 +6,31 @@
             "properties": {
                 "name": "Ocean",
                 "water": true,
-                "devnote": "Manually added ocean to avoid auto-zooming on land-only SVG projection"
+                "devnote": "Default outline for world map, from +/-180 and +/-90"
             },
             "geometry": {
                 "type": "Polygon",
                 "coordinates": [
                     [
                         [
-                            -179.99999,
-                            -89.99999
+                            -180,
+                            -90
                         ],
                         [
-                            -179.99999,
-                            89.99999
+                            -180,
+                            90
                         ],
                         [
-                            179.99999,
-                            89.99999
+                            180,
+                            90
                         ],
                         [
-                            179.99999,
-                            -89.99999
+                            180,
+                            -90
                         ],
                         [
-                            -179.99999,
-                            -89.99999
+                            -180,
+                            -90
                         ]
                     ]
                 ]

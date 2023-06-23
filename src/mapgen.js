@@ -1,11 +1,10 @@
 import demoMap from './img/grieger-triptychial-political.png';
-// import geojson from './json/demo.geojson';
-// import geojson from './json/world.geojson';
-// import geojson from './json/ne_50m_land_with_ocean.geojson';
-// import geojson from './json/ne_50m_land.geojson';
+import overlayGeo from './json/outline-safe.geojson';//       recommended for overlay sizing
+// import overlayGeo from './json/outline-simple.geojson';//  recommended for ocean rendering
+// import overlayGeo from './json/outline-default.geojson';// not recommended (SVG rendering errors)
+
 // TODO: allow multiple geojson files to be imported onto a single map (eg to load land + ocean + lat/long lines separately)
 // TODO: allow separate geojson files on the same map to be independently toggled on/off (ideally without recalculating the same map)
-import overlayGeo from './json/ocean_feature.geojson';
 
 import { MapData, ProjectionData } from './mapdata';
 import { GetGeoJSON } from './mapjson';

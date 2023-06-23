@@ -1,6 +1,8 @@
 
 import geoEarth from './json/ne_50m_land.geojson';
-import geoOcean from './json/ocean_feature.geojson';
+// import geoOcean from './json/outline-safe.geojson';//    recommended for overlay sizing
+import geoOcean from './json/outline-simple.geojson';//     recommended for ocean rendering
+// import geoOcean from './json/outline-default.geojson';// not recommended (SVG rendering errors)
 
 // GeoJSON geo-types per the GeoJSON spec at https://rdrr.io/cran/geoops/man/geojson-types.html June 18 2023
 /** Collection geo-types (non-singular-objects) in GeoJSON format (generally containing collections), lowercase */

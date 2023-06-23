@@ -1,0 +1,75 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Ocean",
+                "water": true,
+                "devnote": "Simple, two polygons, one slightly offset for backup, one accurate to default"
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            -179.99999,
+                            -89.99999
+                        ],
+                        [
+                            -179.99999,
+                            89.99999
+                        ],
+                        [
+                            179.99999,
+                            89.99999
+                        ],
+                        [
+                            179.99999,
+                            -89.99999
+                        ],
+                        [
+                            -179.99999,
+                            -89.99999
+                        ]
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Ocean",
+                "water": true,
+                "devnote": "Default outline for world map, from +/-180 and +/-90"
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            -180,
+                            -90
+                        ],
+                        [
+                            -180,
+                            90
+                        ],
+                        [
+                            180,
+                            90
+                        ],
+                        [
+                            180,
+                            -90
+                        ],
+                        [
+                            -180,
+                            -90
+                        ]
+                    ]
+                ]
+            }
+        }
+    ]
+}

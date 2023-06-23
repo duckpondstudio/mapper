@@ -7,7 +7,7 @@ const keyEventUp = 'keyEventUp';
 
 let debugKeys = false;
 
-let mouseDragUpdatesCoords = true;
+let mouseDragUpdatesCoords = false;
 
 let mouseHeld = false;
 let pressedKeyCodes = [];
@@ -201,7 +201,15 @@ function TestUpdateCursorCoordinates() {
     for (let i = 0; i < modules.length; i++) {
         // check if the current module's mapData contains the cursor 
         if (modules[i].mapData.IsPointWithinContainer(cursor.point)) {
-            // get which, if any, projection is under the cursor 
+            // get which, if any, projection is under the cursor
+
+            // test ALL projections long/lat
+            for (let j = 0; j < modules[i].mapData.projections.length; j++) {
+                let p = modules[i].mapData.projections[j];
+                console.log('cursor: ', cursor.point);
+                console.log('P', j, ' LatLong at Cursor: ', p.LatLongAtPoint(cursor.point));
+            }
+
             let projection = modules[i].mapData.GetProjectionAtPoint(cursor.point);
             if (projection != null) {
                 // update that projection's lat/long info 
