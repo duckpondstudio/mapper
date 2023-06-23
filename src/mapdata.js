@@ -370,7 +370,6 @@ export class ProjectionData {
                 }
             }
         }
-
         return this.projection.invert([x, y]).reverse();
     }
     /**
@@ -386,7 +385,6 @@ export class ProjectionData {
      * @memberof ProjectionData
      */
     LatLongAtPoint(xy, offsetToProjection = true) {
-        if (offsetToProjection) { xy = this.GetContainerXYOffset(xy);}
         return this.LatLongAtXY(xy[0], xy[1], offsetToProjection);
     }
 
@@ -404,6 +402,7 @@ export class ProjectionData {
      * @memberof ProjectionData
      */
     OutputDataAtXY(x, y, offsetToProjection = true) {
+        console.log("output data at XY, x: ", x, ", y: ", y);
         let latLong = this.LatLongAtXY(x, y, offsetToProjection);
         this.mapData.OutputText(
             ("Clicked Latitude: " + latLong[0]),
@@ -423,7 +422,9 @@ export class ProjectionData {
      * coordinates (eg {@link d3.pointer})
      * @memberof ProjectionData
      */
-    OutputDataAtPoint(xy, offsetToProjection = true) { this.OutputDataAtXY(xy[0], xy[1], offsetToProjection); }
+    OutputDataAtPoint(xy, offsetToProjection = true) {
+        this.OutputDataAtXY(xy[0], xy[1], offsetToProjection);
+    }
 }
 
 /**
