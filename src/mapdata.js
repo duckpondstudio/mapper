@@ -11,6 +11,14 @@ export class MapData {
     index = -1;
     projectionsContainer;
     projections = [];
+
+    /** An array of dots, generally for debugging, mapped to XY coordinates relative to this map 
+     * @memberof MapData */
+    dotsXY = [];
+    /** An array of dots, generally for debugging, mapped to latitude/longitude coordinates for this map 
+     * @memberof MapData */
+    dostLatLong = [];
+
     #output;
     #containerRect;
     constructor(
@@ -45,6 +53,10 @@ export class MapData {
         // update container rect
         this.#containerRect = this.projectionsContainer.getBoundingClientRect();
     }
+
+    AddDotXYLocal(x, y) { }
+    AddDotXYScreen(x, y) { this.AddDotXYLocal(this.GetContainerXOffset(x), this.GetContainerYOffset(y)); }
+    AddDotLatLong(lat, long) { }
 
 
     GetContainerOrigin() {
