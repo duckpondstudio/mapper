@@ -84,7 +84,7 @@ function CreateMap(module) {
         // assign size to projectionsContainer
         mapData.projectionsContainer.style.width = containerWidth + 'px';
         mapData.projectionsContainer.style.height = containerHeight + 'px';
-        
+
     }, 0);
 
     mapIndex++;

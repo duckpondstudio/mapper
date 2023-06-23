@@ -14,12 +14,18 @@ export class MapData {
     projectionsContainer;
     projections = [];
 
-    /** An array of dots, generally for debugging, mapped to XY coordinates relative to this map 
+    /** An array of [x,y] coords, generally for debugging, mapped to XY coordinates relative to this map 
      * @memberof MapData */
-    dotsXY = [];
-    /** An array of dots, generally for debugging, mapped to latitude/longitude coordinates for this map 
+    #dotsXY = [];
+    /** An array of [x,y,id] coords, generally for debugging, with IDs, mapped to XY coordinates relative to this map 
      * @memberof MapData */
-    dostLatLong = [];
+    #dotsIdXY = [];
+    /** An array of [lat,long] coords, generally for debugging, mapped to latitude/longitude coordinates for this map 
+     * @memberof MapData */
+    #dostLatLong = [];
+    /** An array of [lat,long,id] coords, generally for debugging, with IDs, mapped to latitude/longitude coordinates for this map 
+     * @memberof MapData */
+    #dostLatLongId = [];
 
     #output;
     #containerRect;
@@ -56,9 +62,20 @@ export class MapData {
         this.#containerRect = this.projectionsContainer.getBoundingClientRect();
     }
 
-    AddDotXYLocal(x, y) { }
-    AddDotXYScreen(x, y) { this.AddDotXYLocal(this.GetContainerXOffset(x), this.GetContainerYOffset(y)); }
-    AddDotLatLong(lat, long) { }
+
+    AddDotXYLocal(x, y, id = null) { }
+    AddDotXYScreen(x, y, id = null) {
+        this.AddDotXYLocal(this.GetContainerXOffset(x), this.GetContainerYOffset(y), id);
+    }
+    AddDotLatLong(lat, long, id = null) { }
+
+    RemoveAllDots() {
+
+    }
+
+    #UpdateDots() {
+
+    }
 
 
     GetContainerOrigin() {
