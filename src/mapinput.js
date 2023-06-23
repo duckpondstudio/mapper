@@ -204,11 +204,17 @@ function TestUpdateCursorCoordinates() {
             // get which, if any, projection is under the cursor
 
             // test ALL projections long/lat
-            for (let j = 0; j < modules[i].mapData.projections.length; j++) {
-                let p = modules[i].mapData.projections[j];
-                console.log('cursor: ', cursor.point);
-                console.log('P', j, ' LatLong at Cursor: ', p.LatLongAtPoint(cursor.point));
-            }
+            // for (let j = 0; j < modules[i].mapData.projections.length; j++) {
+            //     let p = modules[i].mapData.projections[j];
+            //     console.log('P', j, ' LatLong at Cursor: ', p.LatLongAtPoint(cursor.point));
+            // }
+
+            let nonAvg = modules[i].mapData.LatLongAtPoint(cursor.point, false, false);
+            let avg = modules[i].mapData.LatLongAtPoint(cursor.point);
+
+            console.log(" CONTROL LATLONG AT CLICK: ", modules[i].mapData.GetProjectionAtPoint(cursor.point).LatLongAtPoint(cursor.point));
+            console.log(" DIRECT LATLONG AT CLICK: ", nonAvg);
+            console.log(" AVERAGED LATLONG AT CLICK: ", avg);
 
             let projection = modules[i].mapData.GetProjectionAtPoint(cursor.point);
             if (projection != null) {

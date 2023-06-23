@@ -198,6 +198,60 @@ export class MapData {
         return this.GetPointRatio(xy[0], xy[1], offsetToProjection);
     }
 
+    LatLongAtPoint(xy, offsetProjection = false, useAvgLatLong = true) {
+        // NOTE: using average across multiple projections minimizes 
+        //       any tiny differences between individual projections 
+        
+        // ensure projections exist 
+        switch (this.projections.length) {
+            case 0:
+                console.error("Cannot get LatLong at point: ", xy, ", no projections loaded, ",
+                    "ensure module is fully loaded. AvgLatLong ", useAvgLatLong,
+                    ", OffsetProjection ", offsetProjection, ". Returning null");
+                return null;
+            case 1:
+                // only one projection, no need to average it out 
+                useAvgLatLong = false;
+                break;
+        }
+        if (useAvgLatLong) {
+            // use the projection
+            let avgLatLong = [0, 0];
+            // iterate thru all latitude/longitude, and return the average
+            for (let i = 0; i < this.projections.length; i++) {
+                let latLong = this.projections[i].LatLongAtPoint(xy, !offsetProjection);
+                if (i == 0) {
+                    avgLatLong = latLong;
+                } else {
+                    avgLatLong[0] += latLong[0];
+                    avgLatLong[1] += latLong[1];
+                }
+            }
+            avgLatLong[0] /= this.projections.length;
+            avgLatLong[1] /= this.projections.length;
+            return avgLatLong;
+        }
+        // get projection (no point doing the getter if there's only 1 projection)
+        let projection = this.projections.length == 1 && this.projections[0] != null ?
+            this.projections[0] :
+            this.GetProjectionAtPoint(xy, offsetProjection);
+        // projection nullcheck 
+        if (projection == null) {
+            if (this.projections.length > 1) {
+                console.warn("Could not get LatLong at point: ", xy, ", on map: ", this.map,
+                    ", no projection found at point, attempting to get avgLatLong of ",
+                    this.projections.length, " projections instead. OffsetProjection: ", offsetProjection);
+                return this.LatLongAtPoint(xy, !offsetProjection, true);
+            } else {
+                console.error("Cannot get LatLong at point: ", xy, ", projection at point null, ",
+                    "ensure point is valid (bounds check?). AvgLatLong false, OffsetProjection ",
+                    offsetProjection, ". Returning null");
+                return null;
+            }
+        }
+        return projection.LatLongAtPoint(xy, !offsetProjection);
+    }
+
     GetProjectionAtPoint(xy, offsetToProjection = false) {
         // offsetToProjection should usually be FALSE here, this by default works with screenspace coords
         return this.GetProjectionAtXY(xy[0], xy[1], offsetToProjection);
