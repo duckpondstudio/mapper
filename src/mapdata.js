@@ -172,7 +172,7 @@ export class MapData {
 
     GetProjectionAtXY(x, y, offsetToProjection = false) {
         // offsetToProjection should usually be FALSE here, this by default works with screenspace coords
-        
+
         if (offsetToProjection) { x = this.GetContainerXOffset(x); y = this.GetContainerYOffset(y); }
 
         // let nX = NormalizeValue(x, this.GetContainerOriginX(), this.GetContainerExtentX(), false);
@@ -215,7 +215,7 @@ export class MapData {
 
     GetProjectionAtXYNormalized(x, y, offsetToProjection = false) {
         // offsetToProjection should usually be FALSE here, this by default works with screenspace coords
-        
+
         if (offsetToProjection) { x = this.GetContainerXOffset(x); y = this.GetContainerYOffset(y); }
         let iX = InvertNormalizedValue(x, this.GetContainerOriginX(), this.GetContainerExtentX(), false);
         let iY = InvertNormalizedValue(y, this.GetContainerOriginY(), this.GetContainerExtentY(), false);
@@ -250,7 +250,7 @@ export class MapData {
     }
 }
 
-const debugClickProjection = true;
+const debugClickProjection = false;
 
 /** Container for all data for an individual projection within a map */
 export class ProjectionData {
@@ -346,12 +346,12 @@ export class ProjectionData {
      * @memberof ProjectionData
      */
     LatLongAtXY(x, y, offsetToProjection = true) {
-
-        if (offsetToProjection) { x = this.GetContainerXOffset(x); y = this.GetContainerYOffset(y); }
-
+        if (offsetToProjection) {
+            x = this.GetContainerXOffset(x);
+            y = this.GetContainerYOffset(y);
+        }
         let transform;
         let g = this.svg.select('g');
-
         if (g) {
             transform = g.attr('transform');
             if (transform) {
@@ -386,6 +386,65 @@ export class ProjectionData {
      */
     LatLongAtPoint(xy, offsetToProjection = true) {
         return this.LatLongAtXY(xy[0], xy[1], offsetToProjection);
+    }
+
+    /**
+     * Gets the X and Y coordinate from the given latitude/longitude values using this projection
+     *
+     * @param {number} lat Latitude, converted to X-axis coordinate
+     * @param {number} long Latitude, converted to X-axis coordinate
+     * @param {boolean} offsetToProjection Optional, default true. Offsets the given point relative 
+     * to the projection we're reading data from. Essentially, true = returns global XY (screenspace), 
+     * and false = returns local screenspace (relative to this projection's origin)
+     * @return {number[]} Two-value number[] array, where [0] = X and [1] = Y
+     * @memberof ProjectionData
+     */
+    XYPointAtLatLong(lat, long, offsetFromProjection = true) {
+        return this.XYPointAtLatLongPoint([lat, long], offsetFromProjection);
+    }
+    /**
+     * Gets the X and Y coordinate from the given [latitude, longitude] using this projection
+     *
+     * @param {number[]} latLong Two-value number[] array, where [0] = latitude and [1] = longitude
+     * @param {boolean} offsetToProjection Optional, default true. Offsets the given point relative 
+     * to the projection we're reading data from. Essentially, true = returns global XY (screenspace), 
+     * and false = returns local screenspace (relative to this projection's origin)
+     * @return {number[]} Two-value number[] array, where [0] = X and [1] = Y
+     * @memberof ProjectionData
+     */
+    XYPointAtLatLongPoint(latLong, offsetFromProjection = true) {
+        let xy = this.projection(latLong.reverse());
+        let transform;
+        let g = this.svg.select('g');
+        if (g) {
+            transform = g.attr('transform');
+            // transform = null;
+            if (transform) {
+                let x = xy[0];
+                let y = xy[1];
+                // transform found, be sure to update mouse x/y accordingly
+                let t = parse(transform);
+                // accommodate translation 
+                if (t.translate) {
+                    x += t.translate[0];
+                    y += t.translate[1];
+                }
+                // accommodate rotation 
+                if (t.rotate) {
+                    let rotatedXY = RotateAround(this.projectionSize, this.projectionSize, x, y, -t.rotate[0]);
+                    x = rotatedXY[0];
+                    y = rotatedXY[1];
+                }
+                xy[0] = x;
+                xy[1] = y;
+            }
+        }
+        if (offsetFromProjection) {
+            let origin = this.GetContainerFullOrigin();
+            xy[0] += origin[0];
+            xy[1] += origin[1];
+        }
+        return xy;
     }
 
 
