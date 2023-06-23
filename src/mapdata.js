@@ -2,6 +2,8 @@ import * as d3 from 'd3';
 import { parse, stringify } from 'transform-parser';
 import { cursor } from './mapinput';
 
+// see bottom for code examples 
+
 /** Container for all data related to displaying a map */
 export class MapData {
     map;
@@ -538,3 +540,19 @@ function InvertNormalizedValue(value, min, max, clamp = false) {
     let range = max - min;
     return (value * range) + min;
 }
+
+
+
+/* EXAMPLE: getting latitude & longitude from MapData with an XY coordinate, and reversing it
+
+/// Use GetProjectionAtPoint to obtain the ProjectionData from the given point (eg, cursor.point)
+let projection = mapData.GetProjectionAtPoint(cursor.point);
+if (projection != null) { /// nullcheck
+    /// use LatLongAtPoint to get [latitude, longitude], from the ProjectionData 
+    let latitudeLong = projection.LatLongAtPoint(cursor.point);
+    /// use XYPointAtLatLongPoint to convert [latitude, longitude] back to screenspace XY
+    let reversedLatLong = projection.XYPointAtLatLongPoint(latLong);  
+}
+/// NOTE: using LatLongAtPoint(point, false) and XYPointAtLatLongPoint(latLong, false) 
+          will process the point value LOCALLY to the ProjectionData's origin 
+*/
