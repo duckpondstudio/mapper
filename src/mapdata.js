@@ -1,6 +1,8 @@
 import * as d3 from 'd3';
 import { parse, stringify } from 'transform-parser';
 import { cursor } from './mapinput';
+import { Module } from './module';
+import * as m from './maps';
 
 // see bottom for code examples
 
@@ -17,17 +19,29 @@ const debugClickOnProjection = false;
 
 /** Container for all data related to displaying a map */
 export class MapData {
+    /** Name of this map. See {@link m maps.js} @type {Module} @memberof MapData*/
     map;
+    /** Module this MapData is contained in @type {Module} @memberof MapData*/
     module;
+    /** Index, order in which this MapData was generated @type {Module} @memberof MapData*/
     index = -1;
+    /** Div that contains all {@link projections} @type {HTMLDivElement} @memberof MapData*/
     projectionsContainer;
+    /** Array of projections loaded in this MapData @type {ProjectionData[]} @memberof MapData*/
     projections = [];
-
-    /** @type {MapDot[]} */
+    /** Array of map dots to render @type {MapDot[]} @memberof MapData*/
     #mapDots = [];
-
+    /** Paragraph used for basic MapData data output @type {HTMLParagraphElement} @memberof MapData*/
     #output;
+    /** Rect for the size of this MapData, auto-updated on adding {@link projections}.
+     *  @see projectionsContainer
+     *  @type {HTMLParagraphElement} @memberof MapData*/
     #containerRect;
+    /** Creates a new instance of MapData.
+     *  @param {Module} module Module to load all relevant data from 
+     *  @param {*} [projections=[]] List of projections to pre-load. 
+     *  Can also call {@link AddProjection} at any time.
+     *  @memberof MapData */
     constructor(
         module, projections = []) {
         this.map = module.map;
@@ -63,8 +77,8 @@ export class MapData {
 
     /**
      * Add a MapDot dot to this projection
-     * @param {number} x
-     * @param {number} y
+     * @param {number} x X coordinate of this dot (or latitude, see {@link type})
+     * @param {number} y X coordinate of this dot (or longitude, see {@link type})
      * @param {number} [type=0] Optional, default 0. Defines the rendering behaviour of this dot.
      * 
      * 0. XY represents GLOBAL XY coordinates (eg cursor position). Default 
@@ -87,6 +101,17 @@ export class MapData {
         this.#UpdateDots();
         console.log("ADDED DOT at ", x, '/', y);
     }
+    /**
+     * Add a MapDot dot to this projection
+     * @param {number} xy X and Y coordinates of this dot (or lat/long, see {@link type})
+     * @param {number} [type=0] Optional, default 0. Defines the rendering behaviour of this dot.
+     * 
+     * 0. XY represents GLOBAL XY coordinates (eg cursor position). Default 
+     * 1. XY represents LOCAL XY coordinates, relative to this {@link MapData}
+     * 2. XY represents Latitude/Longitude coordinates
+     * @param {string} [id=null]
+     * @memberof MapData
+     */
     AddDot(xy, type = 0, id = null) {
         this.AddDotXY(xy[0], xy[1], type, id);
     }
@@ -103,7 +128,7 @@ export class MapData {
     RemoveDotsByXY(xy) {
         if (this.#mapDots.length == 0) { return; }
         let length = this.#mapDots.length;
-        this.#mapDots = this.#mapDots.filter(function( mapDot ) {
+        this.#mapDots = this.#mapDots.filter(function (mapDot) {
             return mapDot.xy != xy;
         });
         if (this.#mapDots.length != length) { this.#UpdateDots(); }
@@ -111,7 +136,7 @@ export class MapData {
     RemoveDotsByType(type) {
         if (this.#mapDots.length == 0) { return; }
         let length = this.#mapDots.length;
-        this.#mapDots = this.#mapDots.filter(function( mapDot ) {
+        this.#mapDots = this.#mapDots.filter(function (mapDot) {
             return mapDot.type != type;
         });
         if (this.#mapDots.length != length) { this.#UpdateDots(); }
@@ -119,7 +144,7 @@ export class MapData {
     RemoveDotsByID(id) {
         if (this.#mapDots.length == 0) { return; }
         let length = this.#mapDots.length;
-        this.#mapDots = this.#mapDots.filter(function( mapDot ) {
+        this.#mapDots = this.#mapDots.filter(function (mapDot) {
             return mapDot.id != id;
         });
         if (this.#mapDots.length != length) { this.#UpdateDots(); }
@@ -153,6 +178,9 @@ export class MapData {
         return dots;
     }
 
+
+    /** Updates all rendered map dots
+     */
     #UpdateDots() {
 
     }
