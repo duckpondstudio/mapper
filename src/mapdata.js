@@ -420,7 +420,19 @@ export class ProjectionData {
         return [this.GetContainerFullWidth(), this.GetContainerFullHeight()];
     }
 
-
+    IsXYWithinContainer(x, y, offsetToProjection = false) {
+        // offsetToProjection should usually be FALSE here, this by default works with screenspace coords
+        if (offsetToProjection) { x = this.GetContainerXOffset(x); y = this.GetContainerYOffset(y); }
+        let origin = this.GetContainerOrigin();
+        if (x < origin[0] || y < origin[1]) { return false; }
+        let extent = this.GetContainerExtent();
+        if (x > extent[0] || y > extent[1]) { return false; }
+        return true;
+    }
+    IsPointWithinContainer(xy, offsetToProjection = false) {
+        // offsetToProjection should usually be FALSE here, this by default works with screenspace coords
+        return this.IsXYWithinContainer(xy[0], xy[1], offsetToProjection);
+    }
 
     /**
      * Gets the latitude and longitude of this projection at the given normalized XY coordinate
