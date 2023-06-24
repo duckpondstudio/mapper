@@ -5,6 +5,13 @@ import { cursor } from './mapinput';
 // see bottom for code examples
 
 //TODO: move sizing logic (GetContainerSize, etc) into a parent class for both MapData and ProjectionData
+//TODO: gosh it'd be nice to clean this script up =_=;
+
+/// MAPDATA SETUP
+
+/// MAPDOT SETUP
+
+/// PROJECTION SETUP 
 /** if true, fires a click event directly on the projection SVG, bypassing {@link mapinput} */
 const debugClickOnProjection = false;
 
@@ -15,19 +22,6 @@ export class MapData {
     index = -1;
     projectionsContainer;
     projections = [];
-
-    /** An array of [x,y] coords, generally for debugging, mapped to XY coordinates relative to this map 
-     * @memberof MapData */
-    #dotsXY = [];
-    /** An array of [x,y,id] coords, generally for debugging, with IDs, mapped to XY coordinates relative to this map 
-     * @memberof MapData */
-    #dotsIdXY = [];
-    /** An array of [lat,long] coords, generally for debugging, mapped to latitude/longitude coordinates for this map 
-     * @memberof MapData */
-    #dostLatLong = [];
-    /** An array of [lat,long,id] coords, generally for debugging, with IDs, mapped to latitude/longitude coordinates for this map 
-     * @memberof MapData */
-    #dostLatLongId = [];
 
     #output;
     #containerRect;
@@ -64,12 +58,30 @@ export class MapData {
         this.#containerRect = this.projectionsContainer.getBoundingClientRect();
     }
 
-
-    AddDotXYLocal(x, y, id = null) { }
-    AddDotXYScreen(x, y, id = null) {
-        this.AddDotXYLocal(this.GetContainerXOffset(x), this.GetContainerYOffset(y), id);
+    /**
+     * Add a MapDot dot to this projection
+     * @param {number} x
+     * @param {number} y
+     * @param {number} type Optional, default 0. Defines the rendering behaviour of this dot.
+     * 
+     * 0. XY represents GLOBAL XY coordinates (eg cursor position). Default 
+     * 1. XY represents LOCAL XY coordinates, relative to this {@link MapData}
+     * 2. XY represents Latitude/Longitude coordinates
+     * @param {string} [id=null]
+     * @memberof MapData
+     */
+    AddDot(x, y, type, id = null) {
+        let mapDot = new MapDot(x, y, type, id);
     }
-    AddDotLatLong(lat, long, id = null) { }
+    AddDotXYLocal(x, y, id = null) {
+        this.AddDot(x, y, 1, id);
+    }
+    AddDotXYGlobal(x, y, id = null) {
+        this.AddDot(x, y, 0, id);
+    }
+    AddDotLatLong(lat, long, id = null) {
+        this.AddDot(lat, long, 2, id);
+    }
 
     RemoveAllDots() {
 
@@ -443,7 +455,71 @@ export class MapData {
     }
 }
 
-const debugClickProjection = false;
+/** Data related to rendering dots on a map projection */
+class MapDot {
+    /** X-coordinate for this dot (can be Latitude, see {@link type})
+     * @type {number}
+     * @memberof MapDot */
+    x;
+    /** Y-coordinate for this dot (can be Latitude, see {@link type})
+     * @memberof MapDot */
+    y;
+    /** Optional, default 0. Defines the rendering behaviour of this dot.
+     * 
+     * 0. XY represents GLOBAL XY coordinates (eg cursor position). Default 
+     * 1. XY represents LOCAL XY coordinates, relative to this {@link MapData}
+     * 2. XY represents Latitude/Longitude coordinates
+     * @memberof MapDot */
+    type;
+    /** Optional, default null. ID for this dot. 
+     * If set, can use to access all dots of the given ID. 
+     * @memberof MapDot */
+    id;
+    /** Create a new {@link MapDot}. Set {@link X} and {@link Y} coordinates. 
+     * Optionally specify {@link type} and {@link id ID}.
+     * 
+     * @param {number} x X-coordinate for this dot (can be Latitude, see {@link type})
+     * @param {number} y Y-coordinate for this dot (can be Longitude, see {@link type})
+     * @param {number=0} type Optional, default 0. Defines the rendering behaviour of this dot.
+     * 
+     * 0. XY represents GLOBAL XY coordinates (eg cursor position). Default 
+     * 1. XY represents LOCAL XY coordinates, relative to this {@link MapData}
+     * 2. XY represents Latitude/Longitude coordinates
+     * @param {string=null} id Optional, default null. ID for this dot. 
+     * If set, can use to access all dots of the given ID.
+     * @memberof MapDot
+     */
+    constructor(x, y, type = 0, id = null) {
+        this.x = x;
+        this.y = y;
+        switch (type) {
+            case 0: // global 
+            case 1: // local 
+            case 2: // latLong
+                this.type = type;
+                break;
+            default:
+                console.warn("Attempted to create MapDot of invalid type ", type,
+                    ', see @type param for valid values, defaulting to 0');
+                this.type = type = 0;
+                break;
+        }
+        this.id = id;
+    }
+
+    get xy() { return [x, y]; }
+
+    processXY(mapData) {
+        switch (type) {
+            case 0: // global 
+                return GetContainerPointOffset(this.xy);
+            case 1: // local
+                return this.xy;
+            case 2: // lat/long
+                return mapData.XYPointAtLatLongPoint(this.xy);
+        }
+    }
+}
 
 /** Container for all data for an individual projection within a map */
 export class ProjectionData {
