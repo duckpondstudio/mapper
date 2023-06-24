@@ -368,20 +368,24 @@ export class MapData {
      * @param {number} long longitude
      * @param {boolean=true} useAvgXY 
      * @param {boolean=false} offsetProjection 
+     * @param {boolean=true} constrainToContainer If true, constrains the returned XY to the container, 
+     * either adding/subtracting container's width/height to the result until it's within bounds (0 size matches width)
      * @returns {number[]} XY coordinates from the given latitude/longitude 
      * @memberof MapData
      */
-    XYPointAtLatLong(lat, long, useAvgXY = true, offsetProjection = false) {
-        return this.XYPointAtLatLongPoint([lat, long], useAvgXY, offsetProjection);
+    XYPointAtLatLong(lat, long, useAvgXY = true, offsetProjection = false, constrainToContainer = true) {
+        return this.XYPointAtLatLongPoint([lat, long], useAvgXY, offsetProjection, constrainToContainer);
     }
     /** Get the XY coordinates associated with the given latitude/longitude 
      * @param {number[]} latLong Two-value number[] array representing [latitude,longitude] 
      * @param {boolean=true} useAvgXY 
      * @param {boolean=false} offsetProjection 
+     * @param {boolean=true} constrainToContainer If true, constrains the returned XY to the container, 
+     * either adding/subtracting container's width/height to the result until it's within bounds (0 size matches width)
      * @returns {number[]} XY coordinates from the given latitude/longitude 
      * @memberof MapData
      */
-    XYPointAtLatLongPoint(latLong, useAvgXY = true, offsetProjection = false) {
+    XYPointAtLatLongPoint(latLong, useAvgXY = true, offsetProjection = false, constrainToContainer = true) {
         // NOTE: using average across multiple projections minimizes 
         //       any tiny differences between individual projections 
         // ensure projections exist 
@@ -435,7 +439,7 @@ export class MapData {
             xy = projection.XYPointAtLatLongPoint(latLong, !offsetProjection);
         }
         // lastly, ensure the returned point is within the bounds of this container 
-        if (!this.IsPointWithinContainer(xy, offsetProjection)) {
+        if (constrainToContainer && !this.IsPointWithinContainer(xy, offsetProjection)) {
             // not within bounds, constrain within container 
             xy = this.ConstrainPointWithinContainer(xy, offsetProjection);
         }
