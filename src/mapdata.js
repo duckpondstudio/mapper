@@ -920,8 +920,8 @@ export class ProjectionData {
                 function Translate(xy, t, reverse) {
                     // accommodate translation 
                     if (t.translate) {
-                        xy[0] -= t.translate[0] * reverse ? -1 : 1;
-                        xy[1] -= t.translate[1] * reverse ? -1 : 1;
+                        xy[0] -= t.translate[0] * (reverse ? -1 : 1);
+                        xy[1] -= t.translate[1] * (reverse ? -1 : 1);
                     }
                     // return xy;jk    q-0;LT6 (kitty <3)
                     return xy;
@@ -929,7 +929,7 @@ export class ProjectionData {
                 function Rotate(xy, t, size, reverse) {
                     // accommodate rotation 
                     if (t.rotate) {
-                        xy = RotateAround(size, size, xy[0], xy[1], t.rotate[0] * reverse ? -1 : 1);
+                        xy = RotateAround(size, size, xy[0], xy[1], t.rotate[0] * (reverse ? -1 : 1));
                     }
                     return xy;
                 }
