@@ -29,8 +29,6 @@ function CreateMap(module) {
 
     let map = module.map;
 
-    console.log("creating map: " + map);
-
     if (map == null || map == "") {
         console.error('null/empty map projection specified, cannot create');
         return;
@@ -113,7 +111,6 @@ function CreateMap(module) {
         // checks passed, begin loading 
         loadedProjections++;// increment load counter
 
-        console.log('retrieving projection ' + projectionType + ' for map projection ' + map);
         let projection = GetProjection(projectionType);
 
         let fitSize = 1;
@@ -249,7 +246,6 @@ function CreateMap(module) {
 
             if (loadedProjections == 0) {
                 // done loading projections! 
-                console.log("Done!");
             }
 
         }, 50);// nominal delay to ENSURE loadedProjections is incremented properly
@@ -289,7 +285,7 @@ function GetProjection(projectionType) {
     switch (projectionType) {
 
         default:
-            console.log("Unsupported projection type " + projectionType + ", refer to maps.js, returning geoEquirectangular");
+            console.warn("Unsupported projection type " + projectionType + ", refer to maps.js, returning geoEquirectangular");
             return d3.geoEquirectangular();
 
         case m.equirectangular:
@@ -313,7 +309,7 @@ function GetProjection(projectionType) {
 }
 
 function ShowDemoMap() {
-    console.log("creating demo map img");
+    console.warn("Demo map img being created");
     const img = new Image();
     img.src = demoMap;
     img.width = 500;

@@ -270,7 +270,6 @@ export class MapData {
         // NOTE: using average across multiple projections minimizes 
         //       any tiny differences between individual projections 
         // ensure projections exist 
-        console.log("getting...");
         switch (this.projections.length) {
             case 0:
                 console.error("Cannot get point at LatLong: ", latLong, ", no projections loaded, ",
@@ -288,7 +287,6 @@ export class MapData {
             // iterate thru all latitude/longitude, and return the average
             for (let i = 0; i < this.projections.length; i++) {
                 let projXY = this.projections[i].XYPointAtLatLongPoint(latLong, offsetProjection);
-                console.log("output", i, "XY:", projXY);
                 if (i == 0) {
                     xy = projXY;
                 } else {
@@ -757,7 +755,6 @@ export class ProjectionData {
      * @memberof ProjectionData
      */
     OutputDataAtXY(x, y, offsetToProjection = true) {
-        console.log("output data at XY, x: ", x, ", y: ", y);
         let latLong = this.LatLongAtXY(x, y, offsetToProjection);
         this.mapData.OutputText(
             ("Clicked Latitude: " + latLong[0]),

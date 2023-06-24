@@ -110,7 +110,6 @@ function DragEnd(dragEvent) {
 }
 
 function LossOfFocusEvent(event) {
-    console.log("LOSS OF FOCUS");
     mouseHeld = false;
 }
 
@@ -157,41 +156,6 @@ function KeyEvent(keyEvent, type) {
                 switch (key) {
                     case ' ':
                         // pressed space
-
-                        let avgLatLongToXY = false;
-                        let avgXYToLatLong = false;
-
-                        switch (1) {
-                            case 0:
-                                //  proj[0] (falkland islands) off patagonia
-                                let xyAtLatLong = modules[0].mapData.XYPointAtLatLong(-52.169, -60.511, avgLatLongToXY);
-                                let latLongAtXY = modules[0].mapData.LatLongAtPoint([118, 205], avgXYToLatLong);
-                                console.log("LatLong to XY (should be ~[118, 205])");
-                                console.log(xyAtLatLong);
-                                console.log("XY to LatLong (should be ~[52.169, -60.511])");
-                                console.log(latLongAtXY);
-                                break;
-                            case 1:
-
-                                //  proj[1] middle of france
-                                let xyAtLatLong1 = modules[0].mapData.XYPointAtLatLong(40, -5.6, avgLatLongToXY);
-                                let latLongAtXY1 = modules[0].mapData.LatLongAtPoint([239, 193], avgXYToLatLong);
-                                console.log("LatLong to XY (should be ~[239, 193])");
-                                console.log(xyAtLatLong1);
-                                console.log("XY to LatLong (should be ~[40, 5.6])");
-                                console.log(latLongAtXY1);
-                                break;
-                            case 2:
-
-                                //  proj[2] middle of aus
-                                let xyAtLatLong2 = modules[0].mapData.XYPointAtLatLong(-25.304, 132.858, avgLatLongToXY);
-                                let latLongAtXY2 = modules[0].mapData.LatLongAtPoint([410, 216], avgXYToLatLong);
-                                console.log("LatLong to XY (should be ~[410, 216])");
-                                console.log(xyAtLatLong2);
-                                console.log("XY to LatLong (should be ~[25.3, 132.86])");
-                                console.log(latLongAtXY2);
-                                break;
-                        }
                         break;
                 }
 
@@ -235,32 +199,6 @@ function TestUpdateCursorCoordinates() {
     for (let i = 0; i < modules.length; i++) {
         // check if the current module's mapData contains the cursor 
         if (modules[i].mapData.IsPointWithinContainer(cursor.point)) {
-            // get which, if any, projection is under the cursor
-
-            // test ALL projections long/lat
-            // for (let j = 0; j < modules[i].mapData.projections.length; j++) {
-            //     let p = modules[i].mapData.projections[j];
-            //     console.log('P', j, ' LatLong at Cursor: ', p.LatLongAtPoint(cursor.point));
-            // }
-
-            let nonAvgL = modules[i].mapData.LatLongAtPoint(cursor.point, false);
-            let avgL = modules[i].mapData.LatLongAtPoint(cursor.point);
-            let nonAvgLToNonAvgC = modules[i].mapData.XYPointAtLatLongPoint(nonAvgL, false);
-            let nonAvgLToAvgC = modules[i].mapData.XYPointAtLatLongPoint(nonAvgL);
-            let avgLToNonAvgC = modules[i].mapData.XYPointAtLatLongPoint(avgL, false);
-            let avgLToAvgC = modules[i].mapData.XYPointAtLatLongPoint(avgL);
-
-            console.log(" ============================= ");
-            console.log(" CONTROL LATLONG AT CLICK: ", modules[i].mapData.GetProjectionAtPoint(cursor.point).LatLongAtPoint(cursor.point));
-            console.log("  DIRECT LATLONG AT CLICK: ", nonAvgL);
-            console.log("  AVERAGED LATLONG AT CLICK: ", avgL);
-            console.log(" ============================= ");
-            console.log(" CLICK POINT: ", cursor.point);
-            console.log("  NONAVG L TO NONAVG C: ", nonAvgLToNonAvgC);
-            console.log("  NONAVG L TO AVG C: ", nonAvgLToAvgC);
-            // console.log("  AVG L TO NONAVG C: ", avgLToNonAvgC, false);
-            // console.log("  AVG L TO AVG C: ", avgLToAvgC);
-
             let projection = modules[i].mapData.GetProjectionAtPoint(cursor.point);
             if (projection != null) {
                 // update that projection's lat/long info 
