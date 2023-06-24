@@ -248,9 +248,24 @@ export class MapData {
         return this.GetPointRatio(xy[0], xy[1], offsetToProjection);
     }
 
+    /** Get the XY coordinates associated with the given latitude/longitude 
+     * @param {number} lat latitude 
+     * @param {number} long longitude
+     * @param {boolean=true} useAvgXY 
+     * @param {boolean=false} offsetProjection 
+     * @returns {number[]} XY coordinates from the given latitude/longitude 
+     * @memberof MapData
+     */
     XYPointAtLatLong(lat, long, useAvgXY = true, offsetProjection = false) {
         return this.XYPointAtLatLongPoint([lat, long], useAvgXY, offsetProjection);
     }
+    /** Get the XY coordinates associated with the given latitude/longitude 
+     * @param {number[]} latLong Two-value number[] array representing [latitude,longitude] 
+     * @param {boolean=true} useAvgXY 
+     * @param {boolean=false} offsetProjection 
+     * @returns {number[]} XY coordinates from the given latitude/longitude 
+     * @memberof MapData
+     */
     XYPointAtLatLongPoint(latLong, useAvgXY = true, offsetProjection = false) {
         // NOTE: using average across multiple projections minimizes 
         //       any tiny differences between individual projections 
