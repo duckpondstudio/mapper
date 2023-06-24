@@ -799,7 +799,7 @@ export class ProjectionData {
      *
      * @param {number} x X-axis coordinate, normalized to this projection (0 - 1, 0 = left, 1 = right)
      * @param {number} y Y-axis coordinate, normalized to this projection (0 - 1, 0 = top, 1 = bottom)
-     * @param {boolean} offsetToProjection Optional, default true. Offsets the given point relative 
+     * @param {boolean=true} offsetToProjection Optional, default true. Offsets the given point relative 
      * to the projection we're reading data from. Necessary if passing in XY coordinates directly,
      * eg from mouse position (eg {@link cursor}), should disable if passing in already-converted
      * coordinates (eg {@link d3.pointer})
@@ -838,11 +838,11 @@ export class ProjectionData {
      *
      * @param {number[]} xy Two-value number array where [0] is X and [1] is Y.
      * Both coordinates are normalized, where a value of 0=top/left, and 1=bottom/right
-     * @return {number[]} Two-value number[] array, where [0] = Latitude and [1] = Longitude
-     * @param {boolean} offsetToProjection Optional, default true. Offsets the given point relative 
+     * @param {boolean=true} offsetToProjection Optional, default true. Offsets the given point relative 
      * to the projection we're reading data from. Necessary if passing in XY coordinates directly,
      * eg from mouse position (eg {@link cursor}), should disable if passing in already-converted
      * coordinates (eg {@link d3.pointer})
+     * @return {number[]} Two-value number[] array, where [0] = Latitude and [1] = Longitude
      * @memberof ProjectionData
      */
     LatLongAtPoint(xy, offsetToProjection = true) {
@@ -854,7 +854,7 @@ export class ProjectionData {
      *
      * @param {number} lat Latitude, converted to X-axis coordinate
      * @param {number} long Latitude, converted to X-axis coordinate
-     * @param {boolean} offsetToProjection Optional, default true. Offsets the given point relative 
+     * @param {boolean=true} offsetToProjection Optional, default true. Offsets the given point relative 
      * to the projection we're reading data from. Essentially, true = returns global XY (screenspace), 
      * and false = returns local screenspace (relative to this projection's origin)
      * @return {number[]} Two-value number[] array, where [0] = X and [1] = Y
@@ -867,7 +867,7 @@ export class ProjectionData {
      * Gets the X and Y coordinate from the given [latitude, longitude] using this projection
      *
      * @param {number[]} latLong Two-value number[] array, where [0] = latitude and [1] = longitude
-     * @param {boolean} offsetToProjection Optional, default true. Offsets the given point relative 
+     * @param {boolean=true} offsetToProjection Optional, default true. Offsets the given point relative 
      * to the projection we're reading data from. Essentially, true = returns global XY (screenspace), 
      * and false = returns local screenspace (relative to this projection's origin)
      * @return {number[]} Two-value number[] array, where [0] = X and [1] = Y
@@ -915,7 +915,7 @@ export class ProjectionData {
      *
      * @param {number} x X-axis coordinate, normalized to this projection (0 - 1, 0 = left, 1 = right)
      * @param {number} y Y-axis coordinate, normalized to this projection (0 - 1, 0 = top, 1 = bottom)
-     * @param {boolean} offsetToProjection Optional, default true. Offsets the given point relative 
+     * @param {boolean=true} offsetToProjection Optional, default true. Offsets the given point relative 
      * to the projection we're reading data from. Necessary if passing in XY coordinates directly,
      * eg from mouse position (eg {@link cursor}), should disable if passing in already-converted
      * coordinates (eg {@link d3.pointer})
@@ -935,7 +935,7 @@ export class ProjectionData {
      *
      * @param {number[]} xy Two-value number array where [0] is X and [1] is Y.
      * Both coordinates are normalized, where a value of 0=top/left, and 1=bottom/right
-     * @param {boolean} offsetToProjection Optional, default true. Offsets the given point relative 
+     * @param {boolean=true} offsetToProjection Optional, default true. Offsets the given point relative 
      * to the projection we're reading data from. Necessary if passing in XY coordinates directly,
      * eg from mouse position (eg {@link cursor}), should disable if passing in already-converted
      * coordinates (eg {@link d3.pointer})
@@ -972,7 +972,7 @@ function RotateAround(pivotX, pivotY, pointX, pointY, angle) {
  * @param {number} value Value to normalize relative to min and max
  * @param {number} min Minimum extent of the range of normalization
  * @param {number} max Maximum extent of the range of normalization
- * @param {boolean} clamp Optional. Clamp value between 0 and 1? Default false
+ * @param {boolean=false} clamp Optional. Clamp value between 0 and 1? Default false
  * @returns {number} Normalized number for value's ratio between min and max
  */
 function NormalizeValue(value, min, max, clamp = false) {
@@ -989,7 +989,7 @@ function NormalizeValue(value, min, max, clamp = false) {
  * Typically between 0 and 1, see {@link clamp}
  * @param {number} min Min value of the range to invert normalization
  * @param {number} max Max value of the range to invert normalization
- * @param {boolean} clamp Optional, default false. Clamp value between 0 and 1? 
+ * @param {boolean=false} clamp Optional, default false. Clamp value between 0 and 1? 
  *  If true, <=0 returns min, >=1 returns max
  * @returns Inverted normalized value, non-normalized
  */
