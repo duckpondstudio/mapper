@@ -183,6 +183,27 @@ export class MapData {
      */
     #UpdateDots() {
 
+        console.log("updatinig dots...");
+        // iterate thru all projections 
+        this.projections.forEach(projection => {
+            let svg = projection.svg;
+
+            // first, remove all current map dots 
+            svg.selectAll('.mapDot').remove();
+
+            svg.select('g')
+                .selectAll('circle')
+                .data(this.#mapDots)
+                .enter()
+                .append('circle')
+                .attr('class', 'mapDot')
+                .attr('cx', function (d) { return d.GetX(projection) })
+                .attr('cy', function (d) { return d.GetY(projection) })
+                .attr('r', 3)
+                .style('fill', 'red')
+                .raise();
+
+        });
     }
 
 
@@ -614,7 +635,58 @@ class MapDot {
         this.id = id;
     }
 
-    get xy() { return [x, y]; }
+    get xy() { return [this.x, this.y]; }
+
+    /** 
+     * Get X coord relative to the given {@link projection}
+     * @param {ProjectionData} projection Projection to get X coord relative to 
+     * @memberof MapDot */
+    GetXY(projection) {
+        switch (this.type) {
+            case 0: // global, screenspace
+                // convert screenspace to lat/long
+                projection.LatLongAtPoint()
+                return projection.mapData.GetContainerXOffset(this.x);
+            case 1: // local to projection 
+                return this.x;
+            case 2: // lat/long
+                // TODO: doing xy/latlong conversion twice for XY, only do it once (eg XAtLatitude)
+                return projection.XYPointAtLatLong(this.xy)[0];
+        }
+    }
+
+    /** 
+     * Get X coord relative to the given {@link projection}
+     * @param {ProjectionData} projection Projection to get X coord relative to 
+     * @memberof MapDot */
+    GetX(projection) {
+        switch (this.type) {
+            case 0: // global, screenspace
+                // convert screenspace to lat/long
+                projection.LatLongAtPoint()
+                return projection.mapData.GetContainerXOffset(this.x);
+            case 1: // local to projection 
+                return this.x;
+            case 2: // lat/long
+                // TODO: doing xy/latlong conversion twice for XY, only do it once (eg XAtLatitude)
+                return projection.XYPointAtLatLong(this.xy)[0];
+        }
+    }
+    /** 
+     * Get Y coord relative to the given {@link projection}
+     * @param {ProjectionData} projection Projection to get Y coord relative to 
+     * @memberof MapDot */
+    GetY(projection) {
+        switch (this.type) {
+            case 0: // global, screenspace 
+            return this.y;
+            case 1: // local to projection 
+            return projection.GetContainerXOffset(this.y);
+            case 2: // lat/long
+                // TODO: doing xy/latlong conversion twice for XY, only do it once (eg YAtLongitude)
+                return projection.XYPointAtLatLong(this.xy)[1];
+        }
+    }
 
     processXY(mapData) {
         switch (type) {
@@ -632,6 +704,7 @@ class MapDot {
 export class ProjectionData {
     projection;
     index;
+    /** D3 SVG Element @type {d3.Selection<SVGSVGElement, any, null, undefined>} */
     svg;
     svgContainer;
     projectionSize;
