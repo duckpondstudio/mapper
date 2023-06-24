@@ -168,6 +168,42 @@ export class MapData {
         return this.IsXYWithinContainer(xy[0], xy[1], offsetToProjection);
     }
 
+    ConstrainPointWithinContainer(xy, offsetToProjection) {
+        return this.ConstrainXYWithinContainer(xy[0], xy[1], offsetToProjection);
+    }
+    ConstrainXYWithinContainer(x, y, offsetToProjection) {
+        let size = this.GetContainerSize();
+        // offsetToProjection should usually be FALSE here, this by default works with screenspace coords
+        if (offsetToProjection) { x = this.GetContainerXOffset(x); y = this.GetContainerYOffset(y); }
+        let origin = this.GetContainerOrigin();
+        let extent = this.GetContainerExtent();
+        // x coordinate
+        if (size[0] == 0) {
+            // zero width, x must match
+            x = origin[0];
+        } else {
+            // ensure within bounds 
+            if (x < origin[0]) {
+                while (x < origin[0]) { x += size[0]; }
+            } else if (x > extent[0]) {
+                while (x > extent[0]) { x -= size[0]; }
+            }
+        }
+        // y coordinate
+        if (size[1] == 0) {
+            // zero height, y must match
+            y = origin[1];
+        } else {
+            // ensure within bounds 
+            if (y < origin[1]) {
+                while (y < origin[1]) { y += size[1]; }
+            } else if (y > extent[1]) {
+                while (y > extent[1]) { y -= size[1]; }
+            }
+        }
+        return [x, y];
+    }
+
     GetXYRatio(x, y, offsetToProjection = true) {
         return [this.GetXRatio(x, offsetToProjection), this.GetYRatio(y, offsetToProjection)];
     }
