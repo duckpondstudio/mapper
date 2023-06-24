@@ -512,14 +512,11 @@ export class MapData {
 
         if (offsetToProjection) { x = this.GetContainerXOffset(x); y = this.GetContainerYOffset(y); }
 
-        // let nX = NormalizeValue(x, this.GetContainerOriginX(), this.GetContainerExtentX(), false);
-        // let nY = NormalizeValue(y, this.GetContainerOriginY(), this.GetContainerExtentY(), false);
-        // return this.GetProjectionAtXYNormalized(nX, nY);
-
         // get all elements at the given point, filter to type SVG and class map
         let elements = document.elementsFromPoint(x, y).filter(function (e) {
             return e.nodeName === 'svg' && e.getAttribute('class') === 'map';
         });
+
         // iterate over them
         let projectionsFound = [];
         for (let i = 0; i < elements.length; i++) {
@@ -815,27 +812,8 @@ export class ProjectionData {
             x = this.GetContainerXOffset(x);
             y = this.GetContainerYOffset(y);
         }
-        let transform;
-        let g = this.svg.select('g');
-        if (g) {
-            transform = g.attr('transform');
-            if (transform) {
-                // transform found, be sure to update mouse x/y accordingly
-                let t = parse(transform);
-                // accommodate rotation 
-                if (t.rotate) {
-                    let xy = RotateAround(this.projectionSize, this.projectionSize, x, y, t.rotate[0]);
-                    x = xy[0];
-                    y = xy[1];
-                }
-                // accommodate translation 
-                if (t.translate) {
-                    x -= t.translate[0];
-                    y -= t.translate[1];
-                }
-            }
-        }
-        return this.projection.invert([x, y]).reverse();
+        let xy = this.ApplySVGTransformOffsetsToXY(x, y);
+        return this.projection.invert(xy).reverse();
     }
     /**
      * Gets the latitude and longitude of this projection at the given normalized XY coordinate
@@ -879,7 +857,7 @@ export class ProjectionData {
      */
     XYPointAtLatLongPoint(latLong, offsetFromProjection = true) {
         let xy = this.projection(latLong.reverse());
-        xy = this.ApplySVGTransformOffsetsToXY(xy);
+        xy = this.ApplySVGTransformOffsetsToPoint(xy, true);
         if (offsetFromProjection) {
             let origin = this.GetContainerFullOrigin();
             xy[0] += origin[0];
@@ -889,50 +867,76 @@ export class ProjectionData {
     }
 
     /** Gets the XY offset based on this projection's SVG CSS (eg translation, rotation)
-     * and applies it to the given XY
-     * @param {number[]} xy Two-value number[], [x,y] to modify  
+     * and applies it to the given X and Y coordinates (returns an [x,y] array)
+     * @param {number} x X coordinate to modify
+     * @param {number} y Y coordinate to modify
+     * @param {boolean=false} reverseOrder Default false. Perform modifications in reverse order? (Eg for undoing them)
      * @returns {number[]} Two-value number[], [x,y] values for this transform
      * @see {@link GetSVGTransformOffsets}, method that directly reads the transform info
      * @see {@link svg}, element being read for transform info     
      * @memberof ProjectionData
      */
-    ApplySVGTransformOffsetsToXY(xy) {
-        let transform = GetSVGTransformOffsets();
-        xy[0] += transform[0];
-        xy[1] += transform[1];
-        return xy;
+    ApplySVGTransformOffsetsToXY(x, y, reverseOrder = false) {
+        return this.ApplySVGTransformOffsetsToPoint([x, y], reverseOrder);
     }
 
     /** Gets the XY offset based on this projection's SVG CSS (eg translation, rotation)
+     * and applies it to the given XY
+     * @param {number[]} xy Two-value number[], [x,y] to modify  
+     * @param {boolean=false} reverseOrder Default false. Perform modifications in reverse order? (Eg for undoing them)
      * @returns {number[]} Two-value number[], [x,y] values for this transform
-     * @see {@link ApplySVGTransformOffsetsToXY}, method that applies transform info to supplied [x,y] point
+     * @see {@link GetSVGTransformOffsets}, method that directly reads the transform info
+     * @see {@link svg}, element being read for transform info     
+     * @memberof ProjectionData
+     */
+    ApplySVGTransformOffsetsToPoint(xy, reverseOrder = false) {
+        return this.GetSVGTransformOffsets(xy, reverseOrder);
+    }
+
+    /** Gets the XY offset based on this projection's SVG CSS (eg translation, rotation)
+     * @param {boolean=false} reverseOrder Default false. Perform modifications in reverse order? (Eg for undoing them)
+     * @returns {number[]} Two-value number[], [x,y] values for this transform
+     * @see {@link ApplySVGTransformOffsetsToPoint}, method that applies transform info to supplied [x,y] point
      * @see {@link svg}, element being read for transform info 
      * @memberof ProjectionData
      */
-    GetSVGTransformOffsets() {
+    GetSVGTransformOffsets(origin = [0, 0], reverseOrder = false) {
         let g = this.svg.select('g');
         if (g) {
             let transform = g.attr('transform');
             if (transform) {
-                let x = 0;
-                let y = 0;
+                let xy = origin;
                 // transform found, be sure to update mouse x/y accordingly
                 let t = parse(transform);
-                // accommodate translation 
-                if (t.translate) {
-                    x += t.translate[0];
-                    y += t.translate[1];
+                // apply modifications in order
+                if (reverseOrder) {
+                    xy = Translate(xy, t, reverseOrder);
+                    xy = Rotate(xy, t, this.projectionSize, reverseOrder);
+                } else {
+                    xy = Rotate(xy, t, this.projectionSize, reverseOrder);
+                    xy = Translate(xy, t, reverseOrder);
                 }
-                // accommodate rotation 
-                if (t.rotate) {
-                    let rotatedXY = RotateAround(this.projectionSize, this.projectionSize, x, y, -t.rotate[0]);
-                    x = rotatedXY[0];
-                    y = rotatedXY[1];
+
+                function Translate(xy, t, reverse) {
+                    // accommodate translation 
+                    if (t.translate) {
+                        xy[0] -= t.translate[0] * reverse ? -1 : 1;
+                        xy[1] -= t.translate[1] * reverse ? -1 : 1;
+                    }
+                    // return xy;jk    q-0;LT6 (kitty <3)
+                    return xy;
                 }
-                return [x, y];
+                function Rotate(xy, t, size, reverse) {
+                    // accommodate rotation 
+                    if (t.rotate) {
+                        xy = RotateAround(size, size, xy[0], xy[1], t.rotate[0] * reverse ? -1 : 1);
+                    }
+                    return xy;
+                }
+                return xy;
             }
         }
-        return [0, 0];
+        return origin;
     }
 
 
