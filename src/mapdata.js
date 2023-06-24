@@ -879,14 +879,43 @@ export class ProjectionData {
      */
     XYPointAtLatLongPoint(latLong, offsetFromProjection = true) {
         let xy = this.projection(latLong.reverse());
-        let transform;
+        xy = this.ApplySVGTransformOffsetsToXY(xy);
+        if (offsetFromProjection) {
+            let origin = this.GetContainerFullOrigin();
+            xy[0] += origin[0];
+            xy[1] += origin[1];
+        }
+        return xy;
+    }
+
+    /** Gets the XY offset based on this projection's SVG CSS (eg translation, rotation)
+     * and applies it to the given XY
+     * @param {number[]} xy Two-value number[], [x,y] to modify  
+     * @returns {number[]} Two-value number[], [x,y] values for this transform
+     * @see {@link GetSVGTransformOffsets}, method that directly reads the transform info
+     * @see {@link svg}, element being read for transform info     
+     * @memberof ProjectionData
+     */
+    ApplySVGTransformOffsetsToXY(xy) {
+        let transform = GetSVGTransformOffsets();
+        xy[0] += transform[0];
+        xy[1] += transform[1];
+        return xy;
+    }
+
+    /** Gets the XY offset based on this projection's SVG CSS (eg translation, rotation)
+     * @returns {number[]} Two-value number[], [x,y] values for this transform
+     * @see {@link ApplySVGTransformOffsetsToXY}, method that applies transform info to supplied [x,y] point
+     * @see {@link svg}, element being read for transform info 
+     * @memberof ProjectionData
+     */
+    GetSVGTransformOffsets() {
         let g = this.svg.select('g');
         if (g) {
-            transform = g.attr('transform');
-            // transform = null;
+            let transform = g.attr('transform');
             if (transform) {
-                let x = xy[0];
-                let y = xy[1];
+                let x = 0;
+                let y = 0;
                 // transform found, be sure to update mouse x/y accordingly
                 let t = parse(transform);
                 // accommodate translation 
@@ -900,16 +929,10 @@ export class ProjectionData {
                     x = rotatedXY[0];
                     y = rotatedXY[1];
                 }
-                xy[0] = x;
-                xy[1] = y;
+                return [x, y];
             }
         }
-        if (offsetFromProjection) {
-            let origin = this.GetContainerFullOrigin();
-            xy[0] += origin[0];
-            xy[1] += origin[1];
-        }
-        return xy;
+        return [0, 0];
     }
 
 
