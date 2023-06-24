@@ -5,6 +5,8 @@ import { cursor } from './mapinput';
 // see bottom for code examples
 
 //TODO: move sizing logic (GetContainerSize, etc) into a parent class for both MapData and ProjectionData
+/** if true, fires a click event directly on the projection SVG, bypassing {@link mapinput} */
+const debugClickOnProjection = false;
 
 /** Container for all data related to displaying a map */
 export class MapData {
@@ -357,7 +359,7 @@ export class ProjectionData {
         this.mapData = mapData;
         this.#containerRect = this.svgContainer.getBoundingClientRect();
         // check for debug on click functionality 
-        if (debugClickProjection) {
+        if (debugClickOnProjection) {
             // target is the clicked map, event is pointer info
             let projectionReference = this;
             this.svg.on("click", function (event, target) {
