@@ -1,3 +1,4 @@
+import { MapData } from "./mapdata";
 import { CreateMap } from "./mapgen";
 import * as m from './maps';
 const feather = require('feather-icons')
@@ -22,9 +23,14 @@ export function CreateModule(map) {
  * Basic display and data container for everything maps and data! 
  */
 export class Module {
+
     map;
     container;
     moduleId;
+
+    /** 
+     * @type {MapData}
+     * @memberof Module */
     mapData;    
 
     titleBar;

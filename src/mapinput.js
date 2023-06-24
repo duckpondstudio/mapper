@@ -61,6 +61,8 @@ function MouseDown(mouseEvent) {
     if (mouseEvent.button === 0) {
         mouseHeld = true;
 
+        modules[0].mapData.AddDot(cursor.point);
+
         TestUpdateCursorCoordinates();
     }
 }

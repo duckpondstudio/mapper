@@ -23,6 +23,9 @@ export class MapData {
     projectionsContainer;
     projections = [];
 
+    /** @type {MapDot[]} */
+    #mapDots = [];
+
     #output;
     #containerRect;
     constructor(
@@ -62,7 +65,7 @@ export class MapData {
      * Add a MapDot dot to this projection
      * @param {number} x
      * @param {number} y
-     * @param {number} type Optional, default 0. Defines the rendering behaviour of this dot.
+     * @param {number} [type=0] Optional, default 0. Defines the rendering behaviour of this dot.
      * 
      * 0. XY represents GLOBAL XY coordinates (eg cursor position). Default 
      * 1. XY represents LOCAL XY coordinates, relative to this {@link MapData}
@@ -70,21 +73,84 @@ export class MapData {
      * @param {string} [id=null]
      * @memberof MapData
      */
-    AddDot(x, y, type, id = null) {
+    AddDotXY(x, y, type = 0, id = null) {
+        // check if any dots matching exist 
+        this.#mapDots.forEach(mapDot => {
+            if (mapDot.x == x && mapDot.y == y &&
+                mapDot.type == type && mapDot.id == id) {
+                // mapDot already exists, no need to add 
+                return;
+            }
+        });
         let mapDot = new MapDot(x, y, type, id);
+        this.#mapDots.push(mapDot);
+        this.#UpdateDots();
+        console.log("ADDED DOT at ", x, '/', y);
+    }
+    AddDot(xy, type = 0, id = null) {
+        this.AddDotXY(xy[0], xy[1], type, id);
     }
     AddDotXYLocal(x, y, id = null) {
-        this.AddDot(x, y, 1, id);
+        this.AddDotXY(x, y, 1, id);
     }
     AddDotXYGlobal(x, y, id = null) {
-        this.AddDot(x, y, 0, id);
+        this.AddDotXY(x, y, 0, id);
     }
     AddDotLatLong(lat, long, id = null) {
-        this.AddDot(lat, long, 2, id);
+        this.AddDotXY(lat, long, 2, id);
     }
 
+    RemoveDotsByXY(xy) {
+        if (this.#mapDots.length == 0) { return; }
+        let length = this.#mapDots.length;
+        this.#mapDots = this.#mapDots.filter(function( mapDot ) {
+            return mapDot.xy != xy;
+        });
+        if (this.#mapDots.length != length) { this.#UpdateDots(); }
+    }
+    RemoveDotsByType(type) {
+        if (this.#mapDots.length == 0) { return; }
+        let length = this.#mapDots.length;
+        this.#mapDots = this.#mapDots.filter(function( mapDot ) {
+            return mapDot.type != type;
+        });
+        if (this.#mapDots.length != length) { this.#UpdateDots(); }
+    }
+    RemoveDotsByID(id) {
+        if (this.#mapDots.length == 0) { return; }
+        let length = this.#mapDots.length;
+        this.#mapDots = this.#mapDots.filter(function( mapDot ) {
+            return mapDot.id != id;
+        });
+        if (this.#mapDots.length != length) { this.#UpdateDots(); }
+    }
     RemoveAllDots() {
+        if (this.#mapDots.length == 0) { return; }
+        this.#mapDots = [];
+        this.#UpdateDots();
+    }
 
+    GetAllDots() { return this.#mapDots; }
+    GetDotsByXY(xy) {
+        let dots = [];
+        for (let i = 0; i < this.#mapDots.length; i++) {
+            if (this.#mapDots[i].xy == xy) { dots.push(this.#mapDots[i]); }
+        }
+        return dots;
+    }
+    GetDotsByType(type) {
+        let dots = [];
+        for (let i = 0; i < this.#mapDots.length; i++) {
+            if (this.#mapDots[i].type == type) { dots.push(this.#mapDots[i]); }
+        }
+        return dots;
+    }
+    GetDotsByID(id) {
+        let dots = [];
+        for (let i = 0; i < this.#mapDots.length; i++) {
+            if (this.#mapDots[i].id == id) { dots.push(this.#mapDots[i]); }
+        }
+        return dots;
     }
 
     #UpdateDots() {
