@@ -236,15 +236,83 @@ export class MapData {
         return this.GetPointRatio(xy[0], xy[1], offsetToProjection);
     }
 
-    LatLongAtPoint(xy, offsetProjection = false, useAvgLatLong = true) {
+    XYPointAtLatLong(lat, long, useAvgXY = true, offsetProjection = false) {
+        return this.XYPointAtLatLongPoint([lat, long], useAvgXY, offsetProjection);
+    }
+    XYPointAtLatLongPoint(latLong, useAvgXY = true, offsetProjection = false) {
         // NOTE: using average across multiple projections minimizes 
         //       any tiny differences between individual projections 
-        
+        // ensure projections exist 
+        console.log("getting...");
+        switch (this.projections.length) {
+            case 0:
+                console.error("Cannot get point at LatLong: ", latLong, ", no projections loaded, ",
+                    "ensure module is fully loaded. UseAvgXY ", useAvgXY,
+                    ", OffsetProjection ", offsetProjection, ". Returning null");
+                return null;
+            case 1:
+                // only one projection, no need to average it out 
+                useAvgXY = false;
+                break;
+        }
+        let xy = [0, 0];
+        if (useAvgXY) {
+            // use all the combined projections to get the average XY 
+            // iterate thru all latitude/longitude, and return the average
+            for (let i = 0; i < this.projections.length; i++) {
+                let projXY = this.projections[i].XYPointAtLatLongPoint(latLong, offsetProjection);
+                console.log("output", i, "XY:", projXY);
+                if (i == 0) {
+                    xy = projXY;
+                } else {
+                    xy[0] += projXY[0];
+                    xy[1] += projXY[1];
+                }
+            }
+            xy[0] /= this.projections.length;
+            xy[1] /= this.projections.length;
+        } else {
+            // NON-average, just use one projection
+            // by default, use the middle projection (least likelihood of a point being out-of-container)
+            let projection = this.projections[Math.floor(this.projections.length / 2)];// [2]
+            // projection nullcheck 
+            if (projection == null) {
+                if (this.projections.length > 1) {
+                    // middle projection didn't work, search through all 
+                    for (let i = 0; i < this.projections.length; i++) {
+                        if (this.projections[i] != null) {
+                            projection = this.projections[i];
+                            break;
+                        }
+                    }
+                }
+                if (projection == null) {
+                    console.error("Can't get XY at LatLong", latLong,
+                        ", no valid projection found, returning null, mapData:", this);
+                    return null;
+                }
+            }
+            xy = projection.XYPointAtLatLongPoint(latLong, !offsetProjection);
+        }
+        // lastly, ensure the returned point is within the bounds of this container 
+        if (!this.IsPointWithinContainer(xy, offsetProjection)) {
+            // not within bounds, constrain within container 
+            xy = this.ConstrainPointWithinContainer(xy, offsetProjection);
+        }
+        return xy;
+    }
+
+    LatLongAtXY(x, y, useAvgLatLong = true, offsetProjection = false) {
+        return this.LatLongAtPoint([x, y], offsetProjection, useAvgLatLong);
+    }
+    LatLongAtPoint(xy, useAvgLatLong = true, offsetProjection = false) {
+        // NOTE: using average across multiple projections minimizes 
+        //       any tiny differences between individual projections 
         // ensure projections exist 
         switch (this.projections.length) {
             case 0:
                 console.error("Cannot get LatLong at point: ", xy, ", no projections loaded, ",
-                    "ensure module is fully loaded. AvgLatLong ", useAvgLatLong,
+                    "ensure module is fully loaded. UseAvgLatLong ", useAvgLatLong,
                     ", OffsetProjection ", offsetProjection, ". Returning null");
                 return null;
             case 1:
@@ -253,7 +321,7 @@ export class MapData {
                 break;
         }
         if (useAvgLatLong) {
-            // use the projection
+            // use all the combined projections to get the average Lat/Long value
             let avgLatLong = [0, 0];
             // iterate thru all latitude/longitude, and return the average
             for (let i = 0; i < this.projections.length; i++) {
