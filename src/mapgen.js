@@ -210,6 +210,7 @@ function CreateMap(module) {
 
             // apply data
             let g = svg.append('g')
+                .attr('class','mapGroup')
                 .attr("transform", transform)
                 .selectAll('path')
                 .data(geojson.features)

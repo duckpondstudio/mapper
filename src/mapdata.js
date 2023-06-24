@@ -188,11 +188,16 @@ export class MapData {
         this.projections.forEach(projection => {
             let svg = projection.svg;
 
-            // first, remove all current map dots 
-            svg.selectAll('.mapDot').remove();
-
-            svg.select('g')
-                .selectAll('circle')
+            // check if dotGroup exists 
+            let dotGroup = svg.select('.dotGroup');
+            if (dotGroup.empty()) {
+                svg.append('g').attr('class', 'dotGroup').raise();
+                dotGroup = svg.select('.dotGroup');
+            } else {
+                // remove all current map dots 
+                svg.selectAll('.mapDot').remove();
+            }
+            dotGroup.selectAll('circle')
                 .data(this.#mapDots)
                 .enter()
                 .append('circle')
@@ -901,7 +906,7 @@ export class ProjectionData {
      * @memberof ProjectionData
      */
     GetSVGTransformOffsets(origin = [0, 0], reverseOrder = false) {
-        let g = this.svg.select('g');
+        let g = this.svg.select('.mapGroup');
         if (g) {
             let transform = g.attr('transform');
             if (transform) {
