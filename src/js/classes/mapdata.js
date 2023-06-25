@@ -1,6 +1,7 @@
 import { cursor } from '../input';
 import { Module } from './module';
 import { MapDot } from './mapdot';
+import { CreateDot } from './mapdot';
 import { ProjectionData } from './projectiondata';
 import * as m from '../maps';
 import * as math from '../utils/math';
@@ -188,15 +189,10 @@ export class MapData {
                 // remove all current map dots 
                 svg.selectAll('.mapDot').remove();
             }
-            dotGroup.selectAll('circle')
+            let dots = dotGroup.selectAll('circle')
                 .data(this.#mapDots)
-                .enter()
-                .append('circle')
-                .attr('class', 'mapDot')
-                .attr('cx', function (d) { return d.GetX(projection) })
-                .attr('cy', function (d) { return d.GetY(projection) })
-                .attr('r', 3)
-                .style('fill', 'red');
+                .enter();
+            CreateDot(dots, projection);
         });
     }
 

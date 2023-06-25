@@ -87,15 +87,13 @@ export class MapDot {
     GetY(projection) {
         return this.GetXY(projection)[1];
     }
+}
 
-    processXY(mapData) {
-        switch (type) {
-            case 0: // global 
-                return GetContainerPointOffset(this.xy);
-            case 1: // local
-                return this.xy;
-            case 2: // lat/long
-                return mapData.XYPointAtLatLongPoint(this.xy);
-        }
-    }
+export function CreateDot(d3DotsGroup, projection) {
+    d3DotsGroup.append('circle')
+        .attr('class', 'mapDot')
+        .attr('cx', function (d) { return d.GetX(projection) })
+        .attr('cy', function (d) { return d.GetY(projection) })
+        .attr('r', 3)
+        .style('fill', 'red');
 }
