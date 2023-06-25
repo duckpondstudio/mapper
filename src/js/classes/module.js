@@ -68,8 +68,7 @@ export class Module {
         this.container.id = "mod" + this.moduleId + "_" + map;
         this.container.setAttribute('class', 'module background');
         // add selection event listener to container 
-        this.container.addEventListener('click', (event) => { console.log("focused"); }, true);
-        this.container.addEventListener('blur', (event) => { console.log("unfocused"); });
+        this.container.addEventListener('click', this.SelectModule);
 
         // add titlebar to module 
         this.titleBar = document.createElement('div');
@@ -107,6 +106,11 @@ export class Module {
 
         // increment static module counter, ensure all unique
         Module.moduleCount++;
+    }
+
+    /** Select this module */
+    SelectModule(mouseEvent) {
+        lastModule = this;
     }
 
     /** @static Singleton counter for all instantiated modules
