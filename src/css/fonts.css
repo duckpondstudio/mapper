@@ -1,17 +1,17 @@
 /* Isidora Soft - Regular */
 @font-face {
     font-family: 'Isidora Soft';
-    src: url('../fonts/isidorasoft-bold-webfont.woff2') format('woff2'),
-         url('../fonts/isidorasoft-bold-webfont.woff') format('woff'),
-         url('../fonts/isidorasoft-bold.otf') format('opentype');
+    src: url('../assets/fonts/isidorasoft-bold-webfont.woff2') format('woff2'),
+         url('../assets/fonts/isidorasoft-bold-webfont.woff') format('woff'),
+         url('../assets/fonts/isidorasoft-bold.otf') format('opentype');
 }
 
 /* Rockford Sans - Regular */
 @font-face {
     font-family: 'Rockford Sans';
-    src: url('../fonts/rockfordsans-regular-webfont.woff2') format('woff2'),
-         url('../fonts/rockfordsans-regular-webfont.woff') format('woff'),
-         url('../fonts/rockfordsans-regular.otf') format('opentype');
+    src: url('../assets/fonts/rockfordsans-regular-webfont.woff2') format('woff2'),
+         url('../assets/fonts/rockfordsans-regular-webfont.woff') format('woff'),
+         url('../assets/fonts/rockfordsans-regular.otf') format('opentype');
     font-weight: normal;
     font-style: normal;
 }
@@ -19,9 +19,9 @@
 /* Rockford Sans - Bold */
 @font-face {
     font-family: 'Rockford Sans';
-    src: url('../fonts/rockfordsans-bold-webfont.woff2') format('woff2'),
-         url('../fonts/rockfordsans-bold-webfont.woff') format('woff'),
-         url('../fonts/rockfordsans-bold.otf') format('opentype');
+    src: url('../assets/fonts/rockfordsans-bold-webfont.woff2') format('woff2'),
+         url('../assets/fonts/rockfordsans-bold-webfont.woff') format('woff'),
+         url('../assets/fonts/rockfordsans-bold.otf') format('opentype');
     font-weight: bold;
     font-style: normal;
 }
@@ -29,9 +29,9 @@
 /* Rockford Sans - Italic */
 @font-face {
     font-family: 'Rockford Sans';
-    src: url('../fonts/rockfordsans-regularitalic-webfont.woff2') format('woff2'),
-         url('../fonts/rockfordsans-regularitalic-webfont.woff') format('woff'),
-         url('../fonts/rockfordsans-regularitalic.otf') format('opentype');
+    src: url('../assets/fonts/rockfordsans-regularitalic-webfont.woff2') format('woff2'),
+         url('../assets/fonts/rockfordsans-regularitalic-webfont.woff') format('woff'),
+         url('../assets/fonts/rockfordsans-regularitalic.otf') format('opentype');
     font-weight: normal;
     font-style: italic;
 }
@@ -39,9 +39,9 @@
 /* Rockford Sans - Bold Italic */
 @font-face {
     font-family: 'Rockford Sans';
-    src: url('../fonts/rockfordsans-bolditalic-webfont.woff2') format('woff2'),
-         url('../fonts/rockfordsans-bolditalic-webfont.woff') format('woff'),
-         url('../fonts/rockfordsans-bolditalic.otf') format('opentype');
+    src: url('../assets/fonts/rockfordsans-bolditalic-webfont.woff2') format('woff2'),
+         url('../assets/fonts/rockfordsans-bolditalic-webfont.woff') format('woff'),
+         url('../assets/fonts/rockfordsans-bolditalic.otf') format('opentype');
     font-weight: bold;
     font-style: italic;
 }

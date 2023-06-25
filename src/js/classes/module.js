@@ -1,7 +1,9 @@
 import { MapData } from "./mapdata";
-import { CreateMap } from "./mapgen";
-import * as m from './maps';
+import { CreateMap } from "../mapgenerator";
+import * as m from '../maps';
 const feather = require('feather-icons')
+
+let lastModule = null;
 
 /** Array containing all loaded {@link Module modules}
  * @type {Module[]} */
@@ -17,6 +19,23 @@ export function CreateModule(map) {
     module.mapData = CreateMap(module);
     modules.push(module);
     return module;
+}
+
+/** 
+ * Get the most recently loaded/used {@link Module}.
+ * - If none is recently used, returns the first loaded.
+ * - If none are loaded, returns null.
+ * @see {@link modules} is the array containing all loaded modules
+ * @export
+ * @return {Module} */
+export function LastModule() {
+    if (lastModule == null) {
+        for (let i = 0; i < modules.length; i++) {
+            if (modules[i] == null) continue;
+            lastModule = modules[i];
+        }
+    }
+    return lastModule;
 }
 
 /**
@@ -48,6 +67,9 @@ export class Module {
         this.container = document.createElement('div');
         this.container.id = "mod" + this.moduleId + "_" + map;
         this.container.setAttribute('class', 'module background');
+        // add selection event listener to container 
+        this.container.addEventListener('click', (event) => { console.log("focused"); }, true);
+        this.container.addEventListener('blur', (event) => { console.log("unfocused"); });
 
         // add titlebar to module 
         this.titleBar = document.createElement('div');

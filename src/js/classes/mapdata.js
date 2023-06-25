@@ -1,8 +1,9 @@
 import * as d3 from 'd3';
 import { parse, stringify } from 'transform-parser';
-import { cursor } from './mapinput';
+import { cursor } from '../input';
 import { Module } from './module';
-import * as m from './maps';
+import * as m from '../maps';
+import * as math from '../utils/math';
 
 // see bottom for code examples
 
@@ -14,7 +15,7 @@ import * as m from './maps';
 /// MAPDOT SETUP
 
 /// PROJECTION SETUP 
-/** if true, fires a click event directly on the projection SVG, bypassing {@link mapinput} */
+/** if true, fires a click event directly on the projection SVG, bypassing {@link baseinput} */
 const debugClickOnProjection = false;
 
 /** Container for all data related to displaying a map */
@@ -344,7 +345,7 @@ export class MapData {
         // ensure x is within container 
         if (x < origin || x > extent) { rX = -1; } else {
             // x is within bounds 
-            rX = NormalizeValue(x, origin, extent, false);
+            rX = math.NormalizeValue(x, origin, extent, false);
         }
         return rX;
     }
@@ -356,7 +357,7 @@ export class MapData {
         // ensure y is within container 
         if (y < origin || y > extent) { rY = -1; } else {
             // y is within bounds 
-            rY = NormalizeValue(y, origin, extent, false);
+            rY = math.NormalizeValue(y, origin, extent, false);
         }
         return rY;
     }
@@ -553,8 +554,8 @@ export class MapData {
         // offsetToProjection should usually be FALSE here, this by default works with screenspace coords
 
         if (offsetToProjection) { x = this.GetContainerXOffset(x); y = this.GetContainerYOffset(y); }
-        let iX = InvertNormalizedValue(x, this.GetContainerOriginX(), this.GetContainerExtentX(), false);
-        let iY = InvertNormalizedValue(y, this.GetContainerOriginY(), this.GetContainerExtentY(), false);
+        let iX = math.InvertNormalizedValue(x, this.GetContainerOriginX(), this.GetContainerExtentX(), false);
+        let iY = math.InvertNormalizedValue(y, this.GetContainerOriginY(), this.GetContainerExtentY(), false);
         return this.GetProjectionAtXY(iX, iY);
     }
 
@@ -915,7 +916,7 @@ export class ProjectionData {
                 function Rotate(xy, t, size, reverse) {
                     // accommodate rotation 
                     if (t.rotate) {
-                        xy = RotateAround(size, size, xy[0], xy[1], t.rotate[0] * (reverse ? -1 : 1));
+                        xy = math.RotateAround(size, size, xy[0], xy[1], t.rotate[0] * (reverse ? -1 : 1));
                     }
                     return xy;
                 }
@@ -961,59 +962,6 @@ export class ProjectionData {
     OutputDataAtPoint(xy, offsetToProjection = true) {
         this.OutputDataAtXY(xy[0], xy[1], offsetToProjection);
     }
-}
-
-/**
- * Rotate the given XY point around the given pivot XY by the given angle in degrees 
- *
- * @param {number} pivotX X point to rotate 
- * @param {number} pivotY Y point to rotate
- * @param {number} pointX X pivot to rotate around
- * @param {number} pointY Y pivot to rotate around
- * @param {number} angle Angle, in degrees, to rotate by 
- * @return {number[]} Two-value number array where [0] is resulting X and [1] is resulting Y 
- */
-function RotateAround(pivotX, pivotY, pointX, pointY, angle) {
-    let radians = (Math.PI / 180) * angle;
-    let cos = Math.cos(radians);
-    let sin = Math.sin(radians);
-    let newX = (cos * (pointX - pivotX)) + (sin * (pointY - pivotY)) + pivotX;
-    let newY = (cos * (pointY - pivotY)) - (sin * (pointX - pivotX)) + pivotY;
-    return [newX, newY];
-}
-
-/**
- * Returns the normalized value between min and max 
- * 
- * Eg, if value=200, min=100, and max=300, returns 0.5
- * @param {number} value Value to normalize relative to min and max
- * @param {number} min Minimum extent of the range of normalization
- * @param {number} max Maximum extent of the range of normalization
- * @param {boolean=false} clamp Optional. Clamp value between 0 and 1? Default false
- * @returns {number} Normalized number for value's ratio between min and max
- */
-function NormalizeValue(value, min, max, clamp = false) {
-    let v = (value - min) / (max - min);
-    if (clamp) { if (v < 0) { v = 0; } else if (v > 1) { v = 1; } }
-    return v;
-}
-
-/**
- * Convert a normalized value to its non-normalized state, given the min/max values. 
- * 
- * Eg if value=0.5, min=100, and max=300, returns 200
- * @param {number} value Value as a ratio min/max to invert. 
- * Typically between 0 and 1, see {@link clamp}
- * @param {number} min Min value of the range to invert normalization
- * @param {number} max Max value of the range to invert normalization
- * @param {boolean=false} clamp Optional, default false. Clamp value between 0 and 1? 
- *  If true, <=0 returns min, >=1 returns max
- * @returns Inverted normalized value, non-normalized
- */
-function InvertNormalizedValue(value, min, max, clamp = false) {
-    if (clamp) { if (value <= 0) { return min; } else if (value >= 1) { return max; } }
-    let range = max - min;
-    return (value * range) + min;
 }
 
 

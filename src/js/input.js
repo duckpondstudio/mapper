@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
-import { MapData, ProjectionData } from './mapdata';
-import { modules } from './module';
+import { MapData, ProjectionData } from './classes/mapdata';
+import { modules } from './classes/module';
 
 const keyEventDown = 'keyEventDown';
 const keyEventUp = 'keyEventUp';

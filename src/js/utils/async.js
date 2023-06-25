@@ -1,35 +1,24 @@
-import(/* webpackPreload: true */ './css/fonts.css');
-import(/* webpackPreload: true */ './css/style.css');
-import { CreateModule } from './module';
-import { InputSetup } from './mapinput';
-import * as m from './maps';
 
-window.addEventListener('load', function () {
-    // window is loaded 
-    InputSetup();
-    CreateModule(m.grieger);
-    // CreateModule(m.equirectangular);
-});
-
-
-
-
-
-
-
-
-
-//TODO: potentially useful, test / make snippet
+/** 
+ * Show debug log output for {@link PromiseFunction}? 
+ * @type {boolean=true} */
 let debugPromiseFunction = true;
-function PromiseFunction(functionToExecute) {
+
+/**
+ * Simple wrapper around Promise, that calls and returns value from a method
+ * @export
+ * @param {function} functionToInvoke Function invoked and returned in Promise. 
+ * @returns Value returned from {@link functionToInvoke} */
+export function PromiseFunction(functionToInvoke) {
     // Execute heavy function asynchronously
     if (debugPromiseFunction) {
-        console.log('Beginning to execute promise function');
+        console.log('Beginning to execute promise function', functionToInvoke);
     }
     PromiseFunctionCallback()
         .then(function (result) {
-            if (debugPromiseFunction)
+            if (debugPromiseFunction) {
                 console.log('Function promise returned, result: ', result);
+            }
             return result;
         })
         .catch(function (error) {
@@ -37,10 +26,9 @@ function PromiseFunction(functionToExecute) {
         });
     function PromiseFunctionCallback() {
         return new Promise(function (resolve, reject) {
-            // Simulate heavy computation with setTimeout
             setTimeout(function () {
                 try {
-                    const result = functionToExecute();
+                    const result = functionToInvoke();
                     resolve(result);
                 } catch (error) {
                     reject(error);
