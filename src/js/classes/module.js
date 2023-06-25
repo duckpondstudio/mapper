@@ -1,5 +1,5 @@
 import { MapData } from "./mapdata";
-import { CreateMap } from "../mapgenerator";
+import { CreateMap } from "../mapmaker";
 import * as m from '../maps';
 const feather = require('feather-icons')
 
