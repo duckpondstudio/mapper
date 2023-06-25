@@ -6,7 +6,8 @@ import overlayGeo from './../assets/json/outline-safe.geojson';//       recommen
 // TODO: allow multiple geojson files to be imported onto a single map (eg to load land + ocean + lat/long lines separately)
 // TODO: allow separate geojson files on the same map to be independently toggled on/off (ideally without recalculating the same map)
 
-import { MapData, ProjectionData } from './classes/mapdata';
+import { MapData } from './classes/mapdata';
+import { ProjectionData } from './classes/projectiondata';
 import { GetGeoJSON } from './geojsonparser';
 import * as m from './maps';
 
