@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import * as test from './test';
 import { MapData } from './classes/mapdata';
 import { ProjectionData } from './classes/projectiondata';
 import { Module, current } from './classes/module';
@@ -209,6 +210,7 @@ export const cursor = {
 
 /** User pressed the spacebar */
 function KeySpace() {
+    test.DrawLandWaterDots(current.map);
 }
 
 /** User pressed the enter/return key */
