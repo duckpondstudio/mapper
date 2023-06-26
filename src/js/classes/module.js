@@ -52,7 +52,7 @@ export class Module {
     /** 
      * @type {MapData}
      * @memberof Module */
-    mapData;    
+    mapData;
 
     titleBar;
 
@@ -70,7 +70,9 @@ export class Module {
         this.container.id = "mod" + this.moduleId + "_" + map;
         this.container.setAttribute('class', 'module background');
         // add selection event listener to container 
-        this.container.addEventListener('click', this.SelectModule);
+        this.container.addEventListener('click', mouseEvent => {
+            this.Select(); ClickedModule(mouseEvent, this);
+        });
 
         // add titlebar to module 
         this.titleBar = document.createElement('div');
@@ -96,7 +98,7 @@ export class Module {
         this.mapSubModule.setAttribute('class', 'submodule map');
         this.mapSubModule.id = 'mod' + this.moduleId + '_mapCont';
         this.container.appendChild(this.mapSubModule);
-        
+
         // add data container
         this.dataSubModule = document.createElement('div');
         this.dataSubModule.setAttribute('class', 'submodule data');
@@ -108,12 +110,14 @@ export class Module {
 
         // increment static module counter, ensure all unique
         Module.moduleCount++;
+
+        // if lastModule is null, assign it to the first generated one 
+        if (lastModule == null) { this.Select(); }
     }
 
-    /** Select this module */
-    SelectModule(mouseEvent) {
+    /** Sets this Module as {@link lastModule}, the most recently active module */
+    Select() {
         lastModule = this;
-        ClickedModule(mouseEvent, this);
     }
 
     /** @static Singleton counter for all instantiated modules
