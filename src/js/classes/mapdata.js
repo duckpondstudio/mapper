@@ -70,9 +70,9 @@ export class MapData {
 
     /**
      * Add a MapDot dot to this projection
-     * @param {number} x X coordinate of this dot (or latitude, see {@link type})
-     * @param {number} y X coordinate of this dot (or longitude, see {@link type})
-     * @param {number} [type=0] Optional, default 0. Defines the rendering behaviour of this dot.
+     * @param {number} x X coordinate of this dot (or latitude, see {@link posType})
+     * @param {number} y X coordinate of this dot (or longitude, see {@link posType})
+     * @param {number} [posType=0] Optional, default 0. Defines the rendering behaviour of this dot.
      * 
      * 0. XY represents GLOBAL XY coordinates (eg cursor position). Default 
      * 1. XY represents LOCAL XY coordinates, relative to this {@link MapData}
@@ -80,24 +80,24 @@ export class MapData {
      * @param {string} [id=null]
      * @memberof MapData
      */
-    AddDotXY(x, y, type = 0, id = null) {
+    AddDotXY(x, y, posType = 0, id = null) {
         // check if any dots matching exist 
         this.#mapDots.forEach(mapDot => {
             if (mapDot.x == x && mapDot.y == y &&
-                mapDot.type == type && mapDot.id == id) {
+                mapDot.posType == posType && mapDot.id == id) {
                 // mapDot already exists, no need to add 
                 return;
             }
         });
-        let mapDot = new MapDot(x, y, type, id);
+        let mapDot = new MapDot(x, y, id, posType);
         this.#mapDots.push(mapDot);
         this.#UpdateDots();
         console.log("ADDED DOT at ", x, '/', y);
     }
     /**
      * Add a MapDot dot to this projection
-     * @param {number} xy X and Y coordinates of this dot (or lat/long, see {@link type})
-     * @param {number} [type=0] Optional, default 0. Defines the rendering behaviour of this dot.
+     * @param {number} xy X and Y coordinates of this dot (or lat/long, see {@link posType})
+     * @param {number} [posType=0] Optional, default 0. Defines this dot's coordinate system.
      * 
      * 0. XY represents GLOBAL XY coordinates (eg cursor position). Default 
      * 1. XY represents LOCAL XY coordinates, relative to this {@link MapData}
@@ -105,17 +105,17 @@ export class MapData {
      * @param {string} [id=null]
      * @memberof MapData
      */
-    AddDot(xy, type = 0, id = null) {
-        this.AddDotXY(xy[0], xy[1], type, id);
+    AddDot(xy, posType = 0, id = null) {
+        this.AddDotXY(xy[0], xy[1], id, posType);
     }
     AddDotXYLocal(x, y, id = null) {
-        this.AddDotXY(x, y, 1, id);
+        this.AddDotXY(x, y, id, 1);
     }
     AddDotXYGlobal(x, y, id = null) {
-        this.AddDotXY(x, y, 0, id);
+        this.AddDotXY(x, y, id, 0);
     }
     AddDotLatLong(lat, long, id = null) {
-        this.AddDotXY(lat, long, 2, id);
+        this.AddDotXY(lat, long, id, 2);
     }
 
     RemoveDotsByXY(xy) {
@@ -126,11 +126,11 @@ export class MapData {
         });
         if (this.#mapDots.length != length) { this.#UpdateDots(); }
     }
-    RemoveDotsByType(type) {
+    RemoveDotsByPosType(posType) {
         if (this.#mapDots.length == 0) { return; }
         let length = this.#mapDots.length;
         this.#mapDots = this.#mapDots.filter(function (mapDot) {
-            return mapDot.type != type;
+            return mapDot.posType != posType;
         });
         if (this.#mapDots.length != length) { this.#UpdateDots(); }
     }
@@ -156,10 +156,10 @@ export class MapData {
         }
         return dots;
     }
-    GetDotsByType(type) {
+    GetDotsByPosType(posType) {
         let dots = [];
         for (let i = 0; i < this.#mapDots.length; i++) {
-            if (this.#mapDots[i].type == type) { dots.push(this.#mapDots[i]); }
+            if (this.#mapDots[i].posType == posType) { dots.push(this.#mapDots[i]); }
         }
         return dots;
     }
@@ -189,8 +189,9 @@ export class MapData {
                 // remove all current map dots 
                 svg.selectAll('.mapDot').remove();
             }
+            //TODO Only render dots on THIS projection, or adjacent + within 2x dot size/radius of its projection's edge  
             let dots = dotGroup.selectAll('circle')
-                .data(this.#mapDots)
+                .data(this.#mapDots)// data input line 
                 .enter();
             CreateDot(dots, projection);
         });

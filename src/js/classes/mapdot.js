@@ -2,30 +2,30 @@
 
 /** Data related to rendering dots on a map projection */
 export class MapDot {
-    /** X-coordinate for this dot (can be Latitude, see {@link type})
+    /** X-coordinate for this dot (can be Latitude, see {@link posType})
      * @type {number}
      * @memberof MapDot */
     x;
-    /** Y-coordinate for this dot (can be Latitude, see {@link type})
+    /** Y-coordinate for this dot (can be Latitude, see {@link posType})
      * @memberof MapDot */
     y;
-    /** Optional, default 0. Defines the rendering behaviour of this dot.
+    /** Optional, default 0. Defines this dot's coordinate system.
      * 
      * 0. XY represents GLOBAL XY coordinates (eg cursor position). Default 
      * 1. XY represents LOCAL XY coordinates, relative to this {@link MapData}
      * 2. XY represents Latitude/Longitude coordinates
      * @memberof MapDot */
-    type;
+    posType;
     /** Optional, default null. ID for this dot. 
      * If set, can use to access all dots of the given ID. 
      * @memberof MapDot */
     id;
     /** Create a new {@link MapDot}. Set {@link X} and {@link Y} coordinates. 
-     * Optionally specify {@link type} and {@link id ID}.
+     * Optionally specify {@link posType} and {@link id ID}.
      * 
-     * @param {number} x X-coordinate for this dot (can be Latitude, see {@link type})
-     * @param {number} y Y-coordinate for this dot (can be Longitude, see {@link type})
-     * @param {number=0} type Optional, default 0. Defines the rendering behaviour of this dot.
+     * @param {number} x X-coordinate for this dot (can be Latitude, see {@link posType})
+     * @param {number} y Y-coordinate for this dot (can be Longitude, see {@link posType})
+     * @param {number=0} posType Optional, default 0. Defines this dot's coordinate system.
      * 
      * 0. XY represents GLOBAL XY coordinates (eg cursor position). Default 
      * 1. XY represents LOCAL XY coordinates, relative to this {@link MapData}
@@ -34,19 +34,19 @@ export class MapDot {
      * If set, can use to access all dots of the given ID.
      * @memberof MapDot
      */
-    constructor(x, y, type = 0, id = null) {
+    constructor(x, y, id = null, posType = 0) {
         this.x = x;
         this.y = y;
-        switch (type) {
+        switch (posType) {
             case 0: // global 
             case 1: // local 
             case 2: // latLong
-                this.type = type;
+                this.posType = posType;
                 break;
             default:
-                console.warn("Attempted to create MapDot of invalid type ", type,
-                    ', see @type param for valid values, defaulting to 0');
-                this.type = type = 0;
+                console.warn("Attempted to create MapDot of invalid posType ", posType,
+                    ', see @posType param for valid values, defaulting to 0');
+                this.posType = posType = 0;
                 break;
         }
         this.id = id;
@@ -59,7 +59,7 @@ export class MapDot {
      * @param {ProjectionData} p Projection to get X coord relative to 
      * @memberof MapDot */
     GetXY(p) {
-        switch (this.type) {
+        switch (this.posType) {
             case 0: // global, screenspace
                 // convert screenspace to lat/long for per-projection localization
                 let latLong = p.LatLongAtPoint(this.xy);
