@@ -158,7 +158,17 @@ function KeyEvent(keyEvent, type) {
                 switch (key) {
                     case ' ':
                         // pressed space
+                        KeySpace();
                         break;
+                    case 'Enter':
+                        // pressed enter key
+                        KeyEnter();
+                        break;
+                    case 'Escape':
+                        // pressed escape key
+                        KeyEsc();
+                        break;
+
                 }
 
             } else {
@@ -194,6 +204,22 @@ export const cursor = {
 }
 
 //#endregion input setup
+
+//#region useful key events
+
+/** User pressed the spacebar */
+function KeySpace() {
+}
+
+/** User pressed the enter/return key */
+function KeyEnter() {
+}
+
+/** User pressed the escape key */
+function KeyEsc() {
+}
+
+//#endregion useful key events 
 
 //#region per-element input receivers
 
