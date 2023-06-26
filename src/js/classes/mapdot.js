@@ -1,4 +1,12 @@
+import * as d3 from 'd3';
+import { ProjectionData } from './projectiondata';
 
+/** Container of all styles for MapDot */
+export const dotStyle = {
+    get circle() { return 'crc'; },
+    get square() { return 'sqr'; },
+    get default() { return this.circle; }
+}
 
 /** Data related to rendering dots on a map projection */
 export class MapDot {
@@ -8,7 +16,7 @@ export class MapDot {
     x;
     /** Y-coordinate for this dot (can be Latitude, see {@link posType})
      * @memberof MapDot */
-    y;
+   y;
     /** Optional, default 0. Defines this dot's coordinate system.
      * 
      * 0. XY represents GLOBAL XY coordinates (eg cursor position). Default 
@@ -20,6 +28,12 @@ export class MapDot {
      * If set, can use to access all dots of the given ID. 
      * @memberof MapDot */
     id;
+    /** 
+     * Optional. Appearance style for this dot. Default {@link dotStyle.circle circle}
+     * @see {@link dotStyle}
+     * @memberof MapDot */
+    style;
+
     /** Create a new {@link MapDot}. Set {@link X} and {@link Y} coordinates. 
      * Optionally specify {@link posType} and {@link id ID}.
      * 
@@ -32,11 +46,11 @@ export class MapDot {
      * 2. XY represents Latitude/Longitude coordinates
      * @param {string=null} id Optional, default null. ID for this dot. 
      * If set, can use to access all dots of the given ID.
-     * @memberof MapDot
-     */
-    constructor(x, y, id = null, posType = 0) {
+     * @memberof MapDot */
+    constructor(x, y, id = null, posType = 0, style = dotStyle.circle) {
         this.x = x;
         this.y = y;
+        this.id = id;
         switch (posType) {
             case 0: // global 
             case 1: // local 
@@ -49,7 +63,17 @@ export class MapDot {
                 this.posType = posType = 0;
                 break;
         }
-        this.id = id;
+        switch (style) {
+            case dotStyle.circle:
+            case dotStyle.square:
+                this.style = style;
+                break;
+            default:
+                console.warn("Attempted to create MapDot on invalid style", style,
+                    ", see @dotStyle for valid values, defaulting to dotStyle.circle");
+                this.style = dotStyle.circle;
+                break;
+        }
     }
 
     get xy() { return [this.x, this.y]; }
@@ -87,13 +111,24 @@ export class MapDot {
     GetY(projection) {
         return this.GetXY(projection)[1];
     }
+
+    /**
+     * Apply CSS styling for this dot
+     * @param {d3.Selection} d3Selection D3 selected element (eg this dot's DOM element)
+     * @param {ProjectionData} projection Reference to the projection rendering this dot 
+     */
+    StyleForD3(d3Selection, projection) {
+        d3Selection
+            .attr('cx', this.GetX(projection))
+            .attr('cy', this.GetY(projection))
+            .attr('r', 3)
+            .style('fill', 'red')
+            ;
+    }
 }
 
 export function CreateDot(d3DotsGroup, projection) {
     d3DotsGroup.append('circle')
         .attr('class', 'mapDot')
-        .attr('cx', function (d) { return d.GetX(projection) })
-        .attr('cy', function (d) { return d.GetY(projection) })
-        .attr('r', 3)
-        .style('fill', 'red');
+        .each(function (d) { d.StyleForD3(d3.select(this), projection)});
 }

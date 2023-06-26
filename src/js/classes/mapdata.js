@@ -80,7 +80,7 @@ export class MapData {
      * @param {string} [id=null]
      * @memberof MapData
      */
-    AddDotXY(x, y, posType = 0, id = null) {
+    AddDotXY(x, y, id = null, posType = 0) {
         // check if any dots matching exist 
         this.#mapDots.forEach(mapDot => {
             if (mapDot.x == x && mapDot.y == y &&
@@ -92,7 +92,6 @@ export class MapData {
         let mapDot = new MapDot(x, y, id, posType);
         this.#mapDots.push(mapDot);
         this.#UpdateDots();
-        console.log("ADDED DOT at ", x, '/', y);
     }
     /**
      * Add a MapDot dot to this projection
@@ -105,7 +104,7 @@ export class MapData {
      * @param {string} [id=null]
      * @memberof MapData
      */
-    AddDot(xy, posType = 0, id = null) {
+    AddDot(xy, id = null, posType = 0) {
         this.AddDotXY(xy[0], xy[1], id, posType);
     }
     AddDotXYLocal(x, y, id = null) {

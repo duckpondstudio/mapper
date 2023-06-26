@@ -3,6 +3,7 @@ import { CreateMap } from "../mapmaker";
 import * as m from '../maps';
 const feather = require('feather-icons')
 
+/** {@link Module} most recently interacted with (can be null) */
 let lastModule = null;
 
 /** Array containing all loaded {@link Module modules}
