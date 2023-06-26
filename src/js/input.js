@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import { MapData } from './classes/mapdata';
 import { ProjectionData } from './classes/projectiondata';
-import { Module, modules } from './classes/module';
+import { Module, current } from './classes/module';
 
 const keyEventDown = 'keyEventDown';
 const keyEventUp = 'keyEventUp';
@@ -229,7 +229,6 @@ function KeyEsc() {
  * @param {Module} module Module that was clicked on
  */
 export function ClickedModule(mouseEvent, module) {
-
 }
 
 /**
@@ -255,15 +254,12 @@ export function ClickedProjection(mouseEvent, projection) {
 
 /** Uses {@link ProjectionData}'s OutputDataAtPoint to display long/lat coordinate information at the cursor */
 function TestUpdateCursorCoordinates() {
-    // iterate thru all modules 
-    for (let i = 0; i < modules.length; i++) {
-        // check if the current module's mapData contains the cursor 
-        if (modules[i].mapData.IsPointWithinContainer(cursor.point)) {
-            let projection = modules[i].mapData.GetProjectionAtPoint(cursor.point);
-            if (projection != null) {
-                // update that projection's lat/long info 
-                projection.OutputDataAtPoint(cursor.point);
-            }
+    // check if the current module's mapData contains the cursor 
+    if (current.map.IsPointWithinContainer(cursor.point)) {
+        let projection = current.map.GetProjectionAtPoint(cursor.point);
+        if (projection != null) {
+            // update that projection's lat/long info 
+            projection.OutputDataAtPoint(cursor.point);
         }
     }
 }

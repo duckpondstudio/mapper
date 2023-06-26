@@ -5,7 +5,7 @@ import * as m from '../maps';
 const feather = require('feather-icons')
 
 /** {@link Module} most recently interacted with (can be null) */
-let lastModule = null;
+let _currentModule = null;
 
 /** Array containing all loaded {@link Module modules}
  * @type {Module[]} */
@@ -24,20 +24,44 @@ export function CreateModule(map) {
 }
 
 /** 
- * Get the most recently loaded/used {@link Module}.
+ * Get the most-recently-interacted-with {@link Module}.
  * - If none is recently used, returns the first loaded.
  * - If none are loaded, returns null.
  * @see {@link modules} is the array containing all loaded modules
+ * @see {@link current}, convenience getter for most recent {@link MapData map} and {@link Module module} 
+ * @see {@link CurrentMap}, method for getting most recent {@link MapData map}
  * @export
  * @return {Module} */
-export function LastModule() {
-    if (lastModule == null) {
+export function CurrentModule() {
+    if (_currentModule == null) {
         for (let i = 0; i < modules.length; i++) {
             if (modules[i] == null) continue;
-            lastModule = modules[i];
+            _currentModule = modules[i];
         }
     }
-    return lastModule;
+    return _currentModule;
+}
+/** 
+ * Get the most recently used {@link MapData}, from the current {@link CurrentModule module}.
+ * @see {@link current}, convenience getter for most recent {@link MapData map} and {@link Module module} 
+ * @see {@link CurrentModule}, method for getting most recent {@link Module module}
+ * @export
+ * @return {Module} */
+export function CurrentMap() {
+    if (_currentModule == null) { return null; }
+    return _currentModule.mapData;
+}
+/** 
+ * Gets currently active {@link Module module} and {@link MapData map}. 
+ * @see {@link CurrentModule}
+ * @see {@link CurrentMap}
+ * @export
+ * */
+export const current = {
+    /** Currently active {@link Module module} */
+    get module() { return CurrentModule(); },
+    /** Currently active {@link MapData map} */
+    get map() { return CurrentMap(); },
 }
 
 /**
@@ -112,12 +136,12 @@ export class Module {
         Module.moduleCount++;
 
         // if lastModule is null, assign it to the first generated one 
-        if (lastModule == null) { this.Select(); }
+        if (_currentModule == null) { this.Select(); }
     }
 
-    /** Sets this Module as {@link lastModule}, the most recently active module */
+    /** Sets this Module as {@link _currentModule}, the most recently active module */
     Select() {
-        lastModule = this;
+        _currentModule = this;
     }
 
     /** @static Singleton counter for all instantiated modules
