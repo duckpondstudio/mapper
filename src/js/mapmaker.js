@@ -42,13 +42,9 @@ function CreateMap(module) {
     let projectionIndex = 0;
     let loadedProjections = 0;
 
-    // mapContainer.appendChild(title);
-
-
     let mapData = new MapData(
         module
     );
-
 
     // generate projections 
     setTimeout(() => {

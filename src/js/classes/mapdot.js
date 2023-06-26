@@ -76,6 +76,12 @@ export class MapDot {
         }
     }
 
+    /**
+     * Returns {@link x} and {@link y} as a two-value number[] array: [{@link x}, {@link y}]
+     * @readonly
+     * @returns Two-value array [x, y]
+     * @memberof MapDot
+     */
     get xy() { return [this.x, this.y]; }
 
     /** 

@@ -1,5 +1,6 @@
 import { MapData } from "./mapdata";
 import { CreateMap } from "../mapmaker";
+import { ClickedModule } from "../input";
 import * as m from '../maps';
 const feather = require('feather-icons')
 
@@ -112,6 +113,7 @@ export class Module {
     /** Select this module */
     SelectModule(mouseEvent) {
         lastModule = this;
+        ClickedModule(mouseEvent, this);
     }
 
     /** @static Singleton counter for all instantiated modules
