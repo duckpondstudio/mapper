@@ -79,9 +79,10 @@ export class MapData {
      * @param {number} y X coordinate of this dot (or longitude, see {@link posType})
      * @param {number} [posType=0] Optional, default 0. Defines the rendering behaviour of this dot.
      * 
-     * 0. XY represents GLOBAL XY coordinates (eg cursor position). Default 
-     * 1. XY represents LOCAL XY coordinates, relative to this {@link MapData}
-     * 2. XY represents Latitude/Longitude coordinates
+     * 0. XY is GLOBAL XY coordinates (eg cursor position). Default 
+     * 1. XY is LOCAL XY coordinates, relative to this {@link MapData}
+     * 2. XY is normalized 0~1 fraction relative to its {@link ProjectionData projection}
+     * 3. XY is Latitude/Longitude coordinates
      * @param {string} [id=null]
      * @memberof MapData
      */
@@ -103,25 +104,29 @@ export class MapData {
      * @param {number} xy X and Y coordinates of this dot (or lat/long, see {@link posType})
      * @param {number} [posType=0] Optional, default 0. Defines this dot's coordinate system.
      * 
-     * 0. XY represents GLOBAL XY coordinates (eg cursor position). Default 
-     * 1. XY represents LOCAL XY coordinates, relative to this {@link MapData}
-     * 2. XY represents Latitude/Longitude coordinates
+     * 0. XY is GLOBAL XY coordinates (eg cursor position). Default 
+     * 1. XY is LOCAL XY coordinates, relative to this {@link MapData}
+     * 2. XY is normalized 0~1 fraction relative to its {@link ProjectionData projection}
+     * 3. XY is Latitude/Longitude coordinates
      * @param {string} [id=null]
      * @memberof MapData
      */
     AddDot(xy, id = null, posType = 0) {
         this.AddDotXY(xy[0], xy[1], id, posType);
     }
-    AddDotXYLocal(x, y, id = null) {
-        this.AddDotXY(x, y, id, 1);
-    }
-    AddDotXYGlobal(x, y, id = null) {
+    AddDotGlobal(x, y, id = null) {
         this.AddDotXY(x, y, id, 0);
     }
-    AddDotLatLong(lat, long, id = null) {
-        this.AddDotXY(lat, long, id, 2);
+    AddDotLocal(x, y, id = null) {
+        this.AddDotXY(x, y, id, 1);
     }
-
+    AddDotNormalized(xRatio, yRatio, id = null) {
+        this.AddDotXY(xRatio, yRatio, id, 2);
+    }
+    AddDotLatLong(lat, long, id = null) {
+        this.AddDotXY(lat, long, id, 3);
+    }
+    
     RemoveDotsByXY(xy) {
         if (this.#mapDots.length == 0) { return; }
         let length = this.#mapDots.length;

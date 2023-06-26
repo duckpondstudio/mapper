@@ -16,12 +16,13 @@ export class MapDot {
     x;
     /** Y-coordinate for this dot (can be Latitude, see {@link posType})
      * @memberof MapDot */
-   y;
+    y;
     /** Optional, default 0. Defines this dot's coordinate system.
      * 
-     * 0. XY represents GLOBAL XY coordinates (eg cursor position). Default 
-     * 1. XY represents LOCAL XY coordinates, relative to this {@link MapData}
-     * 2. XY represents Latitude/Longitude coordinates
+     * 0. XY is GLOBAL XY coordinates (eg cursor position). Default 
+     * 1. XY is LOCAL XY coordinates, relative to its {@link MapData}
+     * 2. XY is normalized 0~1 fraction relative to its {@link ProjectionData projection}
+     * 3. XY is Latitude/Longitude coordinates
      * @memberof MapDot */
     posType;
     /** Optional, default null. ID for this dot. 
@@ -41,9 +42,10 @@ export class MapDot {
      * @param {number} y Y-coordinate for this dot (can be Longitude, see {@link posType})
      * @param {number=0} posType Optional, default 0. Defines this dot's coordinate system.
      * 
-     * 0. XY represents GLOBAL XY coordinates (eg cursor position). Default 
-     * 1. XY represents LOCAL XY coordinates, relative to this {@link MapData}
-     * 2. XY represents Latitude/Longitude coordinates
+     * 0. XY is GLOBAL XY coordinates (eg cursor position). Default 
+     * 1. XY is LOCAL XY coordinates, relative to this {@link MapData}
+     * 2. XY is normalized 0~1 fraction relative to its {@link ProjectionData projection}
+     * 3. XY is Latitude/Longitude coordinates
      * @param {string=null} id Optional, default null. ID for this dot. 
      * If set, can use to access all dots of the given ID.
      * @memberof MapDot */
@@ -54,7 +56,8 @@ export class MapDot {
         switch (posType) {
             case 0: // global 
             case 1: // local 
-            case 2: // latLong
+            case 2: // normalized
+            case 3: // latLong
                 this.posType = posType;
                 break;
             default:
@@ -97,7 +100,10 @@ export class MapDot {
                 return newXY;
             case 1: // already local to projection 
                 return this.x;
-            case 2: // lat/long
+            case 2: // normalized
+                //TODO: this 
+                return this.x;
+            case 3: // lat/long
                 // TODO: doing xy/latlong conversion twice for XY, only do it once (eg XAtLatitude)
                 return p.XYPointAtLatLong(this.xy, false)[0];
         }
@@ -136,5 +142,5 @@ export class MapDot {
 export function CreateDot(d3DotsGroup, projection) {
     d3DotsGroup.append('circle')
         .attr('class', 'mapDot')
-        .each(function (d) { d.StyleForD3(d3.select(this), projection)});
+        .each(function (d) { d.StyleForD3(d3.select(this), projection) });
 }

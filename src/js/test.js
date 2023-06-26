@@ -17,7 +17,7 @@ export function DrawLandWaterDots(mapData, rows = 5, cols = 10) {
             for (let j = 0; j < rows; j++) {
                 let x = i / (cols - 1);
                 let y = j / (rows - 1);
-                mapData.AddDotXYLocal(x, y);
+                mapData.AddDotNormalized(x, y, 'test');
             }
             console.log((i + 1) + '/' + cols);
         }
