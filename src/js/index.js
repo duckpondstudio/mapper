@@ -8,5 +8,6 @@ window.addEventListener('load', function () {
     // window is loaded 
     InputSetup();
     CreateModule(m.grieger);
+    // TODO: very buggy rendering with non-square projections 
     // CreateModule(m.equirectangular);
 });

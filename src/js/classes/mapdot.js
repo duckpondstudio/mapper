@@ -101,8 +101,7 @@ export class MapDot {
             case 1: // already local to projection 
                 return this.x;
             case 2: // normalized
-                //TODO: this 
-                return this.x;
+                return p.MapPointRatioToXY(this.xy);// xy 0-1 ratio per mapdata
             case 3: // lat/long
                 // TODO: doing xy/latlong conversion twice for XY, only do it once (eg XAtLatitude)
                 return p.XYPointAtLatLong(this.xy, false)[0];

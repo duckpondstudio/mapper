@@ -210,7 +210,7 @@ export const cursor = {
 
 /** User pressed the spacebar */
 function KeySpace() {
-    test.DrawLandWaterDots(current.map);
+    test.DrawNormalizedDots(current.map);
 }
 
 /** User pressed the enter/return key */

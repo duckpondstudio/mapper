@@ -358,9 +358,19 @@ export class MapData {
         }
         return rY;
     }
-
     GetPointRatio(xy, offsetToProjection = true) {
-        return this.GetPointRatio(xy[0], xy[1], offsetToProjection);
+        return this.GetXYRatio(xy[0], xy[1], offsetToProjection);
+    }
+
+    XYRatioToXY(xRatio, yRatio, offsetToProjection) {
+        let iX = math.InvertNormalizedValue(xRatio, this.GetContainerOriginX(), this.GetContainerExtentX(), false);
+        let iY = math.InvertNormalizedValue(yRatio, this.GetContainerOriginY(), this.GetContainerExtentY(), false);
+        if (offsetToProjection) { iX = this.GetContainerXOffset(iX); iY = this.GetContainerYOffset(iY); }
+        // return this.GetProjectionAtXY(iX, iY);
+        return [iX, iY];
+    }
+    PointRatioToXY(xyRatio, offsetToProjection = true) {
+        return this.XYRatioToXY(xyRatio[0], xyRatio[1], offsetToProjection);
     }
 
     /** Get the XY coordinates associated with the given latitude/longitude 

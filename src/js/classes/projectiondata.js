@@ -111,6 +111,43 @@ export class ProjectionData {
         return this.IsXYWithinContainer(xy[0], xy[1], offsetToProjection);
     }
 
+
+    XYRatioToXY(xRatio, yRatio, offsetToProjection) {
+        let origin = this.GetContainerOrigin();
+        let extent = this.GetContainerExtent();
+        let iX = math.InvertNormalizedValue(xRatio, origin[0], extent[0], false);
+        let iY = math.InvertNormalizedValue(yRatio, origin[1], extent[1], false);
+        if (offsetToProjection) { iX = this.GetContainerXOffset(iX); iY = this.GetContainerYOffset(iY); }
+        return [iX, iY];
+    }
+    PointRatioToXY(xyRatio, offsetToProjection = true) {
+        return this.XYRatioToXY(xyRatio[0], xyRatio[1], offsetToProjection);
+    }
+
+    MapXYRatioToXY(xRatio, yRatio, offsetToProjection) {
+        let origin = this.mapData.GetContainerOrigin();
+        let extent = this.mapData.GetContainerExtent();
+        let iX = math.InvertNormalizedValue(xRatio, origin[0], extent[0], false);
+        let iY = math.InvertNormalizedValue(yRatio, origin[1], extent[1], false);
+        if (offsetToProjection) { iX = this.GetContainerXOffset(iX); iY = this.GetContainerYOffset(iY); }
+        return this.MapPointLocalToProjectionLocal([iX, iY ]);
+    }
+    MapPointRatioToXY(xyRatio, offsetToProjection) {
+        return this.MapXYRatioToXY(xyRatio[0], xyRatio[1], offsetToProjection);
+    }
+
+
+    MapPointLocalToProjectionLocal(xy) {
+        let origin = this.GetContainerFullOrigin();
+        xy[0] -= origin[0];
+        xy[1] -= origin[1];
+        return xy;
+    }
+    MapXYLocalToProjectionLocal(x, y) {
+        return this.MapPointLocalToProjectionLocal([x, y]);
+    }
+
+
     /**
      * Gets the latitude and longitude of this projection at the given normalized XY coordinate
      *
