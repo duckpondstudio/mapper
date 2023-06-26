@@ -2,6 +2,7 @@ import { MapData } from "./mapdata";
 import * as d3 from 'd3';
 import { parse } from 'transform-parser';
 import * as math from '../utils/math';
+import { ClickedProjection } from "../input";
 
 /** if true, fires a click event directly on the projection SVG, bypassing {@link baseinput} */
 const debugClickOnProjection = false;
@@ -20,6 +21,8 @@ export class ProjectionData {
     /** Parent MapData reference @type {MapData} @memberof ProjectionData */
     mapData;
     #containerRect;
+
+
     constructor(projection, index, svgContainer, svg, projectionSize, mapData) {
         this.projection = projection;
         this.index = index;
@@ -28,6 +31,10 @@ export class ProjectionData {
         this.svg = svg;
         this.mapData = mapData;
         this.#containerRect = this.svgContainer.getBoundingClientRect();
+        // add click event 
+        this.svgContainer.addEventListener('click', mouseEvent => {
+            this.mapData.module.Select(); ClickedProjection(mouseEvent, this);
+        });
         // check for debug on click functionality 
         if (debugClickOnProjection) {
             // target is the clicked map, event is pointer info

@@ -73,18 +73,19 @@ h1 {
     white-space: nowrap;
     border-radius: var(--appearance-map-border-radius);
     filter: drop-shadow(var(--appearance-shadow-x) var(--appearance-shadow-y) var(--appearance-shadow-blur) var(--color-shadow));
+    
+   -webkit-user-drag: none;
+   -khtml-user-drag: none;
+   -moz-user-drag: none;
+   -o-user-drag: none;
+   /* "user-drag" seems to be an unknown property is VSCode - comment out unless needed later */
+    /* user-drag: none; */
 }
 
 .mapContainer .map {
     margin-right: 0px;
     fill: var(--color-map-default-fill);
     stroke: var(--color-map-default-stroke);
-    
-   -webkit-user-drag: none;
-   -khtml-user-drag: none;
-   -moz-user-drag: none;
-   -o-user-drag: none;
-    user-drag: none;
 }
 /* note that GetProjectionAtXY in mapcont.js is dependent on the classname "map" */ 
 

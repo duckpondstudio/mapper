@@ -1,4 +1,4 @@
-import { cursor } from '../input';
+import { ClickedMap, cursor } from '../input';
 import { Module } from './module';
 import { MapDot } from './mapdot';
 import { CreateDot } from './mapdot';
@@ -30,6 +30,7 @@ export class MapData {
      *  @see mapContainer
      *  @type {HTMLParagraphElement} @memberof MapData*/
     #containerRect;
+
     /** Creates a new instance of MapData.
      *  @param {Module} module Module to load all relevant data from 
      *  @param {*} [projections=[]] List of projections to pre-load. 
@@ -46,6 +47,10 @@ export class MapData {
         this.mapContainer.setAttribute('id', 'mod' + this.module.moduleId + '_mapContainer');
         this.mapContainer.setAttribute('class', 'mapContainer');
         this.module.mapSubModule.appendChild(this.mapContainer);
+        // add click event to container 
+        this.mapContainer.addEventListener('click', mouseEvent => {
+            this.module.Select(); ClickedMap(mouseEvent, this);
+        });
 
         // define container rect
         this.#containerRect = this.mapContainer.getBoundingClientRect();
