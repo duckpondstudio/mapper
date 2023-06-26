@@ -24,7 +24,7 @@ export function DrawLandWaterDots(mapData, rows = 5, cols = 10) {
     }, 0);
 }
 
-export function DrawNormalizedDots(mapData, multiple = false) {
+export function DrawNormalizedDots(mapData, multiple = true) {
     if (!multiple) { 
         mapData.AddDotNormalized(0.5, 0.5, 'test');
         return;

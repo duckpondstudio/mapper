@@ -366,7 +366,6 @@ export class MapData {
         let iX = math.InvertNormalizedValue(xRatio, this.GetContainerOriginX(), this.GetContainerExtentX(), false);
         let iY = math.InvertNormalizedValue(yRatio, this.GetContainerOriginY(), this.GetContainerExtentY(), false);
         if (offsetToProjection) { iX = this.GetContainerXOffset(iX); iY = this.GetContainerYOffset(iY); }
-        // return this.GetProjectionAtXY(iX, iY);
         return [iX, iY];
     }
     PointRatioToXY(xyRatio, offsetToProjection = true) {
