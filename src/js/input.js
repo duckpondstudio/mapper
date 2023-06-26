@@ -8,7 +8,7 @@ const keyEventUp = 'keyEventUp';
 
 let debugKeys = false;
 
-let mouseDragUpdatesCoords = false;
+let mouseDragUpdatesCoords = true;
 
 let mouseHeld = false;
 let pressedKeyCodes = [];
@@ -62,8 +62,6 @@ function MouseDown(mouseEvent) {
 
     if (mouseEvent.button === 0) {
         mouseHeld = true;
-
-        modules[0].mapData.AddDot(cursor.point);
 
         TestUpdateCursorCoordinates();
     }
@@ -213,9 +211,8 @@ export function ClickedModule(mouseEvent, module) {
  * @param {MouseEvent} mouseEvent MouseEvent associated with this click 
  * @param {MapData} mapData {@link MapData} that was clicked on
  */
-export function ClickedMap(mouseEvent, mapData)
-{
-
+export function ClickedMap(mouseEvent, mapData) {
+    mapData.AddDot(cursor.point);
 }
 
 /**
@@ -223,9 +220,8 @@ export function ClickedMap(mouseEvent, mapData)
  * @param {MouseEvent} mouseEvent MouseEvent associated with this click 
  * @param {ProjectionData} projection {@link ProjectionData} that was clicked on
  */
-export function ClickedProjection(mouseEvent, projection)
-{
-
+export function ClickedProjection(mouseEvent, projection) {
+    projection.OutputDataAtPoint(cursor.point);
 }
 
 //#endregion per-element input receivers
