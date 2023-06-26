@@ -63,7 +63,7 @@ h1 {
     min-height: var(--submodule-height-min);
 }
 
-.projectionsContainer {
+.mapContainer {
     display: block;
     outline-color: var(--color-window-border);
     background-color: var(--color-window-background-alpha);
@@ -75,7 +75,7 @@ h1 {
     filter: drop-shadow(var(--appearance-shadow-x) var(--appearance-shadow-y) var(--appearance-shadow-blur) var(--color-shadow));
 }
 
-.projectionsContainer .map {
+.mapContainer .map {
     margin-right: 0px;
     fill: var(--color-map-default-fill);
     stroke: var(--color-map-default-stroke);
@@ -88,12 +88,12 @@ h1 {
 }
 /* note that GetProjectionAtXY in mapcont.js is dependent on the classname "map" */ 
 
-.projectionsContainer .map .land {
+.mapContainer .map .land {
     fill: var(--color-map-land-fill);
     stroke: var(--color-map-land-stroke);
 }
 
-.projectionsContainer .map .water {
+.mapContainer .map .water {
     fill: var(--color-map-water-fill);
     stroke: var(--color-map-water-stroke);
 }

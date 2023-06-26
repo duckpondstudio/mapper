@@ -19,7 +19,7 @@ export class MapData {
     /** Index, order in which this MapData was generated @type {Module} @memberof MapData*/
     index = -1;
     /** Div that contains all {@link projections} @type {HTMLDivElement} @memberof MapData*/
-    projectionsContainer;
+    mapContainer;
     /** Array of projections loaded in this MapData @type {ProjectionData[]} @memberof MapData*/
     projections = [];
     /** Array of map dots to render @type {MapDot[]} @memberof MapData*/
@@ -27,7 +27,7 @@ export class MapData {
     /** Paragraph used for basic MapData data output @type {HTMLParagraphElement} @memberof MapData*/
     #output;
     /** Rect for the size of this MapData, auto-updated on adding {@link projections}.
-     *  @see projectionsContainer
+     *  @see mapContainer
      *  @type {HTMLParagraphElement} @memberof MapData*/
     #containerRect;
     /** Creates a new instance of MapData.
@@ -42,13 +42,13 @@ export class MapData {
         this.index = this.module.moduleId;
 
         // create projections container 
-        this.projectionsContainer = document.createElement('div');
-        this.projectionsContainer.setAttribute('id', 'mod' + this.module.moduleId + '_projectionsCont');
-        this.projectionsContainer.setAttribute('class', 'projectionsContainer');
-        this.module.mapSubModule.appendChild(this.projectionsContainer);
+        this.mapContainer = document.createElement('div');
+        this.mapContainer.setAttribute('id', 'mod' + this.module.moduleId + '_mapContainer');
+        this.mapContainer.setAttribute('class', 'mapContainer');
+        this.module.mapSubModule.appendChild(this.mapContainer);
 
         // define container rect
-        this.#containerRect = this.projectionsContainer.getBoundingClientRect();
+        this.#containerRect = this.mapContainer.getBoundingClientRect();
         // create output 
         this.#output = document.createElement('p');
         this.#output.setAttribute('id', 'mod' + module.moduleId + '_map' + 1 + '_output_' + this.index);
@@ -65,7 +65,7 @@ export class MapData {
         if (!projection) { return; }
         this.projections.push(projection);
         // update container rect
-        this.#containerRect = this.projectionsContainer.getBoundingClientRect();
+        this.#containerRect = this.mapContainer.getBoundingClientRect();
     }
 
     /**
@@ -262,10 +262,10 @@ export class MapData {
     }
 
     GetContainerWidth() {
-        return this.projectionsContainer.clientWidth;
+        return this.mapContainer.clientWidth;
     }
     GetContainerHeight() {
-        return this.projectionsContainer.clientHeight;
+        return this.mapContainer.clientHeight;
     }
     GetContainerSize() {
         return [this.GetContainerWidth(), this.GetContainerHeight()];

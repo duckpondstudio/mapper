@@ -59,7 +59,7 @@ function CreateMap(module) {
                 break;
         }
 
-        // define projectionsContainer size based on map
+        // define mapContainer size based on map
         let containerWidth = mapSize;
         let containerHeight = mapSize;
         // check for special conditions
@@ -69,13 +69,13 @@ function CreateMap(module) {
                 containerWidth = mapSize * 2;
                 break;
             default:
-                // by default, projectionsContainer width is determined by projection count
+                // by default, mapContainer width is determined by projection count
                 containerWidth = mapSize * projectionIndex;
                 break;
         }
-        // assign size to projectionsContainer
-        mapData.projectionsContainer.style.width = containerWidth + 'px';
-        mapData.projectionsContainer.style.height = containerHeight + 'px';
+        // assign size to mapContainer
+        mapData.mapContainer.style.width = containerWidth + 'px';
+        mapData.mapContainer.style.height = containerHeight + 'px';
 
     }, 0);
 
@@ -182,7 +182,7 @@ function CreateMap(module) {
         let svgContainerId = "map_" + map + "_projection_" + currentProjectionIndex;
 
         // create the svg for the map
-        let svg = d3.select(mapData.projectionsContainer).append('svg')
+        let svg = d3.select(mapData.mapContainer).append('svg')
             .attr("class", "map")
             .attr("id", svgContainerId)
             .attr("width", mapSize)
