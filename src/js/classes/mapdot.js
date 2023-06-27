@@ -35,6 +35,9 @@ export class MapDot {
      * @memberof MapDot */
     style;
 
+    #retrievedXY = false;
+    #xy;
+
     /** Create a new {@link MapDot}. Set {@link X} and {@link Y} coordinates. 
      * Optionally specify {@link posType} and {@link id ID}.
      * 
@@ -53,6 +56,7 @@ export class MapDot {
         this.x = x;
         this.y = y;
         this.id = id;
+        // set pos type
         switch (posType) {
             case 0: // global 
             case 1: // local 
@@ -92,20 +96,26 @@ export class MapDot {
      * @param {ProjectionData} p Projection to get X coord relative to 
      * @memberof MapDot */
     GetXY(p) {
+        // if (this.#retrievedXY)
+        //     return this.#xy;
         switch (this.posType) {
             case 0: // global, screenspace
                 // convert screenspace to lat/long for per-projection localization
                 let latLong = p.LatLongAtPoint(this.xy);
-                let newXY = p.XYPointAtLatLongPoint(latLong, false);
-                return newXY;
+                this.#xy = p.XYPointAtLatLongPoint(latLong, false);
+                break;
             case 1: // already local to projection 
-                return this.x;
+                this.#xy = [this.x, this.y];
+                break;
             case 2: // normalized
-                return p.MapPointRatioToXY(this.xy);// xy 0-1 ratio per mapdata
+                this.#xy = p.MapPointRatioToXY(this.xy);// xy 0-1 ratio per mapdata
+                break;
             case 3: // lat/long
-                // TODO: doing xy/latlong conversion twice for XY, only do it once (eg XAtLatitude)
-                return p.XYPointAtLatLong(this.xy, false)[0];
+                this.#xy = p.XYPointAtLatLong(this.xy, false);
+                break;
         }
+        this.#retrievedXY = true;
+        return this.#xy;
     }
 
     /** 
