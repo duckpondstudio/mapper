@@ -20,6 +20,10 @@ export class MapData {
     index = -1;
     /** Div that contains all {@link projections} @type {HTMLDivElement} @memberof MapData*/
     mapContainer;
+    /** Canvas for containing dots/data rendered on top of map @type {HTMLCanvasElement} @memberof MapData */
+    mapCanvas;
+    /** 2D render context for {@link mapCanvas} @type {CanvasRenderingContext2D} @memberof MapData */
+    ctx;
     /** Array of projections loaded in this MapData @type {ProjectionData[]} @memberof MapData*/
     projections = [];
     /** Array of map dots to render @type {MapDot[]} @memberof MapData*/
@@ -54,6 +58,18 @@ export class MapData {
 
         // define container rect
         this.#containerRect = this.mapContainer.getBoundingClientRect();
+
+        // create map canvas 
+        this.mapCanvas = document.createElement('canvas');
+        this.mapCanvas.id = 'mod' + this.module.moduleId + '_mapCanvas';
+        this.mapCanvas.style.width = '100%';
+        this.mapCanvas.style.height = '100%';
+        this.mapCanvas.style.position = 'absolute';
+        this.mapContainer.appendChild(this.mapCanvas);
+        this.ctx = this.mapCanvas.getContext('2d');
+        // this.ctx.fillStyle = 'rgb(200,10,33)';
+        // this.ctx.fillRect(0, 0, 50, 50);
+
         // create output 
         this.#output = document.createElement('p');
         this.#output.setAttribute('id', 'mod' + module.moduleId + '_map' + 1 + '_output_' + this.index);
