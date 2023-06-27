@@ -1,6 +1,6 @@
 import { ClickedMap, cursor } from '../input';
 import { Module } from './module';
-import { MapDot } from './mapdot';
+import { MapDot, dotStyle } from './mapdot';
 import { CreateDot } from './mapdot';
 import { ProjectionData } from './projectiondata';
 import * as m from '../maps';
@@ -67,8 +67,6 @@ export class MapData {
         this.mapCanvas.style.position = 'absolute';
         this.mapContainer.appendChild(this.mapCanvas);
         this.ctx = this.mapCanvas.getContext('2d');
-        // this.ctx.fillStyle = 'rgb(200,10,33)';
-        // this.ctx.fillRect(0, 0, 50, 50);
 
         // create output 
         this.#output = document.createElement('p');
@@ -102,18 +100,12 @@ export class MapData {
      * @param {string} [id=null]
      * @memberof MapData
      */
-    AddDotXY(x, y, id = null, posType = 0) {
+    AddDotXY(x, y, id = null, posType = 0, style = dotStyle.default) {
         // check if any dots matching exist 
-        this.#mapDots.forEach(mapDot => {
-            if (mapDot.x == x && mapDot.y == y &&
-                mapDot.posType == posType && mapDot.id == id) {
-                // mapDot already exists, no need to add 
-                return;
-            }
-        });
-        let mapDot = new MapDot(x, y, id, posType);
-        this.#mapDots.push(mapDot);
-        this.#UpdateDots();
+        if (this.#MapDotParamsAlreadyExists(x, y, id, posType, style)) { return; }
+        // create new mapDot
+        let mapDot = new MapDot(x, y, id, posType, style);
+        this.#RenderDot(mapDot, false);
     }
     /**
      * Add a MapDot dot to this projection
@@ -142,35 +134,39 @@ export class MapData {
     AddDotLatLong(lat, long, id = null) {
         this.AddDotXY(lat, long, id, 3);
     }
-    
+
     RemoveDotsByXY(xy) {
         if (this.#mapDots.length == 0) { return; }
-        let length = this.#mapDots.length;
-        this.#mapDots = this.#mapDots.filter(function (mapDot) {
-            return mapDot.xy != xy;
+        let dotsToRemove = this.#mapDots.filter(function (mapDot) {
+            return mapDot.xy == xy;
         });
-        if (this.#mapDots.length != length) { this.#UpdateDots(); }
+        dotsToRemove.forEach(mapDot => {
+            this.#RemoveDot(mapDot);
+        });
     }
     RemoveDotsByPosType(posType) {
         if (this.#mapDots.length == 0) { return; }
-        let length = this.#mapDots.length;
-        this.#mapDots = this.#mapDots.filter(function (mapDot) {
-            return mapDot.posType != posType;
+        let dotsToRemove = this.#mapDots.filter(function (mapDot) {
+            return mapDot.posType == posType;
         });
-        if (this.#mapDots.length != length) { this.#UpdateDots(); }
+        dotsToRemove.forEach(mapDot => {
+            this.#RemoveDot(mapDot);
+        });
     }
     RemoveDotsByID(id) {
         if (this.#mapDots.length == 0) { return; }
-        let length = this.#mapDots.length;
-        this.#mapDots = this.#mapDots.filter(function (mapDot) {
-            return mapDot.id != id;
+        let dotsToRemove = this.#mapDots.filter(function (mapDot) {
+            return mapDot.id == id;
         });
-        if (this.#mapDots.length != length) { this.#UpdateDots(); }
+        dotsToRemove.forEach(mapDot => {
+            this.#RemoveDot(mapDot);
+        });
     }
     RemoveAllDots() {
         if (this.#mapDots.length == 0) { return; }
-        this.#mapDots = [];
-        this.#UpdateDots();
+        this.#mapDots.forEach(mapDot => {
+            this.#RemoveDot(mapDot);
+        });
     }
 
     GetAllDots() { return this.#mapDots; }
@@ -196,10 +192,43 @@ export class MapData {
         return dots;
     }
 
+    #RenderDot(mapDot, checkForDuplicateDot = true) {
+        if (checkForDuplicateDot && this.#MapDotAlreadyExists(mapDot)) {
+            return;
+        }
+    }
+    #RemoveDot(mapDot) {
+
+    }
+
+    #MapDotAlreadyExists(mapDot) {
+        return this.#MapDotParamsAlreadyExists(
+            mapDot.x,
+            mapDot.y,
+            mapDot.id,
+            mapDot.posType,
+            mapDot.style
+        );
+    }
+    #MapDotParamsAlreadyExists(x, y, id, posType, style) {
+        // check if any dots matching exist 
+        this.#mapDots.forEach(mapDot => {
+            if (mapDot.x == x && mapDot.y == y &&
+                mapDot.id == id && mapDot.style == style &&
+                mapDot.posType == posType) {
+                // mapDot already exists, no need to add 
+                return true;
+            }
+        });
+        return false;
+    }
 
     /** Updates all rendered map dots
      */
     #UpdateDots() {
+
+        console.log("REMOVE ME");
+        return;
 
         // iterate thru all projections 
         this.projections.forEach(projection => {

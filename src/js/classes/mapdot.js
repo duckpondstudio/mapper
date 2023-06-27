@@ -17,6 +17,10 @@ export class MapDot {
     /** Y-coordinate for this dot (can be Latitude, see {@link posType})
      * @memberof MapDot */
     y;
+    /** Optional, default null. ID for this dot. 
+     * If set, can use to access all dots of the given ID. 
+     * @memberof MapDot */
+    id;
     /** Optional, default 0. Defines this dot's coordinate system.
      * 
      * 0. XY is GLOBAL XY coordinates (eg cursor position). Default 
@@ -25,10 +29,6 @@ export class MapDot {
      * 3. XY is Latitude/Longitude coordinates
      * @memberof MapDot */
     posType;
-    /** Optional, default null. ID for this dot. 
-     * If set, can use to access all dots of the given ID. 
-     * @memberof MapDot */
-    id;
     /** 
      * Optional. Appearance style for this dot. Default {@link dotStyle.circle circle}
      * @see {@link dotStyle}
