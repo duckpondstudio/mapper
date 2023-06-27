@@ -10,6 +10,8 @@ import * as math from '../utils/math';
 
 //TODO: move sizing logic (GetContainerSize, etc) into a parent class for both MapData and ProjectionData
 
+const devicePixelRatio = window.devicePixelRatio;
+
 /** Container for all data related to displaying a map */
 export class MapData {
     /** Name of this map. See {@link m maps.js} @type {Module} @memberof MapData*/
@@ -62,11 +64,9 @@ export class MapData {
         // create map canvas 
         this.mapCanvas = document.createElement('canvas');
         this.mapCanvas.id = 'mod' + this.module.moduleId + '_mapCanvas';
-        this.mapCanvas.style.width = '100%';
-        this.mapCanvas.style.height = '100%';
         this.mapCanvas.style.position = 'absolute';
         this.mapContainer.appendChild(this.mapCanvas);
-        this.ctx = this.mapCanvas.getContext('2d');
+        this.ctx = this.mapCanvas.getContext('2d', {alpha: true});
 
         // create output 
         this.#output = document.createElement('p');
@@ -78,13 +78,24 @@ export class MapData {
         }
     }
 
+    #UpdateSize() {
+        this.#containerRect = this.mapContainer.getBoundingClientRect();
+        this.mapCanvas.style.width = this.#containerRect.width * devicePixelRatio;
+        this.mapCanvas.style.height = this.#containerRect.height * devicePixelRatio;
+        this.ctx.scale(devicePixelRatio, devicePixelRatio);
+        this.mapCanvas.style.width = '400px';
+        this.mapCanvas.style.height = '200px';
+        // this.mapCanvas.style.width = `${this.#containerRect.width}px`;
+        // this.mapCanvas.style.height = `${this.#containerRect.height}px`;
+    }
+
     /** Add the given ProjectionData as a child of this MapData 
      * @param {ProjectionData} projection ProjectionData to add to this MapData */
     AddProjection(projection) {
         if (!projection) { return; }
         this.projections.push(projection);
         // update container rect
-        this.#containerRect = this.mapContainer.getBoundingClientRect();
+        this.#UpdateSize();
     }
 
     /**
@@ -105,6 +116,7 @@ export class MapData {
         if (this.#MapDotParamsAlreadyExists(x, y, id, posType, style)) { return; }
         // create new mapDot
         let mapDot = new MapDot(x, y, id, posType, style);
+
         this.#RenderDot(mapDot, false);
     }
     /**
@@ -193,12 +205,21 @@ export class MapData {
     }
 
     #RenderDot(mapDot, checkForDuplicateDot = true) {
+        console.log("r", 1);
         if (checkForDuplicateDot && this.#MapDotAlreadyExists(mapDot)) {
+            console.log("r", -1);
             return;
         }
+        console.log("r", 2);
+        this.#mapDots.push(mapDot);
+        console.log("r", 3);
+        this.ctx.beginPath();
+        this.ctx.arc(5, 10, 50, 0, math.pi2);
+        this.ctx.stroke();
+        console.log("r", 4);
+
     }
     #RemoveDot(mapDot) {
-
     }
 
     #MapDotAlreadyExists(mapDot) {

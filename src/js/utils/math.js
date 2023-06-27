@@ -1,4 +1,6 @@
 
+/** Precalc shortcut for Math.PI * 2 */
+export const pi2 = Math.PI * 2;
 
 /**
  * Rotate the given XY point around the given pivot XY by the given angle in degrees 
