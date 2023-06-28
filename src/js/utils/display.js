@@ -1,8 +1,6 @@
+// credit to https://stackoverflow.com/a/15666143/12888769 
 let _prSet;
 let _pr;
-
-// credit to https://stackoverflow.com/a/15666143/12888769 
-
 let _PIXEL_RATIO = (function () {
     let c = document.createElement('canvas');
     let ctx = c.getContext('2d');
