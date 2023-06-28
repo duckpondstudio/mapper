@@ -2,6 +2,11 @@
 /** Precalc shortcut for Math.PI * 2 */
 export const pi2 = Math.PI * 2;
 
+/** Precalc shortcut for square root of 2 */
+export const sqrt2 = 1.4142135623730950488016887242097;// containerScale
+/** Precalc shortcut for reciprocal of square root of 2 */
+export const sqrt2rec = 0.70710678118654752440084436210485;// containerOffset
+
 /**
  * Rotate the given XY point around the given pivot XY by the given angle in degrees 
  *
