@@ -209,7 +209,7 @@ export class ProjectionData {
      * @memberof ProjectionData
      */
     XYPointAtLatLongPoint(latLong, offsetFromProjection = true) {
-        let xy = this.projection(latLong.reverse());
+        let xy = this.projection(latLong.slice().reverse());
         xy = this.ApplySVGTransformOffsetsToPoint(xy, true);
         if (offsetFromProjection) {
             let origin = this.GetContainerFullOrigin();
