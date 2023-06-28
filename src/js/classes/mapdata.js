@@ -79,19 +79,24 @@ export class MapData {
         }
     }
 
+    /** 
+     * This {@link MapData} has been added to {@link document.body},
+     * as called by its parent {@link Module}
+     */
+    AddedToDocumentBody() {
+        // prevent right-click directly on map overlay canvas 
+        this.mapCanvas.oncontextmenu = function (e) { e.stopPropagation(); }
+        // propogate addedtodocumentbody method to all child projections 
+        projections.forEach(projection => {
+            projection.AddedToDocumentBody();
+        });
+    }
+
     #UpdateSize() {
         this.#containerRect = this.mapContainer.getBoundingClientRect();
         let width = this.#containerRect.width;
         let height = this.#containerRect.height;
         disp.SetHDPICanvasSize(this.mapCanvas, width, height);
-
-        // this.mapCanvas.style.width = this.#containerRect.width * devicePixelRatio;
-        // this.mapCanvas.style.height = this.#containerRect.height * devicePixelRatio;
-        // this.ctx.scale(devicePixelRatio, devicePixelRatio);
-        // this.mapCanvas.style.width = '400px';
-        // this.mapCanvas.style.height = '200px';
-        // this.mapCanvas.style.width = `${this.#containerRect.width}px`;
-        // this.mapCanvas.style.height = `${this.#containerRect.height}px`;
     }
 
     /** Add the given ProjectionData as a child of this MapData 
@@ -105,6 +110,12 @@ export class MapData {
 
     AddDotAtLatLongPointMapRatioPoint(latLong, xyMapRatio, id = null, style = dotStyle.default) {
         console.log("add dot at latlong " + latLong + " xyMapRatio " + xyMapRatio + " id", id, "style", style);
+
+        
+        this.ctx.beginPath();
+        this.ctx.strokeStyle = 'purple';
+        this.ctx.arc(200, 100, 50, 0, math.pi2);
+        this.ctx.stroke();
     }
 
     AddDotAtLatLongPoint(latLong, id = null, style = dotStyle.default) {

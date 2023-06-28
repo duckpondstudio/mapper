@@ -46,6 +46,13 @@ export class ProjectionData {
         }
     }
 
+    /** 
+     * This {@link ProjectionData} has been added to {@link document.body},
+     * as called by its parent {@link MapData}
+     */
+    AddedToDocumentBody() { 
+    }
+
     GetContainerOrigin() {
         let raw = this.GetContainerFullOrigin();
         let cont = this.mapData.GetContainerOrigin();

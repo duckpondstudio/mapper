@@ -131,6 +131,7 @@ export class Module {
 
         // add module to document body 
         document.body.appendChild(this.container);
+        this.AddedToDocumentBody();
 
         // increment static module counter, ensure all unique
         Module.moduleCount++;
@@ -138,6 +139,9 @@ export class Module {
         // if lastModule is null, assign it to the first generated one 
         if (_currentModule == null) { this.Select(); }
     }
+
+    /** This {@link Module} has been added to {@link document.body} */
+    AddedToDocumentBody() { }
 
     /** Sets this Module as {@link _currentModule}, the most recently active module */
     Select() {
