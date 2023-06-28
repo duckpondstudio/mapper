@@ -25,7 +25,7 @@ let geojson = GetGeoJSON();
 
 let mapIndex = 0;
 
-function CreateMap(module) {
+export function CreateMap(module) {
 
     let map = module.map;
 
@@ -293,5 +293,3 @@ function ShowDemoMap() {
     img.width = 500;
     document.body.appendChild(img);
 }
-
-export { CreateMap };
