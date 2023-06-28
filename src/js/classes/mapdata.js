@@ -4,6 +4,7 @@ import { MapDot, dotStyle } from './mapdot';
 import { CreateDot } from './mapdot';
 import { ProjectionData } from './projectiondata';
 import * as m from '../maps';
+import * as disp from '../utils/display';
 import * as math from '../utils/math';
 
 // see bottom for code examples
@@ -62,7 +63,7 @@ export class MapData {
         this.#containerRect = this.mapContainer.getBoundingClientRect();
 
         // create map canvas 
-        this.mapCanvas = document.createElement('canvas');
+        this.mapCanvas = disp.CreateHDPICanvas();
         this.mapCanvas.id = 'mod' + this.module.moduleId + '_mapCanvas';
         this.mapCanvas.style.position = 'absolute';
         this.mapContainer.appendChild(this.mapCanvas);
@@ -80,11 +81,15 @@ export class MapData {
 
     #UpdateSize() {
         this.#containerRect = this.mapContainer.getBoundingClientRect();
-        this.mapCanvas.style.width = this.#containerRect.width * devicePixelRatio;
-        this.mapCanvas.style.height = this.#containerRect.height * devicePixelRatio;
-        this.ctx.scale(devicePixelRatio, devicePixelRatio);
-        this.mapCanvas.style.width = '400px';
-        this.mapCanvas.style.height = '200px';
+        let width = this.#containerRect.width;
+        let height = this.#containerRect.height;
+        disp.SetHDPICanvasSize(this.mapCanvas, width, height);
+
+        // this.mapCanvas.style.width = this.#containerRect.width * devicePixelRatio;
+        // this.mapCanvas.style.height = this.#containerRect.height * devicePixelRatio;
+        // this.ctx.scale(devicePixelRatio, devicePixelRatio);
+        // this.mapCanvas.style.width = '400px';
+        // this.mapCanvas.style.height = '200px';
         // this.mapCanvas.style.width = `${this.#containerRect.width}px`;
         // this.mapCanvas.style.height = `${this.#containerRect.height}px`;
     }
@@ -214,7 +219,7 @@ export class MapData {
         this.#mapDots.push(mapDot);
         console.log("r", 3);
         this.ctx.beginPath();
-        this.ctx.arc(5, 10, 50, 0, math.pi2);
+        this.ctx.arc(200, 100, 50, 0, math.pi2);
         this.ctx.stroke();
         console.log("r", 4);
 
