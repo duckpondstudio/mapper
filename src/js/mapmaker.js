@@ -11,7 +11,6 @@ import { Module } from './classes/module';
 import { ProjectionData } from './classes/projectiondata';
 import { GetGeoJSON } from './geojsonparser';
 import * as m from './maps';
-import * as math from './utils/math';
 
 import * as d3 from 'd3';
 import * as d3gp from 'd3-geo-projection';
@@ -88,18 +87,13 @@ export function CreateMap(module) {
 
     maps.push(mapData);
 
-    /**
-     * Retrieve the given {@link ProjectionData} for this map
-     * @param {string} projectionType Name of specific projection you want to retrieve projection for, see {@link m maps.js} 
-     * @param {MapData} mapData {@link MapData} for this projection   
-     * @returns {ProjectionData} */
     function RetrieveProjection(projectionType, mapData) {
 
         // store current projection index, because ProjectionIndex iterates on an async timer 
         let currentProjectionIndex = projectionIndex;
 
         if (mapData == null) {
-            console.error("null mapData, can't retrieve projection, projectionType: " + projectionType);
+            console.error("null mapData, can't retrieve projection, projectionType: " + map);
             return;
         }
 
