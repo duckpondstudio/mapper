@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
 import { ProjectionData } from './projectiondata';
+import { MapData } from './mapdata';
 
 /** Container of all styles for MapDot */
 export const dotStyle = {
@@ -31,6 +32,13 @@ export class MapDot {
     #xy;
 
     /** 
+     * array for storing per-mapData XY ratios, instead of calc latLong each reference 
+     * - Format: [ {@link MapData.index} , [ xRatio , yRatio ] ]
+     *   - where xRatio/yRatio are the ratio, 0-1, along the map's x and y axes
+    */
+    #ratios = [];
+
+    /** 
      * Create a new {@link MapDot}. Set {@link lat latitude} and {@link long longitude} coordinates. 
      * Optionally specify {@link id ID} and {@link style style (appearance)}.
      * 
@@ -59,6 +67,34 @@ export class MapDot {
                 break;
         }
     }
+
+    GetRatio(mapData) {
+        this.#ratios.forEach(ratio => {
+            if (ratio[0] == mapData.index) {
+                return ratio[1];
+            }
+        });
+        return this.SetRatio(mapData, false);
+    }
+    /** Sets the XY ratio for this MapDot relative to the given MapData
+     * @param {MapData} mapData Reference to MapData to get ratio of 
+     * @param {boolean} [checkIfExists=true] Perform check to see if value already exists?
+     * @memberof MapDot */
+    SetRatio(mapData, checkIfExists = true) {
+        if (checkIfExists) {
+            this.#ratios.forEach(ratio => {
+                if (ratio[0] == mapData.index) {
+                    return ratio[1];
+                }
+            });
+        }
+        // determine ratios for latLong at mapData
+        mapData.Ratio
+        let xy = mapData.XYPointAtLatLongPoint(this.latLong);
+        let ratio = mapData.GetPointRatio(xy);
+        this.#ratios.push([mapData.index, ratio]);
+    }
+
 
     /**
      * Returns {@link lat} and {@link long} as a two-value number[] array: [{@link lat}, {@link long}]
