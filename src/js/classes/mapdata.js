@@ -103,20 +103,61 @@ export class MapData {
         this.#UpdateSize();
     }
 
-    AddDotAtLatLongPointMapRatioPoint(latLong, xyMapRatio) { }
+    AddDotAtLatLongPointMapRatioPoint(latLong, xyMapRatio, id = null, style = dotStyle.default) {
+        console.log("add dot at latlong " + latLong + " xyMapRatio " + xyMapRatio + " id", id, "style", style);
+    }
 
-    AddDotAtLatLongPoint(latLong, id = null, style = dotStyle.default) { }
-    AddDotAtLatLong(lat, long, id = null, style = dotStyle.default) { }
-    AddDotAtGlobalPoint(xyGlobal, id = null, style = dotStyle.default) { }
-    AddDotAtGlobal(xGlobal, yGlobal, id = null, style = dotStyle.default) { }
-    AddDotAtMapLocalPoint(xyMapLocal, id = null, style = dotStyle.default) { }
-    AddDotAtMapLocal(xMapLocal, yMapLocal, id = null, style = dotStyle.default) { }
-    AddDotAtProjectionLocalPoint(xyProjectionLocal, id = null, style = dotStyle.default) { }
-    AddDotAtProjectionLocal(xProjectionLocal, yProjectionLocal, id = null, style = dotStyle.default) { }
-    AddDotAtMapRatioPoint(xyMapRatio, id = null, style = dotStyle.default) { }
-    AddDotAtMapRatio(xMapRatio, yMapRatio, id = null, style = dotStyle.default) { }
-    AddDotAtProjectionRatioPoint(xyProjectionRatio, id = null, style = dotStyle.default) { }
-    AddDotAtProjectionRatio(xProjectionRatio, yProjectionRatio, id = null, style = dotStyle.default) { }
+    AddDotAtLatLongPoint(latLong, id = null, style = dotStyle.default) {
+        // get xy map ratio 
+        let xyMapRatio = [0, 0];// TODO: calc xy ratio 
+        this.AddDotAtLatLongPointMapRatioPoint(latLong, xyMapRatio, id, style);
+    }
+    AddDotAtLatLong(lat, long, id = null, style = dotStyle.default) { return this.AddDotAtLatLongPoint([lat, long], id, style); }
+    AddDotAtGlobalPoint(xyGlobal, id = null, style = dotStyle.default) {
+
+
+        let latLongAtPoint = this.LatLongAtPoint(xyGlobal);
+        let pointratio = this.GetPointRatio(xyGlobal, false);
+        let localXY = this.GetContainerPointOffset(xyGlobal);
+        let ratioToXYLocal = this.PointRatioToXY(pointratio);
+        let ratioToXYGlobal = this.PointRatioToXY(pointratio, false);
+        let latLongfromLocal = this.LatLongAtPoint(xyGlobal, true);
+        let xyFromLatLong = this.XYPointAtLatLongPoint(latLongAtPoint, true, false);
+        
+        
+        console.log("GlobalXY Input: " + xyGlobal);
+        console.log("LocalXY From GlobalXY: " + localXY);
+        console.log("LatLong From GlobalXY: " + latLongAtPoint);
+        console.log("PointRatio From GlobalXY: " + pointratio);
+        console.log("LocalXY From PointRatio: " + ratioToXYLocal);
+        console.log("GlobalXY From PointRatio: " + ratioToXYGlobal);
+        console.log("LatLong From LocalXY: " + latLongfromLocal);
+        console.log("XY From LatLong: " + xyFromLatLong);
+        
+        xyFromLatLong = this.XYPointAtLatLongPoint(latLongAtPoint, false, false);
+        console.log("XY From LatLong: " + xyFromLatLong);
+
+
+        this.AddDotAtLatLongPointMapRatioPoint(
+            this.LatLongAtPoint(xyGlobal),
+            this.GetPointRatio(xyGlobal, false), id, style);
+    }
+    AddDotAtGlobal(xGlobal, yGlobal, id = null, style = dotStyle.default) { return this.AddDotAtGlobalPoint([xGlobal, yGlobal], id, style); }
+    AddDotAtMapLocalPoint(xyMapLocal, id = null, style = dotStyle.default) {
+        let latLong = [0, 0]; // TODO: calc lat/long
+        let xyMapRatio = [0, 0];// TODO: calc xy ratio 
+        this.AddDotAtLatLongPointMapRatioPoint(latLong, xyMapRatio, id, style);
+    }
+    AddDotAtMapLocal(xMapLocal, yMapLocal, id = null, style = dotStyle.default) { return this.AddDotAtMapLocalPoint([xMapLocal, yMapLocal], id, style); }
+    // AddDotAtProjectionLocalPoint(xyProjectionLocal, id = null, style = dotStyle.default) { }
+    // AddDotAtProjectionLocal(xProjectionLocal, yProjectionLocal, id = null, style = dotStyle.default) { }
+    AddDotAtRatioPoint(xyMapRatio, id = null, style = dotStyle.default) {
+        let latLong = [0, 0]; // TODO: calc lat/long
+        this.AddDotAtLatLongPointMapRatioPoint(latLong, xyMapRatio, id, style);
+    }
+    AddDotAtRatio(xMapRatio, yMapRatio, id = null, style = dotStyle.default) { return this.AddDotAtRatioPoint([xMapRatio, yMapRatio], id, style); }
+    // AddDotAtProjectionRatioPoint(xyProjectionRatio, id = null, style = dotStyle.default) { }
+    // AddDotAtProjectionRatio(xProjectionRatio, yProjectionRatio, id = null, style = dotStyle.default) { }
 
     /**
      * Add a MapDot dot to this projection

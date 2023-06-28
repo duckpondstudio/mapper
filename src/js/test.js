@@ -17,7 +17,7 @@ export function DrawLandWaterDots(mapData, rows = 5, cols = 10) {
             for (let j = 0; j < rows; j++) {
                 let x = i / (cols - 1);
                 let y = j / (rows - 1);
-                mapData.AddDotNormalized(x, y, 'test');
+                mapData.AddDotAtRatio(x, y, 'test');
             }
             console.log((i + 1) + '/' + cols);
         }
@@ -26,7 +26,7 @@ export function DrawLandWaterDots(mapData, rows = 5, cols = 10) {
 
 export function DrawNormalizedDots(mapData, multiple = true) {
     if (!multiple) { 
-        mapData.AddDotNormalized(0.5, 0.5, 'test');
+        mapData.AddDotAtRatio(0.5, 0.5, 'test');
         return;
     }
     for (let i = 0; i < 3; i++) {
@@ -43,7 +43,7 @@ export function DrawNormalizedDots(mapData, multiple = true) {
                 case 1: y = 0.5; break;
                 case 2: y = 0.9; break;
             }
-            mapData.AddDotNormalized(x, y, 'test');
+            mapData.AddDotAtRatio(x, y, 'test');
         }
     }
 }
