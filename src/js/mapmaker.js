@@ -7,6 +7,7 @@ import overlayGeo from './../assets/json/outline-safe.geojson';//       recommen
 // TODO: allow separate geojson files on the same map to be independently toggled on/off (ideally without recalculating the same map)
 
 import { MapData } from './classes/mapdata';
+import { Module } from './classes/module';
 import { ProjectionData } from './classes/projectiondata';
 import { GetGeoJSON } from './geojsonparser';
 import * as m from './maps';
@@ -25,6 +26,11 @@ let geojson = GetGeoJSON();
 
 let mapIndex = 0;
 
+/**
+ * Creates a new instance of {@link MapData} for use with the given {@link Module module}
+ * @param {Module} module Module to load {@link MapData} into 
+ * @returns {MapData}
+ */
 export function CreateMap(module) {
 
     let map = module.map;
