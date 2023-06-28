@@ -98,3 +98,18 @@ h1 {
     fill: var(--color-map-water-fill);
     stroke: var(--color-map-water-stroke);
 }
+
+.mapOverlayCanvas {
+    /* prevent touch/selection */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    /* prevent drag */
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+}

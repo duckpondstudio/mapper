@@ -23,7 +23,12 @@ export let PixelRatio = (function () {
 })();
 
 export function CreateHDPICanvas(width = 0, height = 0) {
+    // TODO: prevent canvas right-click while allowing right-click to screen below
+    // TODO: make canvas right-click image output a merged image of overlay + map (all projections)
     let c = document.createElement('canvas');
+    // assign class 
+    c.setAttribute('class', 'mapOverlayCanvas');
+    // if width/height are initially defined, assign them 
     if (width != 0 || height != 0) {
         SetHDPICanvasSize(c, width, height);
     }
