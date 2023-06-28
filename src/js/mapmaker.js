@@ -245,54 +245,45 @@ function CreateMap(module) {
 }
 
 /**
- * Returns geoprojection of the given projection type (with any manual modifications, 
- * otherwise you can just directly call d3.myProjection() )
- * @param {string} projectionType name of the projection type you want  
- * @return {d3.GeoProjection} d3.GeoProjection data for the given name 
+ * Returns {@link d3.GeoProjection} of the given projection type, 
+ * plus any modifications needed for rendering (eg, clipAngle, rotation, etc)
+ * @param {string} map Name of map you want to retrieve projection for, see {@link m maps.js} 
+ * @return {d3.GeoProjection}
  */
-function GetProjection(projectionType) {
+function GetProjection(map) {
 
     // nullcheck
-    if (projectionType == null) {
+    if (map == null) {
         // null, just return default projection type (geoEquirectangular)
         console.warn("Cannot get projection type, given type is null, returning d3.geoEquirectangular");
         return d3.geoEquirectangular();
     }
 
     // ensure lowercase
-    if (typeof (projectionType) === 'string') {
-        projectionType = projectionType.toLowerCase();
+    if (typeof (map) === 'string') {
+        map = map.toLowerCase();
     } else {
         // not a string, invalid parsing 
         console.warn("Can't get projection from type, type isn't a string, type value: "
-            + projectionType + ", typeof: " + typeof (projectionType) + ", returning d3.geoEquirectangular");
+            + map + ", typeof: " + typeof (map) + ", returning d3.geoEquirectangular");
         return d3.geoEquirectangular();
     }
 
-    switch (projectionType) {
-
-        default:
-            console.warn("Unsupported projection type " + projectionType + ", refer to maps.js, returning geoEquirectangular");
-            return d3.geoEquirectangular();
-
-        case m.equirectangular:
-            return d3.geoEquirectangular();
-
-        case m.peirce:
-            return d3gp.geoPeirceQuincuncial()
-                .rotate([0, 0, 315]);
-
-        case m.adams1:
-            return d3gp.geoPeirceQuincuncial()
-                .rotate([0, 315, 45])
-                .clipAngle(90);
-
-        case m.adams2:
-            return d3gp.geoPeirceQuincuncial()
-                .rotate([0, 135, 315])
-                .clipAngle(90);
-
+    // load geoprojection
+    let geoProjection = m.GetMapD3GeoProjection(map);
+    // apply rotation if needed 
+    let rotation = m.GetProjectionFullRotation(map);
+    if (rotation != null && Array.isArray(rotation) &&
+        rotation.length == 3 && rotation != [0, 0, 0]) {
+        geoProjection.rotate(rotation);
     }
+    // apply clip angle if needed 
+    let clipAngle = m.GetMapProjectionClipAngle(map);
+    if (clipAngle != 0) {
+        geoProjection.clipAngle(clipAngle);
+    }
+
+    return geoProjection;
 }
 
 function ShowDemoMap() {
