@@ -122,7 +122,6 @@ export class MapData {
         let ratioToXYLocal = this.PointRatioToXY(pointratio);
         let ratioToXYGlobal = this.PointRatioToXY(pointratio, false);
         let latLongfromLocal = this.LatLongAtPoint(xyGlobal, true);
-        let xyFromLatLong = this.XYPointAtLatLongPoint(latLongAtPoint, true, false);
         
         
         console.log("GlobalXY Input: " + xyGlobal);
@@ -132,10 +131,33 @@ export class MapData {
         console.log("LocalXY From PointRatio: " + ratioToXYLocal);
         console.log("GlobalXY From PointRatio: " + ratioToXYGlobal);
         console.log("LatLong From LocalXY: " + latLongfromLocal);
-        console.log("XY From LatLong: " + xyFromLatLong);
+
+        let est = "(Target: ~" + Math.round(xyGlobal[0]) +
+            "," + Math.round(xyGlobal[1]) + ")";
         
+        console.log(" ");
+        console.log(" ");
+        console.log(" ");
+        console.log("LatLong Input: " + latLongAtPoint);
+        console.log("GlobalXY Input: " + xyGlobal);
+        console.log("LocalXY Reference: " + localXY);
+        console.log(" ");
+        console.log("A XY from LatLong, Avg True, Offset True");
+        let xyFromLatLong = this.XYPointAtLatLongPoint(latLongAtPoint, true, true);
+        console.log("A Result : " + xyFromLatLong, est);
+        console.log(" ");
+        console.log("B XY from LatLong, Avg False, Offset True");
+        xyFromLatLong = this.XYPointAtLatLongPoint(latLongAtPoint, false, true);
+        console.log("B Result : " + xyFromLatLong, est);
+        console.log(" ");
+        console.log("C XY from LatLong, Avg True, Offset False");
+        xyFromLatLong = this.XYPointAtLatLongPoint(latLongAtPoint, true, false);
+        console.log("C Result : " + xyFromLatLong, est);
+        console.log(" ");
+        console.log("D XY from LatLong, Avg False, Offset False");
         xyFromLatLong = this.XYPointAtLatLongPoint(latLongAtPoint, false, false);
-        console.log("XY From LatLong: " + xyFromLatLong);
+        console.log("D Result : " + xyFromLatLong, est);
+        console.log(" ");
 
 
         this.AddDotAtLatLongPointMapRatioPoint(
@@ -496,7 +518,8 @@ export class MapData {
             // use all the combined projections to get the average XY 
             // iterate thru all latitude/longitude, and return the average
             for (let i = 0; i < this.projections.length; i++) {
-                let projXY = this.projections[i].XYPointAtLatLongPoint(latLong, offsetProjection);
+                let projXY = this.projections[i].XYPointAtLatLongPoint(latLong, !offsetProjection, constrainToContainer = true);
+                // console.log("Proj", i, "XYPointAtLatLong", projXY);
                 if (i == 0) {
                     xy = projXY;
                 } else {
@@ -509,7 +532,7 @@ export class MapData {
         } else {
             // NON-average, just use one projection
             // by default, use the middle projection (least likelihood of a point being out-of-container)
-            let projection = this.projections[Math.floor(this.projections.length / 2)];// [2]
+            let projection = this.projections[0];// [2]
             // projection nullcheck 
             if (projection == null) {
                 if (this.projections.length > 1) {
@@ -527,9 +550,9 @@ export class MapData {
                     return null;
                 }
             }
-            xy = projection.XYPointAtLatLongPoint(latLong, !offsetProjection);
+            xy = projection.XYPointAtLatLongPoint(latLong, !offsetProjection, constrainToContainer = true);
         }
-        // lastly, ensure the returned point is within the bounds of this container 
+        // lastly, failsafe ensure the returned point is within the bounds of this container 
         if (constrainToContainer && !this.IsPointWithinContainer(xy, offsetProjection)) {
             // not within bounds, constrain within container 
             xy = this.ConstrainPointWithinContainer(xy, offsetProjection);
