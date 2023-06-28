@@ -4,13 +4,17 @@ export const adams2 = 'adams2';
 export const peirce = 'peirce';
 export const equirectangular = 'equirectangular';
 
+import * as d3 from 'd3';
+import * as d3gp from 'd3-geo-projection';
+
+import * as math from './utils/math';
+
 /** 
  * @type {string[][]} 2D array holding all built-in map projection names. 
  * @example
  *      maps[i][0] // [0] is the full name of the map projection,
  *      maps[i][1] // [1] is const property of the name (top of maps.js),
  *      maps[i][2] // [2...] and beyond are alternate supported names
- * 
  */
 const maps = [
     ['Grieger Triptychial',
@@ -30,6 +34,7 @@ const maps = [
  *
  * @param {string} map name of map projection you want
  * @return {string} map projection name, per const refs at top of maps.js
+ * @see {@link maps} for all valid map name inputs
  */
 export function ParseMap(map) {
     let id = GetMapID(map);
@@ -44,7 +49,8 @@ export function ParseMap(map) {
  *
  * @param {string} map name of map projection you want
  * @return {string} full name of the map projection 
- */
+ * @see {@link maps} for all valid map name inputs
+*/
 export function GetMapFullName(map) {
     let id = GetMapID(map);
     if (id < 0) {
@@ -52,6 +58,102 @@ export function GetMapFullName(map) {
         return null;
     }
     return maps[id][0];
+}
+
+/**
+ * Get the {@link d3.GeoProjection} for this map
+ * @param {string} map name of map projection you want
+ * @returns {d3.GeoProjection}
+ * @see {@link maps} for all valid map name inputs
+ */
+export function GetMapD3GeoProjection(map) {
+    switch (map) {
+        default:
+            console.warn("Unsupported projection type", map,
+                ", can't get geoProjection, refer to maps.js, returning geoEquirectangular");
+            return d3.geoEquirectangular();
+        case equirectangular:
+            return d3.geoEquirectangular();
+        case peirce:
+            return d3gp.geoPeirceQuincuncial();
+        case adams1:
+            return d3gp.geoPeirceQuincuncial();
+        case adams2:
+            return d3gp.geoPeirceQuincuncial();
+    }
+}
+
+export function GetMapCSSRotation(map) {
+    switch (map) {
+        case adams1:
+        case adams2:
+            return 135;
+    }
+    return 0;
+}
+export function GetMapCSSTranslation(map, mapSize) {
+    switch (map) {
+        case adams1:
+        case adams2:
+            return [
+                (mapSize * (math.sqrt2 - 1) * math.sqrt2rec),
+                mapSize
+            ];
+    }
+    return [0, 0];
+}
+
+/**
+ * Convenience getter for map rotation. 
+ * 
+ * Technically the phi, or [1] from {@link GetProjectionFullRotation}. 
+ * Useful, for example, for methods converting lat/long to pixel coordinates.
+ * @param {string} map name of map projection you want
+ * @returns {number} Rotation, in degrees, this projection should be displayed at
+ * @see {@link maps} for all valid map name inputs
+ */
+export function GetProjectionRotation(map) {
+    return GetProjectionFullRotation(map)[1];
+}
+/**
+ * Get this map projection's rotation, [lambda,phi,gamma], for appropriate d3 geo display
+ * @param {string} map name of the map projection you want
+ * @returns {number[]} 3-value array representing this projection's rotation:
+ * - rotation[lambda, phi, gamma]
+ */
+export function GetProjectionFullRotation(map) {
+    let lambda = 0;
+    let phi = 0;
+    let gamma = 0;
+    switch (map) {
+        case peirce:
+            gamma = 315;
+            break;
+        case adams1:
+            phi = 315;
+            gamma = 45;
+            break;
+        case adams2:
+            phi = 135;
+            gamma = 315;
+            break;
+    }
+    return [lambda, phi, gamma];
+}
+
+/**
+ * Get the {@link d3.GeoProjection.clipAngle d3 clip angle} for this map
+ * @param {string} map name of map projection you want
+ * @returns {number} Clip angle value, in degrees
+ * @see {@link maps} for all valid map name inputs
+ */
+export function GetMapProjectionClipAngle(map) {
+    switch (map) {
+        case adams1:
+        case adams2:
+            return 90;
+    }
+    return 0;
 }
 
 /**
