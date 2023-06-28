@@ -130,7 +130,7 @@ export class ProjectionData {
         let iX = math.InvertNormalizedValue(xRatio, origin[0], extent[0], false);
         let iY = math.InvertNormalizedValue(yRatio, origin[1], extent[1], false);
         if (offsetToProjection) { iX = this.GetContainerXOffset(iX); iY = this.GetContainerYOffset(iY); }
-        return this.MapPointLocalToProjectionLocal([iX, iY ]);
+        return this.MapPointLocalToProjectionLocal([iX, iY]);
     }
     MapPointRatioToXY(xyRatio, offsetToProjection) {
         return this.MapXYRatioToXY(xyRatio[0], xyRatio[1], offsetToProjection);
@@ -205,16 +205,26 @@ export class ProjectionData {
      * @param {boolean=true} offsetToProjection Optional, default true. Offsets the given point relative 
      * to the projection we're reading data from. Essentially, true = returns global XY (screenspace), 
      * and false = returns local screenspace (relative to this projection's origin)
+     * @param {boolean=true} constrainToContainer If true, constrains the returned XY to the parent {@link MapData.mapContainer}, 
+     * either adding/subtracting container's width/height to the result until it's within bounds (0 size matches width)
      * @return {number[]} Two-value number[] array, where [0] = X and [1] = Y
      * @memberof ProjectionData
      */
-    XYPointAtLatLongPoint(latLong, offsetFromProjection = true) {
+    XYPointAtLatLongPoint(latLong, offsetToProjection = true, constrainToContainer = true) {
         let xy = this.projection(latLong.slice().reverse());
+        // let xy = this.projection(latLong.slice());
         xy = this.ApplySVGTransformOffsetsToPoint(xy, true);
-        if (offsetFromProjection) {
+        if (offsetToProjection) {
             let origin = this.GetContainerFullOrigin();
+            console.log(this.index, "origin:", origin);
+            console.log(this.index, "xy:", xy);
             xy[0] += origin[0];
             xy[1] += origin[1];
+        }
+        // if (constrainToContainer && !this.mapData.IsPointWithinContainer(xy, offsetToProjection)) {
+        if (constrainToContainer) {
+            // not within bounds, constrain within container 
+            xy = this.mapData.ConstrainPointWithinContainer(xy, false);
         }
         return xy;
     }
@@ -261,6 +271,7 @@ export class ProjectionData {
                 let xy = origin;
                 // transform found, be sure to update mouse x/y accordingly
                 let t = parse(transform);
+                console.log("T", t);
                 // apply modifications in order
                 if (reverseOrder) {
                     xy = Translate(xy, t, reverseOrder);
@@ -282,6 +293,7 @@ export class ProjectionData {
                 function Rotate(xy, t, size, reverse) {
                     // accommodate rotation 
                     if (t.rotate) {
+                        console.log("rotate:", t.rotate[0]);
                         xy = math.RotateAround(size, size, xy[0], xy[1], t.rotate[0] * (reverse ? -1 : 1));
                     }
                     return xy;
