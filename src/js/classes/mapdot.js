@@ -10,25 +10,17 @@ export const dotStyle = {
 
 /** Data related to rendering dots on a map projection */
 export class MapDot {
-    /** X-coordinate for this dot (can be Latitude, see {@link posType})
+    /** Latitude for this dot
      * @type {number}
      * @memberof MapDot */
-    x;
-    /** Y-coordinate for this dot (can be Latitude, see {@link posType})
+    lat;
+    /** Longitude for this dot
      * @memberof MapDot */
-    y;
+    long;
     /** Optional, default null. ID for this dot. 
      * If set, can use to access all dots of the given ID. 
      * @memberof MapDot */
     id;
-    /** Optional, default 0. Defines this dot's coordinate system.
-     * 
-     * 0. XY is GLOBAL XY coordinates (eg cursor position). Default 
-     * 1. XY is LOCAL XY coordinates, relative to its {@link MapData}
-     * 2. XY is normalized 0~1 fraction relative to its {@link ProjectionData projection}
-     * 3. XY is Latitude/Longitude coordinates
-     * @memberof MapDot */
-    posType;
     /** 
      * Optional. Appearance style for this dot. Default {@link dotStyle.circle circle}
      * @see {@link dotStyle}
@@ -38,38 +30,23 @@ export class MapDot {
     #retrievedXY = false;
     #xy;
 
-    /** Create a new {@link MapDot}. Set {@link X} and {@link Y} coordinates. 
-     * Optionally specify {@link posType} and {@link id ID}.
+    /** 
+     * Create a new {@link MapDot}. Set {@link lat latitude} and {@link long longitude} coordinates. 
+     * Optionally specify {@link id ID} and {@link style style (appearance)}.
      * 
-     * @param {number} x X-coordinate for this dot (can be Latitude, see {@link posType})
-     * @param {number} y Y-coordinate for this dot (can be Longitude, see {@link posType})
-     * @param {number=0} posType Optional, default 0. Defines this dot's coordinate system.
-     * 
-     * 0. XY is GLOBAL XY coordinates (eg cursor position). Default 
-     * 1. XY is LOCAL XY coordinates, relative to this {@link MapData}
-     * 2. XY is normalized 0~1 fraction relative to its {@link ProjectionData projection}
-     * 3. XY is Latitude/Longitude coordinates
-     * @param {string=null} id Optional, default null. ID for this dot. 
+     * @param {number} lat Latitude for this dot
+     * @param {number} long Longitude for this dot
+     * @param {string} [id=null] Optional, default null. ID for this dot. 
      * If set, can use to access all dots of the given ID.
+     * @param {string} [style=dotStyle.default] Style this dot will be 
+     * rendered as. See {@link dotStyle}
      * @memberof MapDot */
-    constructor(x, y, id = null, posType = 0, style = dotStyle.circle) {
-        this.x = x;
-        this.y = y;
+    constructor(lat, long, id = null, style = dotStyle.default) {
+        // set basic values 
+        this.lat = lat;
+        this.long = long;
         this.id = id;
-        // set pos type
-        switch (posType) {
-            case 0: // global 
-            case 1: // local 
-            case 2: // normalized
-            case 3: // latLong
-                this.posType = posType;
-                break;
-            default:
-                console.warn("Attempted to create MapDot of invalid posType ", posType,
-                    ', see @posType param for valid values, defaulting to 0');
-                this.posType = posType = 0;
-                break;
-        }
+        // set style, ensure it's valid 
         switch (style) {
             case dotStyle.circle:
             case dotStyle.square:
@@ -77,19 +54,19 @@ export class MapDot {
                 break;
             default:
                 console.warn("Attempted to create MapDot on invalid style", style,
-                    ", see @dotStyle for valid values, defaulting to dotStyle.circle");
-                this.style = dotStyle.circle;
+                    ", see @dotStyle for valid values, defaulting to dotStyle.default");
+                this.style = dotStyle.default;
                 break;
         }
     }
 
     /**
-     * Returns {@link x} and {@link y} as a two-value number[] array: [{@link x}, {@link y}]
+     * Returns {@link lat} and {@link long} as a two-value number[] array: [{@link lat}, {@link long}]
      * @readonly
-     * @returns Two-value array [x, y]
+     * @returns Two-value array [lat, long]
      * @memberof MapDot
      */
-    get xy() { return [this.x, this.y]; }
+    get latLong() { return [this.lat, this.long]; }
 
     /** 
      * Get X coord relative to the given {@link p projection}
@@ -101,17 +78,17 @@ export class MapDot {
         switch (this.posType) {
             case 0: // global, screenspace
                 // convert screenspace to lat/long for per-projection localization
-                let latLong = p.LatLongAtPoint(this.xy);
+                let latLong = p.LatLongAtPoint(this.latLong);
                 this.#xy = p.XYPointAtLatLongPoint(latLong, false);
                 break;
             case 1: // already local to projection 
-                this.#xy = [this.x, this.y];
+                this.#xy = [this.lat, this.long];
                 break;
             case 2: // normalized
-                this.#xy = p.MapPointRatioToXY(this.xy);// xy 0-1 ratio per mapdata
+                this.#xy = p.MapPointRatioToXY(this.latLong);// xy 0-1 ratio per mapdata
                 break;
             case 3: // lat/long
-                this.#xy = p.XYPointAtLatLong(this.xy, false);
+                this.#xy = p.XYPointAtLatLong(this.latLong, false);
                 break;
         }
         this.#retrievedXY = true;

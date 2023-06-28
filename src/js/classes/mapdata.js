@@ -67,7 +67,7 @@ export class MapData {
         this.mapCanvas.id = 'mod' + this.module.moduleId + '_mapCanvas';
         this.mapCanvas.style.position = 'absolute';
         this.mapContainer.appendChild(this.mapCanvas);
-        this.ctx = this.mapCanvas.getContext('2d', {alpha: true});
+        this.ctx = this.mapCanvas.getContext('2d', { alpha: true });
 
         // create output 
         this.#output = document.createElement('p');
@@ -103,6 +103,21 @@ export class MapData {
         this.#UpdateSize();
     }
 
+    AddDotAtLatLongPointMapRatioPoint(latLong, xyMapRatio) { }
+
+    AddDotAtLatLongPoint(latLong, id = null, style = dotStyle.default) { }
+    AddDotAtLatLong(lat, long, id = null, style = dotStyle.default) { }
+    AddDotAtGlobalPoint(xyGlobal, id = null, style = dotStyle.default) { }
+    AddDotAtGlobal(xGlobal, yGlobal, id = null, style = dotStyle.default) { }
+    AddDotAtMapLocalPoint(xyMapLocal, id = null, style = dotStyle.default) { }
+    AddDotAtMapLocal(xMapLocal, yMapLocal, id = null, style = dotStyle.default) { }
+    AddDotAtProjectionLocalPoint(xyProjectionLocal, id = null, style = dotStyle.default) { }
+    AddDotAtProjectionLocal(xProjectionLocal, yProjectionLocal, id = null, style = dotStyle.default) { }
+    AddDotAtMapRatioPoint(xyMapRatio, id = null, style = dotStyle.default) { }
+    AddDotAtMapRatio(xMapRatio, yMapRatio, id = null, style = dotStyle.default) { }
+    AddDotAtProjectionRatioPoint(xyProjectionRatio, id = null, style = dotStyle.default) { }
+    AddDotAtProjectionRatio(xProjectionRatio, yProjectionRatio, id = null, style = dotStyle.default) { }
+
     /**
      * Add a MapDot dot to this projection
      * @param {number} x X coordinate of this dot (or latitude, see {@link posType})
@@ -124,47 +139,11 @@ export class MapData {
 
         this.#RenderDot(mapDot, false);
     }
-    /**
-     * Add a MapDot dot to this projection
-     * @param {number} xy X and Y coordinates of this dot (or lat/long, see {@link posType})
-     * @param {number} [posType=0] Optional, default 0. Defines this dot's coordinate system.
-     * 
-     * 0. XY is GLOBAL XY coordinates (eg cursor position). Default 
-     * 1. XY is LOCAL XY coordinates, relative to this {@link MapData}
-     * 2. XY is normalized 0~1 fraction relative to its {@link ProjectionData projection}
-     * 3. XY is Latitude/Longitude coordinates
-     * @param {string} [id=null]
-     * @memberof MapData
-     */
-    AddDot(xy, id = null, posType = 0) {
-        this.AddDotXY(xy[0], xy[1], id, posType);
-    }
-    AddDotGlobal(x, y, id = null) {
-        this.AddDotXY(x, y, id, 0);
-    }
-    AddDotLocal(x, y, id = null) {
-        this.AddDotXY(x, y, id, 1);
-    }
-    AddDotNormalized(xRatio, yRatio, id = null) {
-        this.AddDotXY(xRatio, yRatio, id, 2);
-    }
-    AddDotLatLong(lat, long, id = null) {
-        this.AddDotXY(lat, long, id, 3);
-    }
 
     RemoveDotsByXY(xy) {
         if (this.#mapDots.length == 0) { return; }
         let dotsToRemove = this.#mapDots.filter(function (mapDot) {
-            return mapDot.xy == xy;
-        });
-        dotsToRemove.forEach(mapDot => {
-            this.#RemoveDot(mapDot);
-        });
-    }
-    RemoveDotsByPosType(posType) {
-        if (this.#mapDots.length == 0) { return; }
-        let dotsToRemove = this.#mapDots.filter(function (mapDot) {
-            return mapDot.posType == posType;
+            return mapDot.latLong == xy;
         });
         dotsToRemove.forEach(mapDot => {
             this.#RemoveDot(mapDot);
@@ -190,14 +169,7 @@ export class MapData {
     GetDotsByXY(xy) {
         let dots = [];
         for (let i = 0; i < this.#mapDots.length; i++) {
-            if (this.#mapDots[i].xy == xy) { dots.push(this.#mapDots[i]); }
-        }
-        return dots;
-    }
-    GetDotsByPosType(posType) {
-        let dots = [];
-        for (let i = 0; i < this.#mapDots.length; i++) {
-            if (this.#mapDots[i].posType == posType) { dots.push(this.#mapDots[i]); }
+            if (this.#mapDots[i].latLong == xy) { dots.push(this.#mapDots[i]); }
         }
         return dots;
     }
@@ -229,19 +201,17 @@ export class MapData {
 
     #MapDotAlreadyExists(mapDot) {
         return this.#MapDotParamsAlreadyExists(
-            mapDot.x,
-            mapDot.y,
+            mapDot.lat,
+            mapDot.long,
             mapDot.id,
-            mapDot.posType,
             mapDot.style
         );
     }
-    #MapDotParamsAlreadyExists(x, y, id, posType, style) {
+    #MapDotParamsAlreadyExists(lat, long, id, style) {
         // check if any dots matching exist 
         this.#mapDots.forEach(mapDot => {
-            if (mapDot.x == x && mapDot.y == y &&
-                mapDot.id == id && mapDot.style == style &&
-                mapDot.posType == posType) {
+            if (mapDot.lat == lat && mapDot.long == long &&
+                mapDot.id == id && mapDot.style == style) {
                 // mapDot already exists, no need to add 
                 return true;
             }
