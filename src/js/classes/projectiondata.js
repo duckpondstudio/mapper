@@ -1,8 +1,9 @@
 import { MapData } from "./mapdata";
 import * as d3 from 'd3';
 import { parse } from 'transform-parser';
-import * as math from '../utils/math';
 import { ClickedProjection } from "../input";
+import * as math from '../utils/math';
+import * as m from '../maps';
 
 /** if true, fires a click event directly on the projection SVG, bypassing {@link baseinput} */
 const debugClickOnProjection = false;
@@ -53,8 +54,7 @@ export class ProjectionData {
      * This {@link ProjectionData} has been added to {@link document.body},
      * as called by its parent {@link MapData}
      */
-    AddedToDocumentBody() { 
-    }
+    AddedToDocumentBody() { }
 
     GetContainerOrigin() {
         let raw = this.GetContainerFullOrigin();
@@ -226,8 +226,6 @@ export class ProjectionData {
         xy = this.ApplySVGTransformOffsetsToPoint(xy, true);
         if (offsetToProjection) {
             let origin = this.GetContainerFullOrigin();
-            console.log(this.index, "origin:", origin);
-            console.log(this.index, "xy:", xy);
             xy[0] += origin[0];
             xy[1] += origin[1];
         }
@@ -277,39 +275,50 @@ export class ProjectionData {
         let g = this.svg.select('.mapGroup');
         if (g) {
             let transform = g.attr('transform');
+            let t;// parsed transform ref 
+            let translate = false;
+            let translation;
+            // get the rotation (test between CSS and D3 rotation)
+            let rotation = m.GetMapCSSRotation(this.projection);
+            // let rotation = m.GetProjectionRotation(this.projection);
+            let rotate = rotation != 0;
             if (transform) {
-                let xy = origin;
                 // transform found, be sure to update mouse x/y accordingly
-                let t = parse(transform);
-                console.log("T", t);
-                // apply modifications in order
-                if (reverseOrder) {
-                    xy = Translate(xy, t, reverseOrder);
-                    xy = Rotate(xy, t, this.projectionSize, reverseOrder);
-                } else {
-                    xy = Rotate(xy, t, this.projectionSize, reverseOrder);
-                    xy = Translate(xy, t, reverseOrder);
+                t = parse(transform);
+                translate = t.translate != null;
+                if (t.translate[0] == 0 && t.translate[1] == 0) {
+                    translate = false;
                 }
-
-                function Translate(xy, t, reverse) {
-                    // accommodate translation 
-                    if (t.translate) {
-                        xy[0] -= t.translate[0] * (reverse ? -1 : 1);
-                        xy[1] -= t.translate[1] * (reverse ? -1 : 1);
-                    }
-                    // return xy;jk    q-0;LT6 (kitty <3)
-                    return xy;
-                }
-                function Rotate(xy, t, size, reverse) {
-                    // accommodate rotation 
-                    if (t.rotate) {
-                        console.log("rotate:", t.rotate[0]);
-                        xy = math.RotateAround(size, size, xy[0], xy[1], t.rotate[0] * (reverse ? -1 : 1));
-                    }
-                    return xy;
-                }
-                return xy;
+                if (translate) { translation = t.translate; }
             }
+            // apply modifications in order
+            let xy = origin;
+            if (reverseOrder) {
+                if (translate) { xy = Translate(xy, translation, reverseOrder); }
+                if (rotate) { xy = Rotate(xy, rotation, this.projectionSize, reverseOrder); }
+            } else {
+                if (rotate) { xy = Rotate(xy, rotation, this.projectionSize, reverseOrder); }
+                if (translate) { xy = Translate(xy, translation, reverseOrder); }
+            }
+            return xy;
+        }
+        function Translate(xy, translation, reverse) {
+            // accommodate translation 
+            xy[0] -= translation[0] * (reverse ? -1 : 1);
+            xy[1] -= translation[1] * (reverse ? -1 : 1);
+            // return xy;jk    q-0;LT6 (kitty <3)
+            return xy;
+        }
+        /** 
+         * @param {ProjectionData} projection
+         */
+        function Rotate(xy, rotation, size, reverse) {
+            // accommodate rotation 
+            if (rotation != 0) {
+                if (reverse) { rotation *= -1; }
+                xy = math.RotateAround(size, size, xy[0], xy[1], rotation);
+            }
+            return xy;
         }
         return origin;
     }
