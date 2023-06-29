@@ -14,7 +14,6 @@ import * as m from './maps';
 import * as math from './utils/math';
 
 import * as d3 from 'd3';
-import * as d3gp from 'd3-geo-projection';
 
 let mapSize = 200;
 
