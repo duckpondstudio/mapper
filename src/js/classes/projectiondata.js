@@ -11,8 +11,10 @@ const debugClickOnProjection = false;
 
 /** Container for all data for an individual projection within a map */
 export class ProjectionData {
-    /** D3 projection data ref @type {d3.GeoProjection} @memberof ProjectionData */
+    /** Name of this projection, see {@link m maps.js} @type {string} @memberof ProjectionData */
     projection;
+    /** D3 projection data ref @type {d3.GeoProjection} @memberof ProjectionData */
+    d3Projection;
     index;
     /** D3 SVG Element @type {d3.Selection<SVGSVGElement, any, null, undefined>} @memberof ProjectionData */
     svg;
@@ -23,8 +25,9 @@ export class ProjectionData {
     #containerRect;
 
 
-    constructor(projection, index, svgContainer, svg, projectionSize, mapData) {
+    constructor(projection, d3Projection, index, svgContainer, svg, projectionSize, mapData) {
         this.projection = projection;
+        this.d3Projection = d3Projection;
         this.index = index;
         this.svgContainer = svgContainer;
         this.projectionSize = projectionSize;
@@ -173,7 +176,7 @@ export class ProjectionData {
             y = this.GetContainerYOffset(y);
         }
         let xy = this.ApplySVGTransformOffsetsToXY(x, y);
-        return this.projection.invert(xy).reverse();
+        return this.d3Projection.invert(xy).reverse();
     }
     /**
      * Gets the latitude and longitude of this projection at the given normalized XY coordinate
@@ -218,7 +221,7 @@ export class ProjectionData {
      * @memberof ProjectionData
      */
     XYPointAtLatLongPoint(latLong, offsetToProjection = true, constrainToContainer = true) {
-        let xy = this.projection(latLong.slice().reverse());
+        let xy = this.d3Projection(latLong.slice().reverse());
         // let xy = this.projection(latLong.slice());
         xy = this.ApplySVGTransformOffsetsToPoint(xy, true);
         if (offsetToProjection) {

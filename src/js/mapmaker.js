@@ -88,7 +88,7 @@ export function CreateMap(module) {
 
     maps.push(mapData);
 
-    function RetrieveProjection(projectionType, mapData) {
+    function RetrieveProjection(projection, mapData) {
 
         // store current projection index, because ProjectionIndex iterates on an async timer 
         let currentProjectionIndex = projectionIndex;
@@ -100,8 +100,8 @@ export function CreateMap(module) {
 
         let map = mapData.map;
 
-        if (projectionType == null || projectionType == "") {
-            console.error('null/empty projection type specified, cannot retrieve');
+        if (projection == null || projection == "") {
+            console.error('null/empty projection name specified, cannot retrieve');
             return;
         }
         if (map == null || map == "") {
@@ -113,7 +113,7 @@ export function CreateMap(module) {
         // checks passed, begin loading 
         loadedProjections++;// increment load counter
 
-        let projection = GetProjection(projectionType);
+        let d3Projection = GetD3Projection(projection);
 
         let fitSize = 1;
         // adjust projection scale (zoom)
@@ -122,14 +122,14 @@ export function CreateMap(module) {
                 fitSize = math.sqrt2;
                 break;
         }
-        projection
+        d3Projection
             .fitSize([mapSize * fitSize, mapSize * fitSize], overlayGeo);
         // using ocean JSON here because it extends all the way to the edges of lat/long, -180/-90 to 180/90, eg max size
 
 
         // create geopath generator
         let geoGenerator = d3.geoPath()
-            .projection(projection);
+            .projection(d3Projection);
 
         // left offset (adjust first map size - use projection width for right map cutoff)
         let leftOffset = 0;
@@ -155,8 +155,8 @@ export function CreateMap(module) {
         //         break;
         // }
 
-        let cssRotation = m.GetMapCSSRotation(projectionType);
-        let cssTranslation = m.GetMapCSSTranslation(projectionType, mapSize);
+        let cssRotation = m.GetMapCSSRotation(projection);
+        let cssTranslation = m.GetMapCSSTranslation(projection, mapSize);
         let hasRotation = cssRotation != 0;
         let hasTranslation =
             (cssTranslation != null && Array.isArray(cssTranslation) &&
@@ -223,8 +223,9 @@ export function CreateMap(module) {
             let svgContainer = document.getElementById(svgContainerId);
 
             // create projection data container
-            let projectionData = new ProjectionData(
-                projection, currentProjectionIndex, svgContainer, svg, mapSize, mapData);
+            let projectionData = new ProjectionData(projection, 
+                d3Projection, currentProjectionIndex,
+                svgContainer, svg, mapSize, mapData);
 
             // add projectiondata to mapdata 
             mapData.AddProjection(projectionData);
@@ -248,38 +249,38 @@ export function CreateMap(module) {
 /**
  * Returns {@link d3.GeoProjection} of the given projection type, 
  * plus any modifications needed for rendering (eg, clipAngle, rotation, etc)
- * @param {string} map Name of map you want to retrieve projection for, see {@link m maps.js} 
+ * @param {string} projection Name of map you want to retrieve projection for, see {@link m maps.js} 
  * @return {d3.GeoProjection}
  */
-function GetProjection(map) {
+function GetD3Projection(projection) {
 
     // nullcheck
-    if (map == null) {
+    if (projection == null) {
         // null, just return default projection type (geoEquirectangular)
         console.warn("Cannot get projection type, given type is null, returning d3.geoEquirectangular");
         return d3.geoEquirectangular();
     }
 
     // ensure lowercase
-    if (typeof (map) === 'string') {
-        map = map.toLowerCase();
+    if (typeof (projection) === 'string') {
+        projection = projection.toLowerCase();
     } else {
         // not a string, invalid parsing 
         console.warn("Can't get projection from type, type isn't a string, type value: "
-            + map + ", typeof: " + typeof (map) + ", returning d3.geoEquirectangular");
+            + projection + ", typeof: " + typeof (projection) + ", returning d3.geoEquirectangular");
         return d3.geoEquirectangular();
     }
 
     // load geoprojection
-    let geoProjection = m.GetMapD3GeoProjection(map);
+    let geoProjection = m.GetMapD3GeoProjection(projection);
     // apply rotation if needed 
-    let rotation = m.GetProjectionFullRotation(map);
+    let rotation = m.GetProjectionFullRotation(projection);
     if (rotation != null && Array.isArray(rotation) &&
         rotation.length == 3 && rotation != [0, 0, 0]) {
         geoProjection.rotate(rotation);
     }
     // apply clip angle if needed 
-    let clipAngle = m.GetMapProjectionClipAngle(map);
+    let clipAngle = m.GetMapProjectionClipAngle(projection);
     if (clipAngle != 0) {
         geoProjection.clipAngle(clipAngle);
     }
