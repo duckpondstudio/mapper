@@ -13,6 +13,8 @@ import * as math from '../utils/math';
 
 const devicePixelRatio = window.devicePixelRatio;
 
+let PPP = 0;
+
 /** Container for all data related to displaying a map */
 export class MapData {
     /** Name of this map. See {@link m maps.js} @type {Module} @memberof MapData*/
@@ -111,7 +113,7 @@ export class MapData {
     AddDotAtLatLongPointMapRatioPoint(latLong, xyMapRatio, id = null, style = dotStyle.default) {
         console.log("add dot at latlong " + latLong + " xyMapRatio " + xyMapRatio + " id", id, "style", style);
 
-        
+
         this.ctx.beginPath();
         this.ctx.strokeStyle = 'purple';
         this.ctx.arc(200, 100, 50, 0, math.pi2);
@@ -133,8 +135,8 @@ export class MapData {
         let ratioToXYLocal = this.PointRatioToXY(pointratio);
         let ratioToXYGlobal = this.PointRatioToXY(pointratio, false);
         let latLongfromLocal = this.LatLongAtPoint(xyGlobal, true);
-        
-        
+
+
         console.log("GlobalXY Input: " + xyGlobal);
         console.log("LocalXY From GlobalXY: " + localXY);
         console.log("LatLong From GlobalXY: " + latLongAtPoint);
@@ -145,7 +147,7 @@ export class MapData {
 
         let est = "(Target: ~" + Math.round(xyGlobal[0]) +
             "," + Math.round(xyGlobal[1]) + ")";
-        
+
         console.log(" ");
         console.log(" ");
         console.log(" ");
@@ -157,18 +159,29 @@ export class MapData {
         let xyFromLatLong = this.XYPointAtLatLongPoint(latLongAtPoint, true, true);
         console.log("A Result : " + xyFromLatLong, est);
         console.log(" ");
-        console.log("B XY from LatLong, Avg False, Offset True");
+        PPP = 0;
+        console.log("B0 XY from LatLong, Avg False, Offset True");
         xyFromLatLong = this.XYPointAtLatLongPoint(latLongAtPoint, false, true);
-        console.log("B Result : " + xyFromLatLong, est);
+        console.log("B0 Result : " + xyFromLatLong, est);
         console.log(" ");
-        console.log("C XY from LatLong, Avg True, Offset False");
-        xyFromLatLong = this.XYPointAtLatLongPoint(latLongAtPoint, true, false);
-        console.log("C Result : " + xyFromLatLong, est);
+        PPP = 1;
+        console.log("B1 XY from LatLong, Avg False, Offset True");
+        xyFromLatLong = this.XYPointAtLatLongPoint(latLongAtPoint, false, true);
+        console.log("B1 Result : " + xyFromLatLong, est);
         console.log(" ");
-        console.log("D XY from LatLong, Avg False, Offset False");
-        xyFromLatLong = this.XYPointAtLatLongPoint(latLongAtPoint, false, false);
-        console.log("D Result : " + xyFromLatLong, est);
+        PPP = 2;
+        console.log("B2 XY from LatLong, Avg False, Offset True");
+        xyFromLatLong = this.XYPointAtLatLongPoint(latLongAtPoint, false, true);
+        console.log("B2 Result : " + xyFromLatLong, est);
         console.log(" ");
+        // console.log("C XY from LatLong, Avg True, Offset False");
+        // xyFromLatLong = this.XYPointAtLatLongPoint(latLongAtPoint, true, false);
+        // console.log("C Result : " + xyFromLatLong, est);
+        // console.log(" ");
+        // console.log("D XY from LatLong, Avg False, Offset False");
+        // xyFromLatLong = this.XYPointAtLatLongPoint(latLongAtPoint, false, false);
+        // console.log("D Result : " + xyFromLatLong, est);
+        // console.log(" ");
 
 
         this.AddDotAtLatLongPointMapRatioPoint(
@@ -543,7 +556,8 @@ export class MapData {
         } else {
             // NON-average, just use one projection
             // by default, use the middle projection (least likelihood of a point being out-of-container)
-            let projection = this.projections[0];// [2]
+            // let projection = this.projections[Math.floor(this.projections.length / 2)];// [2]
+            let projection = this.projections[PPP];// [2]
             // projection nullcheck 
             if (projection == null) {
                 if (this.projections.length > 1) {
@@ -564,14 +578,13 @@ export class MapData {
             xy = projection.XYPointAtLatLongPoint(latLong, offsetProjection, constrainToContainer);
         }
 
-        console.log("XY Input:",xy);
-        console.log("Size:", this.GetContainerSize());
-        console.log("Origin:", this.GetContainerOrigin());
-        console.log("Extent:", this.GetContainerExtent());
-        
 
-        // lastly, failsafe ensure the returned point is within the bounds of this container 
-        if (constrainToContainer && !this.IsPointWithinContainer(xy, !offsetProjection)) {
+        // lastly, failsafe ensure the returned point is within the bounds of this container
+        // if (constrainToContainer && !this.IsPointWithinContainer(xy, !offsetProjection)) {
+        // console.log("XY:", xy);
+        // console.log("Point within F:", this.IsPointWithinContainer(xy, false));
+        // console.log("Point within T:", this.IsPointWithinContainer(xy, true));
+        if (constrainToContainer) {
             // not within bounds, constrain within container 
             xy = this.ConstrainPointWithinContainer(xy, !offsetProjection);
         }

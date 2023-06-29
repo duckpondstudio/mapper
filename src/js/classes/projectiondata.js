@@ -221,19 +221,24 @@ export class ProjectionData {
      * @memberof ProjectionData
      */
     XYPointAtLatLongPoint(latLong, offsetToProjection = true, constrainToContainer = true) {
+        console.log("latlong input:", latLong, "offset:",offsetToProjection);
         let xy = this.d3Projection(latLong.slice().reverse());
+        console.log("xy output:", xy);
         // let xy = this.projection(latLong.slice());
         xy = this.ApplySVGTransformOffsetsToPoint(xy, true);
+        console.log("xy post svg:", xy);
         if (offsetToProjection) {
             let origin = this.GetContainerFullOrigin();
             xy[0] += origin[0];
             xy[1] += origin[1];
         }
+        console.log("xy + origin:", xy, "ori:", this.GetContainerFullOrigin());
         // if (constrainToContainer && !this.mapData.IsPointWithinContainer(xy, offsetToProjection)) {
-        if (constrainToContainer) {
-            // not within bounds, constrain within container 
-            xy = this.mapData.ConstrainPointWithinContainer(xy, false);
-        }
+            if (constrainToContainer) {
+                // not within bounds, constrain within container 
+                xy = this.mapData.ConstrainPointWithinContainer(xy, false);
+            }
+            console.log("xy after constraint:", xy);
         return xy;
     }
 
@@ -279,8 +284,8 @@ export class ProjectionData {
             let translate = false;
             let translation;
             // get the rotation (test between CSS and D3 rotation)
-            let rotation = m.GetMapCSSRotation(this.projection);
-            // let rotation = m.GetProjectionRotation(this.projection);
+            // let rotation = m.GetMapCSSRotation(this.projection);
+            let rotation = m.GetProjectionRotation(this.projection);
             let rotate = rotation != 0;
             if (transform) {
                 // transform found, be sure to update mouse x/y accordingly
@@ -304,6 +309,7 @@ export class ProjectionData {
         }
         function Translate(xy, translation, reverse) {
             // accommodate translation 
+            console.log("translate xy", xy, "by", translation);
             xy[0] -= translation[0] * (reverse ? -1 : 1);
             xy[1] -= translation[1] * (reverse ? -1 : 1);
             // return xy;jk    q-0;LT6 (kitty <3)
