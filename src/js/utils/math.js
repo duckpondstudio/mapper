@@ -59,3 +59,69 @@ export function InvertNormalizedValue(value, min, max, clamp = false) {
     let range = max - min;
     return (value * range) + min;
 }
+
+
+
+
+/**
+ * Takes multiple [x,y] points and adds them all together.
+ * @param  {...number[]} points All two-value arrays to add together
+ * @returns {number[]}
+ */
+export function XYPointsAdd(...points) {
+    return points.reduce(function (total, current) {
+        total[0] += current[0];
+        total[1] += current[1];
+        return total;
+    });
+}
+/**
+ * Takes multiple [x,y] points and subtracts them all in sequence
+ * @param  {...number[]} points All two-value arrays to add together
+ * @returns {number[]}
+ */
+export function XYPointsSubtract(...points) {
+    return points.reduce(function (total, current) {
+        total[0] -= current[0];
+        total[1] -= current[1];
+        return total;
+    });
+}
+/**
+ * Takes multiple [x,y] points and multiplies them all together.
+ * @param  {...number[]} points All two-value arrays to add together
+ * @returns {number[]}
+ */
+export function XYPointsMultiply(...points) {
+    return points.reduce(function (total, current) {
+        total[0] *= current[0];
+        total[1] *= current[1];
+        return total;
+    });
+}
+/**
+ * Takes multiple [x,y] points and multiplies them all together.
+ * - Be careful, as this contains no safeties for divide-by-zero errors.
+ * @param  {...number[]} points All two-value arrays to add together
+ * @returns {number[]}
+ */
+export function XYPointsDivide(...points) {
+    return points.reduce(function (total, current) {
+        total[0] /= current[0];
+        total[1] /= current[1];
+        return total;
+    });
+}
+/**
+ * Takes multiple [x,y] points and returns the modulus.
+ * - Be careful, as this contains no safeties for divide-by-zero errors.
+ * @param  {...number[]} points All two-value arrays to add together
+ * @returns {number[]}
+ */
+export function XYPointsModulo(...points) {
+    return points.reduce(function (total, current) {
+        total[0] %= current[0];
+        total[1] %= current[1];
+        return total;
+    });
+}
