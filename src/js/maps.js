@@ -197,15 +197,32 @@ function GetMapID(map) {
 }
 
 // sampling of mostly random, dubiously-accurate lat/long coordinates for testing 
-export const EXAMPLE_LAT_LONG_VANCOUVER = [49.26, -123.11];
-export const EXAMPLE_LAT_LONG_AUSTRALIA = [-23.69, 135.1];
-export const EXAMPLE_LAT_LONG_MADAGASCAR = [-19.62, 47.17];
-export const EXAMPLE_LAT_LONG_RIO_BRAZIL = [-22.83, -43.17];
-export const EXAMPLE_LAT_LONG_FALKLAND_ISLES = [-51.79, -59.59];
-export const EXAMPLE_LAT_LONG_MCMURDO_STN = [-77.85, 166.666];
-export const EXAMPLE_LAT_LONG_GREENLAND = [73.45, -43.29];
-export const EXAMPLE_LAT_LONG_GULF_OF_MEXICO = [22.8, -93];
-export const EXAMPLE_LAT_LONG_GALAPAGOS = [-0.45, -91.12];
-export const EXAMPLE_LAT_LONG_INDIA = [19.13, 78.54];
-export const EXAMPLE_LAT_LONG_ITALY = [42.33, 12.84];
-export const EXAMPLE_LAT_LONG_HAWAII = [21, -155.75];
+//                            LOCATION    APPROX LAT,LONG     APPROX CURSOR POS*
+export const EXAMPLE_LAT_LONG_VANCOUVER = [49.26, -123.11];//   259,113
+export const EXAMPLE_LAT_LONG_AUSTRALIA = [-23.69, 135.1];//    409,213
+export const EXAMPLE_LAT_LONG_MADAGASCAR = [-19.62, 47.17];//   244,275
+export const EXAMPLE_LAT_LONG_RIO_BRAZIL = [-22.7, -42.9];//    161,199
+export const EXAMPLE_LAT_LONG_FALKLAND_ISLES = [-51.79, -59.59];//  118,205
+export const EXAMPLE_LAT_LONG_MCMURDO_STN = [-77.85, 166.666];//    63,172
+export const EXAMPLE_LAT_LONG_GREENLAND = [73.45, -43.29];//    259,162
+export const EXAMPLE_LAT_LONG_GULF_OF_MEXICO = [22.8, -93];//   210,114
+export const EXAMPLE_LAT_LONG_GALAPAGOS = [-0.45, -91.12];//    130,112
+export const EXAMPLE_LAT_LONG_INDIA = [19.13, 78.54];// 303,239
+export const EXAMPLE_LAT_LONG_ITALY = [42.33, 12.84];// 250,200
+export const EXAMPLE_LAT_LONG_HAWAII = [21, -155.75];// 420,122
+// *: cursor pos is likely to change, it's based on js/css web test setup on june 29 2023
+// *: also it's VERY approximate, even moreso than the lat/long. Values +/- 5-10px are expected
+
+
+export const EXAMPLE_XY_VANCOUVER = [259, 113];
+export const EXAMPLE_XY_AUSTRALIA = [409, 213];
+export const EXAMPLE_XY_MADAGASCAR = [244, 275];
+export const EXAMPLE_XY_RIO_BRAZIL = [161, 199];
+export const EXAMPLE_XY_FALKLAND_ISLES = [118, 205];
+export const EXAMPLE_XY_MCMURDO_STN = [63, 172];
+export const EXAMPLE_XY_GREENLAND = [259, 162];
+export const EXAMPLE_XY_GULF_OF_MEXICO = [210, 114];
+export const EXAMPLE_XY_GALAPAGOS = [130, 112];
+export const EXAMPLE_XY_INDIA = [303, 239];
+export const EXAMPLE_XY_ITALY = [250, 200];
+export const EXAMPLE_XY_HAWAII = [420, 122];
