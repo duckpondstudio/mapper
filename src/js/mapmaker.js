@@ -143,17 +143,6 @@ export function CreateMap(module) {
         // prepare relevant transformations 
         let transform;
 
-
-        // check for / apply per-map transformations
-        // switch (map) { // obsolete - keeping for ref 
-        //     case 'grieger-test':
-        //         applyTransformation = true;
-        //         rotation = 90;
-        //         // translationX = -(mapSize * (math.sqrt2 - 1) * math.sqrt2rec);
-        //         translationY = mapSize;
-        //         break;
-        // }
-
         let cssRotation = m.GetMapCSSRotation(projection);
         let cssTranslation = m.GetMapCSSTranslation(projection, mapSize);
         let hasRotation = cssRotation != 0;

@@ -7,6 +7,8 @@ import * as m from '../maps';
 
 /** if true, fires a click event directly on the projection SVG, bypassing {@link baseinput} */
 const debugClickOnProjection = false;
+const debugXYLatLong = true;
+const debugSVGConversion = true;
 
 //TODO: move sizing logic (GetContainerSize, etc) into a parent class for both MapData and ProjectionData
 
@@ -221,24 +223,25 @@ export class ProjectionData {
      * @memberof ProjectionData
      */
     XYPointAtLatLongPoint(latLong, offsetToProjection = true, constrainToContainer = true) {
-        console.log("latlong input:", latLong, "offset:",offsetToProjection);
+        if (debugXYLatLong) console.log("latlong input:", latLong, "offset:",offsetToProjection);
         let xy = this.d3Projection(latLong.slice().reverse());
-        console.log("xy output:", xy);
+        if (debugXYLatLong) console.log("xy output:", xy);
         // let xy = this.projection(latLong.slice());
         xy = this.ApplySVGTransformOffsetsToPoint(xy, true);
-        console.log("xy post svg:", xy);
+        if (debugXYLatLong) console.log("xy post svg:", xy);
         if (offsetToProjection) {
             let origin = this.GetContainerFullOrigin();
+            if (debugXYLatLong) console.log('move xy', xy, 'by origin', origin);
             xy[0] += origin[0];
             xy[1] += origin[1];
+            if (debugXYLatLong) console.log('xy result', xy);
         }
-        console.log("xy + origin:", xy, "ori:", this.GetContainerFullOrigin());
         // if (constrainToContainer && !this.mapData.IsPointWithinContainer(xy, offsetToProjection)) {
             if (constrainToContainer) {
                 // not within bounds, constrain within container 
                 xy = this.mapData.ConstrainPointWithinContainer(xy, false);
             }
-            console.log("xy after constraint:", xy);
+            if (debugXYLatLong) console.log("xy after constraint:", xy);
         return xy;
     }
 
@@ -284,8 +287,8 @@ export class ProjectionData {
             let translate = false;
             let translation;
             // get the rotation (test between CSS and D3 rotation)
-            // let rotation = m.GetMapCSSRotation(this.projection);
-            let rotation = m.GetProjectionRotation(this.projection);
+            let rotation = m.GetMapCSSRotation(this.projection);
+            // let rotation = m.GetProjectionRotation(this.projection);
             let rotate = rotation != 0;
             if (transform) {
                 // transform found, be sure to update mouse x/y accordingly
@@ -309,9 +312,10 @@ export class ProjectionData {
         }
         function Translate(xy, translation, reverse) {
             // accommodate translation 
-            console.log("translate xy", xy, "by", translation);
+            if (debugSVGConversion) console.log("translate xy", xy, "by", translation);
             xy[0] -= translation[0] * (reverse ? -1 : 1);
             xy[1] -= translation[1] * (reverse ? -1 : 1);
+            if (debugSVGConversion) console.log("translation result:", xy);
             // return xy;jk    q-0;LT6 (kitty <3)
             return xy;
         }
@@ -322,8 +326,11 @@ export class ProjectionData {
             // accommodate rotation 
             if (rotation != 0) {
                 if (reverse) { rotation *= -1; }
+                if (debugSVGConversion) console.log('rotate xy', xy, 'by', rotation);
                 xy = math.RotateAround(size, size, xy[0], xy[1], rotation);
+                if (debugSVGConversion) console.log('rotation result', xy);
             }
+            if (debugSVGConversion) console.log('do not rotate xy', xy);
             return xy;
         }
         return origin;
