@@ -186,6 +186,10 @@ function KeyEvent(keyEvent, type) {
                     case '8':
                     case '9':
                         KeyNumber(parseInt(key));
+                        // check if triggering a numeric test 
+                        if (IsShiftHeldEvent(keyEvent) && IsKeyHeld(test.testKey)) {
+                            test.NumericTest(parseInt(key));
+                        }
                         break;
 
                 }
