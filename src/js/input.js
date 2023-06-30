@@ -9,7 +9,7 @@ const keyEventUp = 'keyEventUp';
 
 let debugKeys = false;
 
-let mouseDragUpdatesCoords = true;
+let mouseDragUpdatesCoords = false;
 
 let mouseHeld = false;
 let pressedKeyCodes = [];
@@ -155,7 +155,7 @@ function KeyEvent(keyEvent, type) {
                 // key pressed initially 
                 pressedKeyCodes.push(key);
                 initialDown = true;
-
+                
                 switch (key) {
                     case ' ':
                         // pressed space
@@ -168,6 +168,19 @@ function KeyEvent(keyEvent, type) {
                     case 'Escape':
                         // pressed escape key
                         KeyEsc();
+                        break;
+                    
+                    case '0':
+                    case '1':
+                    case '2':
+                    case '3':
+                    case '4':
+                    case '5':
+                    case '6':
+                    case '7':
+                    case '8':
+                    case '9':
+                        KeyNumber(parseInt(key));
                         break;
 
                 }
@@ -219,6 +232,31 @@ function KeyEnter() {
 
 /** User pressed the escape key */
 function KeyEsc() {
+}
+
+function KeyNumber(num) {
+    switch (num) {
+        case 0:
+            break;
+        case 1:
+            break;
+        case 2:
+            break;
+        case 3:
+            break;
+        case 4:
+            break;
+        case 5:
+            break;
+        case 6:
+            break;
+        case 7:
+            break;
+        case 8:
+            break;
+        case 9:
+            break;
+    }
 }
 
 //#endregion useful key events 
