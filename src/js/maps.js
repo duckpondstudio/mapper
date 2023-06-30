@@ -195,3 +195,17 @@ function GetMapID(map) {
     console.error("ERROR: could not find entry for map name " + map + ", could not get map ID, returning -1");
     return -1;
 }
+
+// sampling of mostly random, dubiously-accurate lat/long coordinates for testing 
+export const EXAMPLE_LAT_LONG_VANCOUVER = [49.26, -123.11];
+export const EXAMPLE_LAT_LONG_AUSTRALIA = [-23.69, 135.1];
+export const EXAMPLE_LAT_LONG_MADAGASCAR = [-19.62, 47.17];
+export const EXAMPLE_LAT_LONG_RIO_BRAZIL = [-22.83, -43.17];
+export const EXAMPLE_LAT_LONG_FALKLAND_ISLES = [-51.79, -59.59];
+export const EXAMPLE_LAT_LONG_MCMURDO_STN = [-77.85, 166.666];
+export const EXAMPLE_LAT_LONG_GREENLAND = [73.45, -43.29];
+export const EXAMPLE_LAT_LONG_GULF_OF_MEXICO = [22.8, -93];
+export const EXAMPLE_LAT_LONG_GALAPAGOS = [-0.45, -91.12];
+export const EXAMPLE_LAT_LONG_INDIA = [19.13, 78.54];
+export const EXAMPLE_LAT_LONG_ITALY = [42.33, 12.84];
+export const EXAMPLE_LAT_LONG_HAWAII = [21, -155.75];
