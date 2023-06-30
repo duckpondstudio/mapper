@@ -12,7 +12,7 @@ let debugKeys = false;
 let mouseDragUpdatesCoords = false;
 
 let mouseHeld = false;
-let pressedKeyCodes = [];
+let pressedKeys = [];
 
 //#region input setup
 
@@ -142,18 +142,17 @@ function SetCursorPosition(x, y) {
  * @see {@link InputSetup} calls this method
  */
 function KeyEvent(keyEvent, type) {
-    let key = keyEvent.key;
-    let index = pressedKeyCodes.indexOf(key);
+    let index = pressedKeys.indexOf(key);
     let initialDown = type == keyEventDown && index == -1;
     let debugValid = debugKeys && (type != keyEventDown || initialDown);
     if (debugValid) {
-        console.log("Begin KeyEvent %s, key: %s, pressedKeyCodes: %o", type, key, pressedKeyCodes)
+        console.log("Begin KeyEvent %s, key: %s, pressedKeys: %o", type, key, pressedKeys)
     }
     switch (type) {
         case keyEventDown:
             if (initialDown) {
                 // key pressed initially 
-                pressedKeyCodes.push(key);
+                pressedKeys.push(key);
                 initialDown = true;
                 
                 switch (key) {
@@ -194,11 +193,11 @@ function KeyEvent(keyEvent, type) {
             // key released 
             if (index >= 0) {
                 // key released
-                pressedKeyCodes.splice(index, 1);
+                pressedKeys.splice(index, 1);
             } else {
                 // should be impossible
-                console.warn('Key released that is not in the pressedKeyCodes array, should be impossible, ',
-                    'likely a browser glitch, investigate. PressedKeyCodes: ', pressedKeyCodes);
+                console.warn('Key', key, 'released that is not in the pressedKeys array, should be impossible,',
+                    'likely a browser glitch, investigate. PressedKeys: ', pressedKeys);
             }
             break;
         default:
@@ -206,8 +205,7 @@ function KeyEvent(keyEvent, type) {
             break;
     }
     if (debugValid) {
-        console.log("Complete KeyEvent %s, key: %s, pressedKeyCodes: %o", type, key, pressedKeyCodes)
-    }
+        console.log("Complete KeyEvent %s, key: %s, pressedKeys: %o", type, key, pressedKeys)
 }
 
 /** Object reference to the user's primary cursor position */
@@ -234,6 +232,10 @@ function KeyEnter() {
 function KeyEsc() {
 }
 
+/**
+ * User pressed the given number key
+ * @param {Number} num 
+ */
 function KeyNumber(num) {
     switch (num) {
         case 0:
