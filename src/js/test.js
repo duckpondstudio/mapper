@@ -1,5 +1,39 @@
 import { MapData } from "./classes/mapdata";
 
+/**
+ * Key that must be held, along with shift, to trigger a numeric test when pressing 
+ * a number key. Eg, Shift+{@link testKey [testKey]}+3 will trigger Numeric Test 3.
+ * @see {@link NumericTest}
+ * @see {@link ./input.js }
+ */
+export const testKey = 't';
+
+export function NumericTest(num) {
+    console.log("Toggle numeric test", num);
+    switch (num) {
+        case 0:
+            break;
+        case 1:
+            break;
+        case 2:
+            break;
+        case 3:
+            break;
+        case 4:
+            break;
+        case 5:
+            break;
+        case 6:
+            break;
+        case 7:
+            break;
+        case 8:
+            break;
+        case 9:
+            break;
+    }
+}
+
 
 /**
  * draw dots across mapdata, show land/water on each dot 
