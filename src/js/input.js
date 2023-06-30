@@ -3,6 +3,7 @@ import * as test from './test';
 import { MapData } from './classes/mapdata';
 import { ProjectionData } from './classes/projectiondata';
 import { Module, current } from './classes/module';
+import { PreventKeyboardEventShiftKeyModification } from './utils/string.js';
 
 const keyEventDown = 'keyEventDown';
 const keyEventUp = 'keyEventUp';
@@ -142,33 +143,38 @@ function SetCursorPosition(x, y) {
  * @see {@link InputSetup} calls this method
  */
 function KeyEvent(keyEvent, type) {
+    // ensure key value isn't mucked about with by Shift key (eg no @, only 2)
+    keyEvent = PreventKeyboardEventShiftKeyModification(keyEvent);
+    let key = keyEvent.key.toLowerCase();// force key values to lowercase 
     let index = pressedKeys.indexOf(key);
     let initialDown = type == keyEventDown && index == -1;
     let debugValid = debugKeys && (type != keyEventDown || initialDown);
     if (debugValid) {
         console.log("Begin KeyEvent %s, key: %s, pressedKeys: %o", type, key, pressedKeys)
     }
+
     switch (type) {
         case keyEventDown:
             if (initialDown) {
                 // key pressed initially 
                 pressedKeys.push(key);
                 initialDown = true;
-                
+
+                // note that for simplicity, all key values are lowercase here 
                 switch (key) {
                     case ' ':
                         // pressed space
                         KeySpace();
                         break;
-                    case 'Enter':
+                    case 'enter':
                         // pressed enter key
                         KeyEnter();
                         break;
-                    case 'Escape':
+                    case 'escape':
                         // pressed escape key
                         KeyEsc();
                         break;
-                    
+
                     case '0':
                     case '1':
                     case '2':
@@ -206,6 +212,34 @@ function KeyEvent(keyEvent, type) {
     }
     if (debugValid) {
         console.log("Complete KeyEvent %s, key: %s, pressedKeys: %o", type, key, pressedKeys)
+    }
+}
+
+/**
+ * Returns true if the supplied key is currently held, eg '3', 'Shift', etc
+ * @param {string} key Key to check, eg '3', 'Shift', etc
+ * @returns {boolean}
+ */
+export function IsKeyHeld(key) {
+    key = key.toLowerCase();
+    if (key == 'space') { key = ' '; }
+    return pressedKeys.includes(key);
+}
+
+/**
+ * Globally accessible read-only check if shift key is currently held 
+ * - If calling with access to a {@link KeyboardEvent}, recommended use {@link IsShiftHeldEvent}
+ */
+export function IsShiftHeld() {
+    return pressedKeys.includes('shift');
+}
+/**
+ * 
+ * @param {KeyboardEvent} keyEvent 
+ * @returns 
+ */
+export function IsShiftHeldEvent(keyEvent) {
+    return keyEvent.shiftKey || IsShiftHeld();
 }
 
 /** Object reference to the user's primary cursor position */
