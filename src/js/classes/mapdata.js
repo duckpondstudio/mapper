@@ -13,6 +13,8 @@ import * as math from '../utils/math';
 
 const devicePixelRatio = window.devicePixelRatio;
 
+const debugXYLatLong = true;
+
 let PPP = 0;
 
 /** Container for all data related to displaying a map */
@@ -129,17 +131,18 @@ export class MapData {
     AddDotAtGlobalPoint(xyGlobal, id = null, style = dotStyle.default) {
 
 
-        let latLongAtPoint = this.LatLongAtPoint(xyGlobal);
-        let pointratio = this.GetPointRatio(xyGlobal, false);
-        let localXY = this.GetContainerPointOffset(xyGlobal);
-        let ratioToXYLocal = this.PointRatioToXY(pointratio);
-        let ratioToXYGlobal = this.PointRatioToXY(pointratio, false);
-        let latLongfromLocal = this.LatLongAtPoint(xyGlobal, true);
+        // let latLongAtPoint = this.LatLongAtPoint(xyGlobal);
+        // let pointratio = this.GetPointRatio(xyGlobal, false);
+        // let localXY = this.GetContainerPointOffset(xyGlobal);
+        // let ratioToXYLocal = this.PointRatioToXY(pointratio);
+        // let ratioToXYGlobal = this.PointRatioToXY(pointratio, false);
+        // let latLongfromLocal = this.LatLongAtPoint(xyGlobal, true);
 
 
         console.log("GlobalXY Input: " + xyGlobal);
-        console.log("LocalXY From GlobalXY: " + localXY);
-        console.log("LatLong From GlobalXY: " + latLongAtPoint);
+        // console.log("LocalXY From GlobalXY: " + localXY);
+        // console.log("LatLong From GlobalXY: " + latLongAtPoint);
+        return;
         console.log("PointRatio From GlobalXY: " + pointratio);
         console.log("LocalXY From PointRatio: " + ratioToXYLocal);
         console.log("GlobalXY From PointRatio: " + ratioToXYGlobal);
@@ -537,10 +540,16 @@ export class MapData {
                 useAvgXY = false;
                 break;
         }
+        if (debugXYLatLong) {
+            console.log("getting XY at latlong", latLong, 'useAvgXY', useAvgXY,
+                'offsetProjection', offsetProjection, "constrainToContainer", constrainToContainer);
+            console.log("map:", this.map, "mapdata:", this);
+        }
         let xy = [0, 0];
         if (useAvgXY) {
             // use all the combined projections to get the average XY 
             // iterate thru all latitude/longitude, and return the average
+            if (debugXYLatLong) { console.log("processing avg latlong>xy across", this.projections.length, "projections"); }
             for (let i = 0; i < this.projections.length; i++) {
                 let projXY = this.projections[i].XYPointAtLatLongPoint(latLong, offsetProjection, constrainToContainer);
                 // console.log("Proj", i, "XYPointAtLatLong", projXY);
