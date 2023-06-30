@@ -130,6 +130,8 @@ export function GetProjectionFullRotation(map) {
             gamma = 315;
             break;
         case adams1:
+            // phi = 135;
+            // gamma = 315;
             phi = 315;
             gamma = 45;
             break;

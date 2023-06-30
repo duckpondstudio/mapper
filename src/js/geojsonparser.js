@@ -1,5 +1,7 @@
-
+// import geoEarth from './../assets/json/demo.geojson';
+// import geoEarth from './../assets/json/outline-default.geojson';
 import geoEarth from './../assets/json/ne_50m_land.geojson';
+
 // import geoOcean from './../assets/json/outline-safe.geojson';//    recommended for overlay sizing
 import geoOcean from './../assets/json/outline-simple.geojson';//     recommended for ocean rendering
 // import geoOcean from './../assets/json/outline-default.geojson';// not recommended (SVG rendering errors)
