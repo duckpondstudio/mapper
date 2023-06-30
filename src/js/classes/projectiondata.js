@@ -223,25 +223,25 @@ export class ProjectionData {
      * @memberof ProjectionData
      */
     XYPointAtLatLongPoint(latLong, offsetToProjection = true, constrainToContainer = true) {
-        if (debugXYLatLong) console.log("latlong input:", latLong, "offset:",offsetToProjection);
+        if (debugXYLatLong) { console.log('P' + this.index, "latlong input:", latLong, "offset:", offsetToProjection); }
         let xy = this.d3Projection(latLong.slice().reverse());
-        if (debugXYLatLong) console.log("xy output:", xy);
+        if (debugXYLatLong) { console.log('P' + this.index, "xy output:", xy); }
         // let xy = this.projection(latLong.slice());
         xy = this.ApplySVGTransformOffsetsToPoint(xy, true);
-        if (debugXYLatLong) console.log("xy post svg:", xy);
+        if (debugXYLatLong) { console.log('P' + this.index, "xy post svg:", xy); }
         if (offsetToProjection) {
             let origin = this.GetContainerFullOrigin();
-            if (debugXYLatLong) console.log('move xy', xy, 'by origin', origin);
+            if (debugXYLatLong) { console.log('P' + this.index, 'move xy', xy, 'by origin', origin); }
             xy[0] += origin[0];
             xy[1] += origin[1];
-            if (debugXYLatLong) console.log('xy result', xy);
+            if (debugXYLatLong) { console.log('P' + this.index, 'xy result', xy); }
         }
         // if (constrainToContainer && !this.mapData.IsPointWithinContainer(xy, offsetToProjection)) {
-            if (constrainToContainer) {
-                // not within bounds, constrain within container 
-                xy = this.mapData.ConstrainPointWithinContainer(xy, false);
-            }
-            if (debugXYLatLong) console.log("xy after constraint:", xy);
+        if (constrainToContainer) {
+            // not within bounds, constrain within container 
+            xy = this.mapData.ConstrainPointWithinContainer(xy, false);
+        }
+        if (debugXYLatLong) { console.log('P' + this.index, "xy after constraint:", xy); }
         return xy;
     }
 
@@ -329,8 +329,9 @@ export class ProjectionData {
                 if (debugSVGConversion) console.log('rotate xy', xy, 'by', rotation);
                 xy = math.RotateAround(size, size, xy[0], xy[1], rotation);
                 if (debugSVGConversion) console.log('rotation result', xy);
+            } else {
+                if (debugSVGConversion) console.log('do not rotate xy', xy);
             }
-            if (debugSVGConversion) console.log('do not rotate xy', xy);
             return xy;
         }
         return origin;
