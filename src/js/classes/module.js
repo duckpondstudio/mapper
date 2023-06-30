@@ -58,9 +58,9 @@ export function CurrentMap() {
  * @export
  * */
 export const current = {
-    /** Currently active {@link Module module} */
+    /** Currently active {@link Module module} @type {Module} */
     get module() { return CurrentModule(); },
-    /** Currently active {@link MapData map} */
+    /** Currently active {@link MapData map} @type {MapData} */
     get map() { return CurrentMap(); },
 }
 
