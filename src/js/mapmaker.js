@@ -65,6 +65,7 @@ export function CreateMap(module) {
         }
 
         // define mapContainer size based on map
+        // TODO: move this to maps.js 
         let containerWidth = mapSize;
         let containerHeight = mapSize;
         // check for special conditions
