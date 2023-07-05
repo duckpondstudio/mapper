@@ -178,7 +178,8 @@ export class ProjectionData {
             y = this.GetContainerYOffset(y);
         }
         let xy = this.ApplySVGTransformOffsetsToXY(x, y);
-        return this.d3Projection.invert(xy).reverse();
+        let latLong = this.d3Projection.invert(xy).reverse();
+        return latLong;
     }
     /**
      * Gets the latitude and longitude of this projection at the given normalized XY coordinate
@@ -223,6 +224,10 @@ export class ProjectionData {
      * @memberof ProjectionData
      */
     XYPointAtLatLongPoint(latLong, offsetToProjection = true, constrainToContainer = true) {
+        console.log("do the thingggggggggggg");
+        
+
+
         if (debugXYLatLong) { console.log('P' + this.index, "latlong input:", latLong, "offset:", offsetToProjection); }
         let xy = this.d3Projection(latLong.slice().reverse());
         if (debugXYLatLong) { console.log('P' + this.index, "xy output:", xy); }
@@ -230,7 +235,8 @@ export class ProjectionData {
         xy = this.ApplySVGTransformOffsetsToPoint(xy, true);
         if (debugXYLatLong) { console.log('P' + this.index, "xy post svg:", xy); }
         if (offsetToProjection) {
-            let origin = this.GetContainerFullOrigin();
+            // let origin = this.GetContainerFullOrigin();
+            let origin_ = this.GetContainerOrigin();
             if (debugXYLatLong) { console.log('P' + this.index, 'move xy', xy, 'by origin', origin); }
             xy[0] += origin[0];
             xy[1] += origin[1];
@@ -313,8 +319,12 @@ export class ProjectionData {
         function Translate(xy, translation, reverse) {
             // accommodate translation 
             if (debugSVGConversion) console.log("translate xy", xy, "by", translation);
-            xy[0] -= translation[0] * (reverse ? -1 : 1);
-            xy[1] -= translation[1] * (reverse ? -1 : 1);
+            if (reverse) {
+                translation[0] *= -1;
+                translation[1] *= -1;
+            }
+            xy[0] -= translation[0];
+            xy[1] -= translation[1];
             if (debugSVGConversion) console.log("translation result:", xy);
             // return xy;jk    q-0;LT6 (kitty <3)
             return xy;

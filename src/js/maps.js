@@ -1,4 +1,5 @@
 export const grieger = 'grieger';
+export const grieger_alt = 'grieger_alt';
 export const adams1 = 'adams1';
 export const adams2 = 'adams2';
 export const peirce = 'peirce';
@@ -9,6 +10,8 @@ import * as d3gp from 'd3-geo-projection';
 
 import * as math from './utils/math';
 
+const useCSSTransformations = true;
+
 /** 
  * @type {string[][]} 2D array holding all built-in map projection names. 
  * @example
@@ -18,7 +21,7 @@ import * as math from './utils/math';
  */
 const maps = [
     ['Grieger Triptychial',
-        grieger, 'grieger triptychial', 'triptychial'],
+        grieger_alt, 'grieger triptychial', 'triptychial'],
     ['Peirce Quincuncial ',
         peirce, 'pierce'],
     ['Adams Hemisphere-In-A-Square (Atlantic)',
@@ -84,6 +87,7 @@ export function GetMapD3GeoProjection(map) {
 }
 
 export function GetMapCSSRotation(map) {
+    if (!useCSSTransformations) { return 0; }
     switch (map) {
         case adams1:
         case adams2:
@@ -92,6 +96,7 @@ export function GetMapCSSRotation(map) {
     return 0;
 }
 export function GetMapCSSTranslation(map, mapSize) {
+    if (!useCSSTransformations) { return [0, 0]; }
     switch (map) {
         case adams1:
         case adams2:

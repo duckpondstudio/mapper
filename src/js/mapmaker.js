@@ -54,6 +54,7 @@ export function CreateMap(module) {
     setTimeout(() => {
         switch (map) {
             case m.grieger:
+            case m.grieger_alt:
                 RetrieveProjection(m.adams2, mapData);
                 RetrieveProjection(m.adams1, mapData);
                 RetrieveProjection(m.adams2, mapData);
@@ -68,7 +69,7 @@ export function CreateMap(module) {
         let containerHeight = mapSize;
         // check for special conditions
         switch (map) {
-            case m.grieger:
+            case m.grieger_alt:
             case 'grieger-test':
                 containerWidth = mapSize * 2;
                 break;
@@ -117,7 +118,7 @@ export function CreateMap(module) {
         let fitSize = 1;
         // adjust projection scale (zoom)
         switch (map) {
-            case m.grieger:
+            case m.grieger_alt:
                 fitSize = math.sqrt2;
                 break;
         }
@@ -133,7 +134,7 @@ export function CreateMap(module) {
         // left offset (adjust first map size - use projection width for right map cutoff)
         let leftOffset = 0;
         switch (map) {
-            case m.grieger:
+            case m.grieger_alt:
                 if (currentProjectionIndex == 0) {
                     leftOffset = mapSize * -0.5;
                 }

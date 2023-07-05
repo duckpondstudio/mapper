@@ -10,6 +10,7 @@ const keyEventUp = 'keyEventUp';
 
 let debugKeys = false;
 
+let mouseClickUpdatesCoords = false;
 let mouseDragUpdatesCoords = false;
 
 let mouseHeld = false;
@@ -65,7 +66,8 @@ function MouseDown(mouseEvent) {
     if (mouseEvent.button === 0) {
         mouseHeld = true;
 
-        TestUpdateCursorCoordinates();
+        if (mouseClickUpdatesCoords)
+            TestUpdateCursorCoordinates();
     }
 }
 /**

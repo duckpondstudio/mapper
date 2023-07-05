@@ -131,18 +131,18 @@ export class MapData {
     AddDotAtGlobalPoint(xyGlobal, id = null, style = dotStyle.default) {
 
 
-        // let latLongAtPoint = this.LatLongAtPoint(xyGlobal);
-        // let pointratio = this.GetPointRatio(xyGlobal, false);
-        // let localXY = this.GetContainerPointOffset(xyGlobal);
-        // let ratioToXYLocal = this.PointRatioToXY(pointratio);
-        // let ratioToXYGlobal = this.PointRatioToXY(pointratio, false);
-        // let latLongfromLocal = this.LatLongAtPoint(xyGlobal, true);
+        let latLongAtPoint = this.LatLongAtPoint(xyGlobal);
+        let pointratio = this.GetPointRatio(xyGlobal, false);
+        let localXY = this.GetContainerPointOffset(xyGlobal);
+        let ratioToXYLocal = this.PointRatioToXY(pointratio);
+        let ratioToXYGlobal = this.PointRatioToXY(pointratio, false);
+        let latLongfromLocal = this.LatLongAtPoint(xyGlobal, true);
 
-
+        console.log("       ");
         console.log("GlobalXY Input: " + xyGlobal);
-        // console.log("LocalXY From GlobalXY: " + localXY);
-        // console.log("LatLong From GlobalXY: " + latLongAtPoint);
-        return;
+        // return;
+        console.log("LocalXY From GlobalXY: " + localXY);
+        console.log("LatLong From GlobalXY: " + latLongAtPoint);
         console.log("PointRatio From GlobalXY: " + pointratio);
         console.log("LocalXY From PointRatio: " + ratioToXYLocal);
         console.log("GlobalXY From PointRatio: " + ratioToXYGlobal);
@@ -186,7 +186,10 @@ export class MapData {
         // console.log("D Result : " + xyFromLatLong, est);
         // console.log(" ");
 
+        console.log("Global XY Input:", xyGlobal);
+        console.log("Local XY Input:", localXY);
 
+        return;
         this.AddDotAtLatLongPointMapRatioPoint(
             this.LatLongAtPoint(xyGlobal),
             this.GetPointRatio(xyGlobal, false), id, style);
