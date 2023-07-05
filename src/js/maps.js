@@ -1,7 +1,9 @@
 export const grieger = 'grieger';
-export const grieger_alt = 'grieger_alt';
 export const adams1 = 'adams1';
 export const adams2 = 'adams2';
+export const grieger_alt = 'grieger_alt';
+export const adams1_alt = 'adams1_alt';
+export const adams2_alt = 'adams2_alt';
 export const peirce = 'peirce';
 export const equirectangular = 'equirectangular';
 
@@ -21,6 +23,8 @@ const useCSSTransformations = true;
  */
 const maps = [
     ['Grieger Triptychial',
+        grieger, 'grieger triptychial', 'triptychial'],
+    ['Grieger Triptychial',
         grieger_alt, 'grieger triptychial', 'triptychial'],
     ['Peirce Quincuncial ',
         peirce, 'pierce'],
@@ -28,6 +32,10 @@ const maps = [
         adams1, 'adams', 'adams atlantic'],
     ['Adams Hemisphere-In-A-Square (Pacific)',
         adams2, 'adams pacific'],
+    ['Adams Hemisphere-In-A-Square (Atlantic)',
+        adams1_alt, 'adams', 'adams atlantic'],
+    ['Adams Hemisphere-In-A-Square (Pacific)',
+        adams2_alt, 'adams pacific'],
     ['Equirectangular',
         equirectangular, 'geoequirectangular', 'geoequi', 'equirect']
 ];
@@ -70,7 +78,7 @@ export function GetMapFullName(map) {
  * @see {@link maps} for all valid map name inputs
  */
 export function GetMapD3GeoProjection(map) {
-    switch (map) {
+    switch (GetMap(map)) {
         default:
             console.warn("Unsupported projection type", map,
                 ", can't get geoProjection, refer to maps.js, returning geoEquirectangular");
@@ -80,8 +88,10 @@ export function GetMapD3GeoProjection(map) {
         case peirce:
             return d3gp.geoPeirceQuincuncial();
         case adams1:
+        case adams1_alt:
             return d3gp.geoPeirceQuincuncial();
         case adams2:
+        case adams2_alt:
             return d3gp.geoPeirceQuincuncial();
     }
 }
@@ -89,17 +99,17 @@ export function GetMapD3GeoProjection(map) {
 export function GetMapCSSRotation(map) {
     if (!useCSSTransformations) { return 0; }
     switch (map) {
-        case adams1:
-        case adams2:
+        case adams1_alt:
+        case adams2_alt:
             return 135;
     }
     return 0;
 }
 export function GetMapCSSTranslation(map, mapSize) {
     if (!useCSSTransformations) { return [0, 0]; }
-    switch (map) {
-        case adams1:
-        case adams2:
+    switch (GetMap(map)) {
+        case adams1_alt:
+        case adams2_alt:
             return [
                 (mapSize * (math.sqrt2 - 1) * math.sqrt2rec),
                 mapSize
@@ -130,17 +140,17 @@ export function GetProjectionFullRotation(map) {
     let lambda = 0;
     let phi = 0;
     let gamma = 0;
-    switch (map) {
+    switch (GetMap(map)) {
         case peirce:
             gamma = 315;
             break;
-        case adams1:
+        case adams1_alt:
             // phi = 135;
             // gamma = 315;
             phi = 315;
             gamma = 45;
             break;
-        case adams2:
+        case adams2_alt:
             phi = 135;
             gamma = 315;
             break;
@@ -155,12 +165,26 @@ export function GetProjectionFullRotation(map) {
  * @see {@link maps} for all valid map name inputs
  */
 export function GetMapProjectionClipAngle(map) {
-    switch (map) {
-        case adams1:
-        case adams2:
+    switch (GetMap(map)) {
+        case adams1_alt:
+        case adams2_alt:
             return 90;
     }
     return 0;
+}
+
+function GetMap(map) {
+    // quick check 
+    maps.forEach(element => {
+        if (element[1] == map) { return map; }
+    });
+    // id check 
+    let id = GetMapID(map);
+    if (id == -1) {
+        console.error("Could not get map name by input name:", map, ", id -1, returning null");
+        return null;
+    }
+    return maps[id][1];
 }
 
 /**

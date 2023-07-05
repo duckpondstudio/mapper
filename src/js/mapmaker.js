@@ -54,10 +54,13 @@ export function CreateMap(module) {
     setTimeout(() => {
         switch (map) {
             case m.grieger:
-            case m.grieger_alt:
-                RetrieveProjection(m.adams2, mapData);
                 RetrieveProjection(m.adams1, mapData);
-                RetrieveProjection(m.adams2, mapData);
+                break;
+
+            case m.grieger_alt:
+                RetrieveProjection(m.adams2_alt, mapData);
+                RetrieveProjection(m.adams1_alt, mapData);
+                RetrieveProjection(m.adams2_alt, mapData);
                 break;
             default:
                 RetrieveProjection(map, mapData);
