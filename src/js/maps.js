@@ -26,7 +26,7 @@ const useCSSTransformations = true;
 const maps = [
     ['Grieger Triptychial',
         grieger, 'grieger triptychial', 'triptychial'],
-    ['Grieger Triptychial',
+    ['Grieger Triptychial (Alt)',
         grieger_alt, 'grieger triptychial', 'triptychial'],
     ['Peirce Quincuncial ',
         peirce, 'pierce'],
@@ -34,9 +34,9 @@ const maps = [
         adams1, 'adams', 'adams atlantic'],
     ['Adams Hemisphere-In-A-Square (Pacific)',
         adams2, 'adams pacific'],
-    ['Adams Hemisphere-In-A-Square (Atlantic)',
+    ['Adams Hemisphere-In-A-Square (Atlantic) (Alt)',
         adams1_alt, 'adams', 'adams atlantic'],
-    ['Adams Hemisphere-In-A-Square (Pacific)',
+    ['Adams Hemisphere-In-A-Square (Pacific) (Alt)',
         adams2_alt, 'adams pacific'],
     ['Equirectangular',
         equirectangular, 'geoequirectangular', 'geoequi', 'equirect']
@@ -126,19 +126,16 @@ export function GetMapCSSRotation(map) {
 }
 export function GetMapCSSTranslation(map, mapSize) {
     if (!useCSSTransformations) { return [0, 0]; }
-    switch (GetMap(map)) {
+    map = GetMap(map);
+    switch (map) {
         case adams1:
-            return [
-                (mapSize * (math.sqrt2 - 1) * 1)
-                ,
-                0
-            ];
         case adams2:
-            return [
-                0
-                ,
-                0
-            ];
+            let mapSizeHalf = mapSize * 0.5;
+            let mapMod = mapSize * 0.5 * -(math.sqrt2 - 1);
+            switch (map) {
+                case adams1: return [mapSizeHalf, mapMod];
+                case adams2: return [mapMod, mapSizeHalf];
+            }
         case adams1_alt:
         case adams2_alt:
             return [

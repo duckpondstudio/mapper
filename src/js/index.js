@@ -7,8 +7,8 @@ import * as m from './maps';
 window.addEventListener('load', function () {
     // window is loaded 
     InputSetup();
-    CreateModule(m.grieger_alt);
     CreateModule(m.grieger);
+    CreateModule(m.grieger_alt);
     // CreateModule(m.grieger);
     // CreateModule(m.adams1_alt);
     // CreateModule(m.grieger_alt);
