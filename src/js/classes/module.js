@@ -2,7 +2,9 @@ import { MapData } from "./mapdata";
 import { CreateMap } from "../mapmaker";
 import { ClickedModule } from "../input";
 import * as m from '../maps';
-const feather = require('feather-icons')
+const feather = require('feather-icons');
+
+const _spawnData = false;
 
 /** {@link Module} most recently interacted with (can be null) */
 let _currentModule = null;
@@ -127,7 +129,9 @@ export class Module {
         this.dataSubModule = document.createElement('div');
         this.dataSubModule.setAttribute('class', 'submodule data');
         this.dataSubModule.setAttribute('id', 'mod' + this.moduleId + '_dataCont');
-        this.container.appendChild(this.dataSubModule);
+        if (_spawnData) {
+            this.container.appendChild(this.dataSubModule);
+        }
 
         // add module to document body 
         document.body.appendChild(this.container);
