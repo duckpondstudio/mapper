@@ -15,11 +15,13 @@ import * as math from './utils/math';
 const useCSSTransformations = true;
 
 /** 
- * @type {string[][]} 2D array holding all built-in map projection names. 
+ * 2D array holding all built-in map projection names. 
  * @example
  *      maps[i][0] // [0] is the full name of the map projection,
  *      maps[i][1] // [1] is const property of the name (top of maps.js),
  *      maps[i][2] // [2...] and beyond are alternate supported names
+ * @see {@link GetMapD3GeoProjection}
+ * @type {string[][]}
  */
 const maps = [
     ['Grieger Triptychial',
@@ -38,7 +40,34 @@ const maps = [
         adams2_alt, 'adams pacific'],
     ['Equirectangular',
         equirectangular, 'geoequirectangular', 'geoequi', 'equirect']
+
+    // Remember to update GetMapD3GeoProjection below as well!!!
 ];
+
+/**
+ * Get the {@link d3.GeoProjection} for this map
+ * @param {string} map name of map projection you want
+ * @returns {d3.GeoProjection}
+ * @see {@link maps} for all valid map name inputs
+ */
+export function GetMapD3GeoProjection(map) {
+    switch (GetMap(map)) {
+        default:
+            console.warn("Unsupported projection type", map,
+                ", can't get geoProjection, refer to maps.js, returning geoEquirectangular");
+            return d3.geoEquirectangular();
+        case equirectangular:
+            return d3.geoEquirectangular();
+        case peirce:
+            return d3gp.geoPeirceQuincuncial();
+        case adams1:
+        case adams1_alt:
+            return d3gp.geoPeirceQuincuncial();
+        case adams2:
+        case adams2_alt:
+            return d3gp.geoPeirceQuincuncial();
+    }
+}
 
 /**
  * Gets the const reference name of the given map property (accommodating for alternate names). Returns null if not found.
@@ -71,34 +100,19 @@ export function GetMapFullName(map) {
     return maps[id][0];
 }
 
-/**
- * Get the {@link d3.GeoProjection} for this map
- * @param {string} map name of map projection you want
- * @returns {d3.GeoProjection}
- * @see {@link maps} for all valid map name inputs
- */
-export function GetMapD3GeoProjection(map) {
+export function GetMapScale(map) {
     switch (GetMap(map)) {
-        default:
-            console.warn("Unsupported projection type", map,
-                ", can't get geoProjection, refer to maps.js, returning geoEquirectangular");
-            return d3.geoEquirectangular();
-        case equirectangular:
-            return d3.geoEquirectangular();
-        case peirce:
-            return d3gp.geoPeirceQuincuncial();
         case adams1:
-        case adams1_alt:
-            return d3gp.geoPeirceQuincuncial();
         case adams2:
-        case adams2_alt:
-            return d3gp.geoPeirceQuincuncial();
+            // return math.sqrt2;
+            return 1;
     }
+    return 1;
 }
 
 export function GetMapCSSRotation(map) {
     if (!useCSSTransformations) { return 0; }
-    switch (map) {
+    switch (GetMap(map)) {
         case adams1_alt:
         case adams2_alt:
             return 135;
@@ -144,6 +158,14 @@ export function GetProjectionFullRotation(map) {
         case peirce:
             gamma = 315;
             break;
+        case adams1:
+            phi = 315;
+            gamma = 270;
+            break;
+        case adams2:
+            phi = 135;
+            gamma = 180;
+            break;
         case adams1_alt:
             // phi = 135;
             // gamma = 315;
@@ -156,6 +178,23 @@ export function GetProjectionFullRotation(map) {
             break;
     }
     return [lambda, phi, gamma];
+}
+let v = 0;
+
+/**
+ * Get the {@link d3.GeoProjection.center d3 center} for this map (lat, long)
+ * @param {string} map name of map projection you want
+ * @returns {number[]} Two-value array representing [latitude,longitude] of the center
+ * @see {@link maps} for all valid map name inputs
+ */
+export function GetProjectionCenter(map) {
+    switch (GetMap(map)) {
+        case adams1:
+            return [45, 0];
+        case adams2:
+            return [-45, 180];
+    }
+    return [0,0];
 }
 
 /**

@@ -15,7 +15,7 @@ import * as math from './utils/math';
 
 import * as d3 from 'd3';
 
-let mapSize = 200;
+let mapSize = 180;
 
 const usePerMapBorder = false;
 
@@ -55,12 +55,19 @@ export function CreateMap(module) {
         switch (map) {
             case m.grieger:
                 RetrieveProjection(m.adams1, mapData);
+                // RetrieveProjection(m.adams1, mapData);
+                // RetrieveProjection(m.adams1, mapData);
+                // RetrieveProjection(m.adams1, mapData);
                 break;
 
             case m.grieger_alt:
+                // RetrieveProjection(m.adams1_alt, mapData);
+                // RetrieveProjection(m.adams1_alt, mapData);
+                // RetrieveProjection(m.adams1_alt, mapData);
                 RetrieveProjection(m.adams2_alt, mapData);
                 RetrieveProjection(m.adams1_alt, mapData);
                 RetrieveProjection(m.adams2_alt, mapData);
+                // RetrieveProjection(m.adams1_alt, mapData);
                 break;
             default:
                 RetrieveProjection(map, mapData);
@@ -130,6 +137,15 @@ export function CreateMap(module) {
             .fitSize([mapSize * fitSize, mapSize * fitSize], overlayGeo);
         // using ocean JSON here because it extends all the way to the edges of lat/long, -180/-90 to 180/90, eg max size
 
+        let scale = m.GetMapScale(projection);
+        if (scale != null && scale != 1) {
+            d3Projection.scale(d3Projection.scale() * scale);
+        }
+        
+        let center = m.GetProjectionCenter(projection);
+        if (center != null && Array.isArray(center) && center != [0, 0]) {
+            d3Projection.center(center);
+        }
 
         // create geopath generator
         let geoGenerator = d3.geoPath()
@@ -171,9 +187,22 @@ export function CreateMap(module) {
 
         let svgContainerId = "map_" + map + "_projection_" + currentProjectionIndex;
 
+        // temp solution to prevent map class rendering on specific map/projections 
+        let svgClass = "map";
+        switch (map) {
+            case m.grieger_alt:
+                switch (currentProjectionIndex) {
+                    case 0:
+                    case 2:
+                        svgClass = null;
+                        break;
+                }
+                break;
+        }
+
         // create the svg for the map
         let svg = d3.select(mapData.mapContainer).append('svg')
-            .attr("class", "map")
+            .attr("class", svgClass)
             .attr("id", svgContainerId)
             .attr("width", mapSize)
             .attr("height", mapSize)
@@ -272,6 +301,7 @@ function GetD3Projection(projection) {
         rotation.length == 3 && rotation != [0, 0, 0]) {
         geoProjection.rotate(rotation);
     }
+
     // apply clip angle if needed 
     let clipAngle = m.GetMapProjectionClipAngle(projection);
     if (clipAngle != 0) {
