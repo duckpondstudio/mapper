@@ -104,7 +104,8 @@ export function GetMapScale(map) {
     switch (GetMap(map)) {
         case adams1:
         case adams2:
-            // return math.sqrt2;
+            return math.sqrt2;
+            // return math.sqrt2rec;
             return 1;
     }
     return 1;
@@ -113,6 +114,10 @@ export function GetMapScale(map) {
 export function GetMapCSSRotation(map) {
     if (!useCSSTransformations) { return 0; }
     switch (GetMap(map)) {
+        case adams1:
+            return -45;
+        case adams2:
+            return 45;
         case adams1_alt:
         case adams2_alt:
             return 135;
@@ -122,6 +127,18 @@ export function GetMapCSSRotation(map) {
 export function GetMapCSSTranslation(map, mapSize) {
     if (!useCSSTransformations) { return [0, 0]; }
     switch (GetMap(map)) {
+        case adams1:
+            return [
+                (mapSize * (math.sqrt2 - 1) * 1)
+                ,
+                0
+            ];
+        case adams2:
+            return [
+                0
+                ,
+                0
+            ];
         case adams1_alt:
         case adams2_alt:
             return [
@@ -160,11 +177,11 @@ export function GetProjectionFullRotation(map) {
             break;
         case adams1:
             phi = 315;
-            gamma = 270;
+            gamma = 225;
             break;
         case adams2:
             phi = 135;
-            gamma = 180;
+            gamma = 225;
             break;
         case adams1_alt:
             // phi = 135;
@@ -190,11 +207,15 @@ let v = 0;
 export function GetProjectionCenter(map) {
     switch (GetMap(map)) {
         case adams1:
-            return [45, 0];
+            return [0, 0];
+        // return [45, 0];
+        // return [0, 45];
         case adams2:
-            return [-45, 180];
+            return [0, 0];
+        // return [180, -45];
+        // return [-45, 180];
     }
-    return [0,0];
+    return [0, 0];
 }
 
 /**
@@ -205,6 +226,9 @@ export function GetProjectionCenter(map) {
  */
 export function GetMapProjectionClipAngle(map) {
     switch (GetMap(map)) {
+        case adams1:
+        case adams2:
+            return 90;
         case adams1_alt:
         case adams2_alt:
             return 90;
