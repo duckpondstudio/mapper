@@ -157,10 +157,10 @@ export class MapData {
         console.log("LatLong Input: " + latLongAtPoint);
         console.log("GlobalXY Input: " + xyGlobal);
         console.log("LocalXY Reference: " + localXY);
-        console.log(" ");
-
-        let moreLogging = false;
+        
+        let moreLogging = true;
         if (moreLogging) {
+            console.log(" ");
             console.log("A XY from LatLong, Avg True, Offset True");
             let xyFromLatLong = this.XYPointAtLatLongPoint(latLongAtPoint, true, true);
             console.log("A Result : " + xyFromLatLong, est);
@@ -560,15 +560,20 @@ export class MapData {
             for (let i = 0; i < this.projections.length; i++) {
                 let projXY = this.projections[i].XYPointAtLatLongPoint(latLong, offsetProjection, constrainToContainer);
                 // console.log("Proj", i, "XYPointAtLatLong", projXY);
+                let x = projXY[0];
+                let y = projXY[1];
                 if (i == 0) {
-                    xy = projXY;
+                    xy[0] = x;
+                    xy[1] = y;
                 } else {
-                    xy[0] += projXY[0];
-                    xy[1] += projXY[1];
+                    xy[0] += x;
+                    xy[1] += y;
                 }
+                console.log("avg project for p%i:", i, projXY, " | projected xy:", xy);
             }
             xy[0] /= this.projections.length;
             xy[1] /= this.projections.length;
+            console.log("projected XY final:", xy);
         } else {
             // NON-average, just use one projection
             // by default, use the middle projection (least likelihood of a point being out-of-container)

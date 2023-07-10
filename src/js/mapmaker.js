@@ -54,6 +54,7 @@ export function CreateMap(module) {
     setTimeout(() => {
         switch (map) {
             case m.grieger:
+                RetrieveProjection(m.adams2, mapData);
                 RetrieveProjection(m.adams1, mapData);
                 RetrieveProjection(m.adams2, mapData);
                 // RetrieveProjection(m.adams1, mapData);
