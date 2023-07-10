@@ -141,7 +141,7 @@ export function CreateMap(module) {
             .projection(d3Projection);
 
         // left offset (adjust first map size - use projection width for right map cutoff)
-        let leftOffset = currentProjectionIndex == 0 ? m.GetMapCSSLeftOffset(map, mapSize) : 0;
+        let leftOffset = m.GetMapCSSLeftOffset(map, mapSize, currentProjectionIndex);
 
         // prepare relevant transformations 
         let transform;

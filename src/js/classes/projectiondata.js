@@ -343,31 +343,49 @@ export class ProjectionData {
     GetSVGTransformOffsets(origin = [0, 0], reverseOrder = false) {
         let g = this.svg.select('.mapGroup');
         if (g) {
+            // determine left offset
+            let leftOffset = 0;
+            let node = g.node();
+            if (node != null) {
+                /** Parent element of the SVG group @type {HTMLElement} */
+                let parent = node.parentElement;
+                if (parent != null &&
+                    parent.style != null &&
+                    parent.style.marginLeft != null &&
+                    !isNaN(parent.style.marginLeft)) {
+                    // valid left offset 
+                    leftOffset = parent.style.marginLeft;
+                }
+            }
+            let hasLeftOffset = leftOffset != 0;
+            // determine translation / rotation 
             let transform = g.attr('transform');
             let t;// parsed transform ref 
-            let translate = false;
+            let hasTranslation = false;
             let translation;
             // get the rotation (test between CSS and D3 rotation)
             let rotation = m.GetMapCSSRotation(this.projection);
             // let rotation = m.GetProjectionRotation(this.projection);
-            let rotate = rotation != 0;
+            let hasRotation = rotation != 0;
             if (transform) {
                 // transform found, be sure to update mouse x/y accordingly
                 t = parse(transform);
-                translate = t.translate != null;
+                hasTranslation = t.translate != null;
                 if (t.translate[0] == 0 && t.translate[1] == 0) {
-                    translate = false;
+                    hasTranslation = false;
                 }
-                if (translate) { translation = t.translate; }
+                if (hasTranslation) { translation = t.translate; }
             }
             // apply modifications in order
             let xy = origin;
             if (reverseOrder) {
-                if (translate) { xy = Translate(xy, translation, reverseOrder); }
-                if (rotate) { xy = Rotate(xy, rotation, this.projectionSize, reverseOrder); }
+                if (hasTranslation) { xy = Translate(xy, translation, reverseOrder); }
+                if (hasRotation) { xy = Rotate(xy, rotation, this.projectionSize, reverseOrder); }
+                if (hasLeftOffset) { xy = math.AddToNumArray(xy, leftOffset); }
             } else {
-                if (rotate) { xy = Rotate(xy, rotation, this.projectionSize, reverseOrder); }
-                if (translate) { xy = Translate(xy, translation, reverseOrder); }
+                if (hasLeftOffset) { xy = math.AddToNumArray(xy, leftOffset); }
+                if (hasRotation) { xy = Rotate(xy, rotation, this.projectionSize, reverseOrder); }
+                if (hasTranslation) { xy = Translate(xy, translation, reverseOrder); }
             }
             return xy;
         }

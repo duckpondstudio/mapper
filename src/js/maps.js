@@ -125,9 +125,11 @@ export function GetMapScale(map) {
     return 1;
 }
 
-export function GetMapCSSLeftOffset(map, mapSize) {
+export function GetMapCSSLeftOffset(map, mapSize, projectionIndex) {
+    // left offset only ever applies on leftmost projection, eg index 0 
+    if (projectionIndex != 0) { return 0; }
     switch (GetMap(map)) {
-        // case grieger:
+        case grieger:
         case grieger_alt:
             return mapSize * -0.5;
     }

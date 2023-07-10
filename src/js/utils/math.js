@@ -125,3 +125,69 @@ export function XYPointsModulo(...points) {
         return total;
     });
 }
+
+
+
+
+/**
+ * Adds the given value to every number in the array. 
+ * @param {number[]} numArray Array of numbers to add value to
+ * @param {number} value Value to add to the given XY array
+ * @returns {number[]}
+ */
+export function AddToNumArray(numArray, value) {
+    for (let i = 0; i < numArray.length; i++) {
+        numArray[i] += value;
+    }
+    return numArray;
+}
+/**
+ * Subtracts the given value from every number in the array. 
+ * @param {number[]} numArray Array of numbers to subtract value from
+ * @param {number} value Value to add to the given XY array
+ * @returns {number[]}
+ */
+export function SubtractFromNumArray(numArray, value) {
+    for (let i = 0; i < numArray.length; i++) {
+        numArray[i] -= value;
+    }
+    return numArray;
+}
+/**
+ * Multiplies every number in the array by the given value. 
+ * @param {number[]} numArray Array of numbers to multiply by value 
+ * @param {number} value Value to add to the given XY array
+ * @returns {number[]}
+ */
+export function MultiplyNumArrayBy(numArray, value) {
+    for (let i = 0; i < numArray.length; i++) {
+        numArray[i] *= value;
+    }
+    return numArray;
+}
+/**
+ * Divides every number in the array by the given value. 
+ * - Be careful, as this contains no safeties for divide-by-zero errors.
+ * @param {number[]} numArray Array of numbers to divibe by value 
+ * @param {number} value Value to add to the given XY array
+ * @returns {number[]}
+ */
+export function DivideNumArrayBy(numArray, value) {
+    for (let i = 0; i < numArray.length; i++) {
+        numArray[i] /= value;
+    }
+    return numArray;
+}
+/**
+ * Modulos every number in the array by the given value. 
+ * - Be careful, as this contains no safeties for divide-by-zero errors.
+ * @param {number[]} numArray Array of numbers to modulo by value 
+ * @param {number} value Value to add to the given XY array
+ * @returns {number[]}
+ */
+export function ModuloNumArrayBy(numArray, value) {
+    for (let i = 0; i < numArray.length; i++) {
+        numArray[i] %= value;
+    }
+    return numArray;
+}

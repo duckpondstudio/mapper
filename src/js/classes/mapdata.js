@@ -137,6 +137,8 @@ export class MapData {
         let ratioToXYLocal = this.PointRatioToXY(pointratio);
         let ratioToXYGlobal = this.PointRatioToXY(pointratio, false);
         let latLongfromLocal = this.LatLongAtPoint(xyGlobal, true);
+        
+        // TODO: determine why LatLong collection is borked on grieger (non-alt) with leftoffset / limited container size 
 
         console.log("       ");
         console.log("GlobalXY Input: " + xyGlobal);
