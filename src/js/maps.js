@@ -103,7 +103,7 @@ export function GetMapFullName(map) {
 export function GetMapContainerWidthHeight(map, mapSize, projectionsCount) {
     let containerWidthHeight = [mapSize, mapSize];
     switch (GetMap(map)) {
-        case grieger:
+        // case grieger:
         case grieger_alt:
             containerWidthHeight[0] = mapSize * 2;
             break;
@@ -125,9 +125,22 @@ export function GetMapScale(map) {
     return 1;
 }
 
+export function GetMapCSSLeftOffset(map, mapSize) {
+    switch (GetMap(map)) {
+        // case grieger:
+        case grieger_alt:
+            return mapSize * -0.5;
+    }
+    return 0;
+}
 export function GetMapCSSRotation(map) {
     if (!useCSSTransformations) { return 0; }
     switch (GetMap(map)) {
+        case grieger:
+        case grieger_alt:
+            console.warn("Warning: this is meant for Projections, whereas", map,
+                "is a map made of multiple individual projections");
+            break;
         case adams1:
             return -45;
         case adams2:

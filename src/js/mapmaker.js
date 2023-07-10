@@ -141,14 +141,7 @@ export function CreateMap(module) {
             .projection(d3Projection);
 
         // left offset (adjust first map size - use projection width for right map cutoff)
-        let leftOffset = 0;
-        switch (map) {
-            case m.grieger_alt:
-                if (currentProjectionIndex == 0) {
-                    leftOffset = mapSize * -0.5;
-                }
-                break;
-        }
+        let leftOffset = currentProjectionIndex == 0 ? m.GetMapCSSLeftOffset(map, mapSize) : 0;
 
         // prepare relevant transformations 
         let transform;

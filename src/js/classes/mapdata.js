@@ -148,8 +148,8 @@ export class MapData {
         console.log("GlobalXY From PointRatio: " + ratioToXYGlobal);
         console.log("LatLong From LocalXY: " + latLongfromLocal);
 
-        let est = "(Target: ~" + Math.round(localXY[0]) +
-            "," + Math.round(localXY[1]) + ")";
+        let est = "(Target: ~" + Math.round(xyGlobal[0]) +
+            "," + Math.round(xyGlobal[1]) + ")";
 
         console.log(" ");
         console.log(" ");
