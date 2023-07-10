@@ -7,8 +7,8 @@ import * as m from '../maps';
 
 /** if true, fires a click event directly on the projection SVG, bypassing {@link baseinput} */
 const debugClickOnProjection = false;
-const debugXYLatLong = true;
-const debugSVGConversion = true;
+const debugXYLatLong = false;
+const debugSVGConversion = false;
 
 //TODO: move sizing logic (GetContainerSize, etc) into a parent class for both MapData and ProjectionData
 
@@ -224,10 +224,7 @@ export class ProjectionData {
      * @memberof ProjectionData
      */
     XYPointAtLatLongPoint(latLong, offsetToProjection = true, constrainToContainer = true) {
-        console.log("do the thingggggggggggg");
         
-
-
         if (debugXYLatLong) { console.log('P' + this.index, "latlong input:", latLong, "offset:", offsetToProjection); }
         let xy = this.d3Projection(latLong.slice().reverse());
         if (debugXYLatLong) { console.log('P' + this.index, "xy output:", xy); }
