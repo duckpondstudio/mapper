@@ -100,6 +100,20 @@ export function GetMapFullName(map) {
     return maps[id][0];
 }
 
+export function GetMapContainerWidthHeight(map, mapSize, projectionsCount) {
+    let containerWidthHeight = [mapSize, mapSize];
+    switch (GetMap(map)) {
+        case grieger:
+        case grieger_alt:
+            containerWidthHeight[0] = mapSize * 2;
+            break;
+        default:
+            containerWidthHeight[0] = mapSize * projectionsCount;
+            break;
+    }
+    return containerWidthHeight;
+}
+
 export function GetMapScale(map) {
     switch (GetMap(map)) {
         case adams1:

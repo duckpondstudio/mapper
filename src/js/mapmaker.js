@@ -43,7 +43,7 @@ export function CreateMap(module) {
         return;
     }
 
-    let projectionIndex = 0;
+    let projectionsCount = 0;
     let loadedProjections = 0;
 
     let mapData = new MapData(
@@ -77,23 +77,10 @@ export function CreateMap(module) {
         }
 
         // define mapContainer size based on map
-        // TODO: move this to maps.js 
-        let containerWidth = mapSize;
-        let containerHeight = mapSize;
-        // check for special conditions
-        switch (map) {
-            case m.grieger_alt:
-            case 'grieger-test':
-                containerWidth = mapSize * 2;
-                break;
-            default:
-                // by default, mapContainer width is determined by projection count
-                containerWidth = mapSize * projectionIndex;
-                break;
-        }
+        let containerWidthHeight = m.GetMapContainerWidthHeight(map, mapSize, projectionsCount);
         // assign size to mapContainer
-        mapData.mapContainer.style.width = containerWidth + 'px';
-        mapData.mapContainer.style.height = containerHeight + 'px';
+        mapData.mapContainer.style.width = containerWidthHeight[0] + 'px';
+        mapData.mapContainer.style.height = containerWidthHeight[1] + 'px';
 
     }, 0);
 
@@ -103,8 +90,8 @@ export function CreateMap(module) {
 
     function RetrieveProjection(projection, mapData) {
 
-        // store current projection index, because ProjectionIndex iterates on an async timer 
-        let currentProjectionIndex = projectionIndex;
+        // store current projection index, because projectionsCount iterates on an async timer 
+        let currentProjectionIndex = projectionsCount;
 
         if (mapData == null) {
             console.error("null mapData, can't retrieve projection, projectionType: " + map);
@@ -264,7 +251,7 @@ export function CreateMap(module) {
         }, 50);// nominal delay to ENSURE loadedProjections is incremented properly
 
         // increment projection index 
-        projectionIndex++;
+        projectionsCount++;
     }
 
     return mapData;
