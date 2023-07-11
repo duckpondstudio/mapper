@@ -2,6 +2,8 @@ import { MapData } from "./classes/mapdata";
 import { Module, current } from './classes/module';
 import * as m from "./maps";
 
+// Default testkey: t           ----------------- SHIFT + T + Num
+
 /**
  * Key that must be held, along with shift, to trigger a numeric test when pressing 
  * a number key. Eg, Shift+{@link testKey [testKey]}+3 will trigger Numeric Test 3.
@@ -10,10 +12,15 @@ import * as m from "./maps";
  */
 export const testKey = 't';
 
+/**
+ * Triggers numeric test of the given value.
+ * @param {Number} num Integer from 0-9 triggering the given numeric test 
+ */
 export function NumericTest(num) {
     console.group("Numeric Test " + num);
     switch (num) {
         case 1:
+            // example lat long + xy outputs
             console.groupCollapsed('Greenland, ' + m.EXAMPLE_LAT_LONG_GREENLAND
                 + ", Target XY: " + m.EXAMPLE_XY_GREENLAND);
             console.log("XY at Greenland:",
@@ -59,6 +66,7 @@ export function NumericTest(num) {
 
             break;
         case 2:
+
             break;
         case 3:
             break;
