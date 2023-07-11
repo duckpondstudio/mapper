@@ -131,7 +131,7 @@ export class ProjectionData {
         return this.ConstrainXYWithinContainer(xy[0], xy[1], offsetToProjection, zeroOrigin);
     }
     ConstrainXYWithinContainer(x, y, offsetToProjection, zeroOrigin = false) {
-        let size = this.GetContainerSize();
+        let size = this.GetContainerFullSize();
         // offsetToProjection should usually be FALSE here, this by default works with screenspace coords
         if (offsetToProjection) { x = this.GetContainerXOffset(x); y = this.GetContainerYOffset(y); }
         let origin = zeroOrigin ? [0, 0] : this.GetContainerOrigin();
