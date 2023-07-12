@@ -1,19 +1,22 @@
+/** Grieger Triptychial */
 export const grieger = 'grieger';
+/** Adams Hemisphere-In-A-Square */
 export const diptych = 'diptych';
+/** Adams Hemisphere-In-A-Square (Atlantic) */
 export const adams1 = 'adams1';
+/** Adams Hemisphere-In-A-Square (Pacific) */
 export const adams2 = 'adams2';
+/** Grieger Triptychial (Alt) */
 export const grieger_alt = 'grieger_alt';
+/** Adams Hemisphere-In-A-Square (Atlantic) (Alt) */
 export const adams1_alt = 'adams1_alt';
+/** Adams Hemisphere-In-A-Square (Pacific) (Alt) */
 export const adams2_alt = 'adams2_alt';
+/** Peirce Quincuncial */
 export const peirce = 'peirce';
+/** Equirectangular */
 export const equirectangular = 'equirectangular';
-
-import * as d3 from 'd3';
-import * as d3gp from 'd3-geo-projection';
-
-import * as math from './utils/math';
-
-const useCSSTransformations = true;
+// Remember to update maps[] below as well!!!
 
 /** 
  * 2D array holding all built-in map projection names. 
@@ -31,7 +34,7 @@ const maps = [
         grieger_alt, 'grieger triptychial', 'triptychial'],
     ['Adams HIAS Diptychial',
         diptych, 'grieger diptychial', 'adams diptychial', 'diptychial'],
-    ['Peirce Quincuncial ',
+    ['Peirce Quincuncial',
         peirce, 'pierce'],
     ['Adams Hemisphere-In-A-Square (Atlantic)',
         adams1, 'adams', 'adams atlantic'],
@@ -46,6 +49,13 @@ const maps = [
 
     // Remember to update GetMapD3GeoProjection below as well!!!
 ];
+
+import * as d3 from 'd3';
+import * as d3gp from 'd3-geo-projection';
+
+import * as math from './utils/math';
+
+const useCSSTransformations = true;
 
 /**
  * Get the {@link d3.GeoProjection} for this map
