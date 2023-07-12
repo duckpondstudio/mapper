@@ -551,9 +551,14 @@ export class MapData {
         }
         if (debugXYLatLong) {
             console.log("getting XY at latlong", latLong, 'useAvgXY', useAvgXY,
-                'offsetProjection', offsetProjection, "constrainToContainer", constrainToContainer);
+            'offsetProjection', offsetProjection, "constrainToContainer", constrainToContainer);
             console.log("map:", this.map, "mapdata:", this);
         }
+        // determine default projection index 
+        // by default, use the middle projection (least likelihood of a point being out-of-container)
+        // let projID = this.projections.length <= 1 ? 0 : Math.floor(this.projections.length / 2);
+        let defaultProjectionID = PPP;
+        let projection = this.projections[defaultProjectionID];// [2]
         let xy = [0, 0];
         if (useAvgXY) {
             // use all the combined projections to get the average XY 
@@ -580,14 +585,12 @@ export class MapData {
             console.log("avg projected XY final:", xy);
         } else {
             // NON-average, just use one projection
-            // by default, use the middle projection (least likelihood of a point being out-of-container)
-            // let projection = this.projections[Math.floor(this.projections.length / 2)];// [2]
-            let projection = this.projections[PPP];// [2]
             // projection nullcheck 
             if (projection == null) {
                 if (this.projections.length > 1) {
                     // middle projection didn't work, search through all 
                     for (let i = 0; i < this.projections.length; i++) {
+                        if (i == defaultProjectionID) { continue; }
                         if (this.projections[i] != null) {
                             projection = this.projections[i];
                             break;
@@ -603,9 +606,9 @@ export class MapData {
             // get projection-local XY
             xy = projection.XYPointAtLatLongPoint(latLong, !offsetProjection, constrainToContainer, true);
         }
-        // remap local-to-projection to global point
+        // remap local-to-projection to global point using default projection
         console.log("PRE XY MAP PROJ LOCAL-TO-GLOBAL:", xy);
-        xy = this.projections[0].MapProjectionLocalPointToGlobalPoint(xy);
+        xy = this.projections[defaultProjectionID].MapProjectionLocalPointToGlobalPoint(xy);
         console.log("POST XY MAP PROJ LOCAL-TO-GLOBAL:", xy);
 
 
