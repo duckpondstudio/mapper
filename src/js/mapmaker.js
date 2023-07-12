@@ -52,28 +52,12 @@ export function CreateMap(module) {
 
     // generate projections 
     setTimeout(() => {
-        switch (map) {
-            case m.grieger:
-                RetrieveProjection(m.adams2, mapData);
-                RetrieveProjection(m.adams1, mapData);
-                // RetrieveProjection(m.adams2, mapData);
-                // RetrieveProjection(m.adams1, mapData);
-                // RetrieveProjection(m.adams1, mapData);
-                // RetrieveProjection(m.adams1, mapData);
-                break;
 
-            case m.grieger_alt:
-                // RetrieveProjection(m.adams1_alt, mapData);
-                // RetrieveProjection(m.adams1_alt, mapData);
-                // RetrieveProjection(m.adams1_alt, mapData);
-                RetrieveProjection(m.adams2_alt, mapData);
-                RetrieveProjection(m.adams1_alt, mapData);
-                RetrieveProjection(m.adams2_alt, mapData);
-                // RetrieveProjection(m.adams1_alt, mapData);
-                break;
-            default:
-                RetrieveProjection(map, mapData);
-                break;
+        // get all projections for this map 
+        let projections = m.GetMapProjectionsArray(map);
+        // retrieve projections for spawning prep 
+        for (let i = 0; i < projections.length; i++) {
+            RetrieveProjection(projections[i], mapData);
         }
 
         // define mapContainer size based on map
@@ -130,7 +114,7 @@ export function CreateMap(module) {
         if (scale != null && scale != 1) {
             d3Projection.scale(d3Projection.scale() * scale);
         }
-        
+
         let center = m.GetProjectionCenter(projection);
         if (center != null && Array.isArray(center) && center != [0, 0]) {
             d3Projection.center(center);
@@ -157,13 +141,13 @@ export function CreateMap(module) {
         // if projection calls for transformation, apply it here
         if (hasTransform) {
             transform = "";
-            if (hasRotation) { 
+            if (hasRotation) {
                 transform += "rotate(" + cssRotation + ", " + mapSize + ", " +
                     mapSize + (hasTranslation ? ") " : ")");
             }
-            if (hasTranslation) { 
+            if (hasTranslation) {
                 transform += "translate(" + cssTranslation[0] + "," + cssTranslation[1] + ")";
-            }   
+            }
         }
 
 
@@ -213,8 +197,8 @@ export function CreateMap(module) {
                 .selectAll('path')
                 .data(geojson.features)
                 .enter();
-            
-            
+
+
             g.append('path')
                 .attr('class', function (d) {
                     let isWater = d.properties && d.properties.water === true;
@@ -227,7 +211,7 @@ export function CreateMap(module) {
             let svgContainer = document.getElementById(svgContainerId);
 
             // create projection data container
-            let projectionData = new ProjectionData(projection, 
+            let projectionData = new ProjectionData(projection,
                 d3Projection, currentProjectionIndex,
                 svgContainer, svg, mapSize, mapData);
 
