@@ -364,7 +364,7 @@ export class ProjectionData {
             let hasTranslation = false;
             let translation;
             // get the rotation (test between CSS and D3 rotation)
-            let rotation = m.GetMapCSSRotation(this.projection);
+            let rotation = m.GetProjectionCSSRotation(this.projection);
             // let rotation = m.GetProjectionRotation(this.projection);
             let hasRotation = rotation != 0;
             if (transform) {

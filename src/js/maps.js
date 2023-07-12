@@ -98,7 +98,7 @@ export function GetMapFullName(map) {
     return maps[id][0];
 }
 
-export function GetMapScale(map) {
+export function GetProjectionScale(map) {
     switch (ParseMap(map)) {
         case adams1:
         case adams2:
@@ -123,7 +123,7 @@ export function GetMapContainerWidthHeight(map, mapSize, projectionsCount) {
     return containerWidthHeight;
 }
 
-export function GetMapCSSLeftOffset(map, mapSize, projectionIndex) {
+export function GetProjectionCSSLeftOffset(map, mapSize, projectionIndex) {
     // left offset only ever applies on leftmost projection, eg index 0 
     if (projectionIndex != 0) { return 0; }
     switch (ParseMap(map)) {
@@ -133,7 +133,7 @@ export function GetMapCSSLeftOffset(map, mapSize, projectionIndex) {
     }
     return 0;
 }
-export function GetMapCSSRotation(map) {
+export function GetProjectionCSSRotation(map) {
     if (!useCSSTransformations) { return 0; }
     switch (ParseMap(map)) {
         case grieger:
@@ -151,7 +151,7 @@ export function GetMapCSSRotation(map) {
     }
     return 0;
 }
-export function GetMapCSSTranslation(map, mapSize) {
+export function GetProjectionCSSTranslation(map, mapSize) {
     if (!useCSSTransformations) { return [0, 0]; }
     map = ParseMap(map);
     switch (map) {
@@ -248,7 +248,7 @@ export function GetProjectionCenter(map) {
  * @returns {number} Clip angle value, in degrees
  * @see {@link maps} for all valid map name inputs
  */
-export function GetMapProjectionClipAngle(map) {
+export function GetProjectionClipAngle(map) {
     switch (ParseMap(map)) {
         case adams1:
         case adams2:

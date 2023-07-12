@@ -110,7 +110,7 @@ export function CreateMap(module) {
             .fitSize([mapSize * fitSize, mapSize * fitSize], overlayGeo);
         // using ocean JSON here because it extends all the way to the edges of lat/long, -180/-90 to 180/90, eg max size
 
-        let scale = m.GetMapScale(projection);
+        let scale = m.GetProjectionScale(projection);
         if (scale != null && scale != 1) {
             d3Projection.scale(d3Projection.scale() * scale);
         }
@@ -125,13 +125,13 @@ export function CreateMap(module) {
             .projection(d3Projection);
 
         // left offset (adjust first map size - use projection width for right map cutoff)
-        let leftOffset = m.GetMapCSSLeftOffset(map, mapSize, currentProjectionIndex);
+        let leftOffset = m.GetProjectionCSSLeftOffset(map, mapSize, currentProjectionIndex);
 
         // prepare relevant transformations 
         let transform;
 
-        let cssRotation = m.GetMapCSSRotation(projection);
-        let cssTranslation = m.GetMapCSSTranslation(projection, mapSize);
+        let cssRotation = m.GetProjectionCSSRotation(projection);
+        let cssTranslation = m.GetProjectionCSSTranslation(projection, mapSize);
         let hasRotation = cssRotation != 0;
         let hasTranslation =
             (cssTranslation != null && Array.isArray(cssTranslation) &&
@@ -269,7 +269,7 @@ function GetD3Projection(projection) {
     }
 
     // apply clip angle if needed 
-    let clipAngle = m.GetMapProjectionClipAngle(projection);
+    let clipAngle = m.GetProjectionClipAngle(projection);
     if (clipAngle != 0) {
         geoProjection.clipAngle(clipAngle);
     }
