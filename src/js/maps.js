@@ -64,7 +64,7 @@ const useCSSTransformations = true;
  * @see {@link maps} for all valid map name inputs
  */
 export function GetMapD3GeoProjection(map) {
-    switch (GetMap(map)) {
+    switch (ParseMap(map)) {
         default:
             console.warn("Unsupported projection type", map,
                 ", can't get geoProjection, refer to maps.js, returning geoEquirectangular");
@@ -83,21 +83,6 @@ export function GetMapD3GeoProjection(map) {
 }
 
 /**
- * Gets the const reference name of the given map property (accommodating for alternate names). Returns null if not found.
- *
- * @param {string} map name of map projection you want
- * @return {string} map projection name, per const refs at top of maps.js
- * @see {@link maps} for all valid map name inputs
- */
-export function ParseMap(map) {
-    let id = GetMapID(map);
-    if (id < 0) {
-        console.error("ERROR: could not parse map " + map + ", invalid ID " + id + ", returning null");
-        return null;
-    }
-    return maps[id][1];
-}
-/**
  * Gets the full name of the given map (eg, supplying 'grieger' will return 'Grieger Triptychial')
  *
  * @param {string} map name of map projection you want
@@ -114,7 +99,7 @@ export function GetMapFullName(map) {
 }
 
 export function GetMapScale(map) {
-    switch (GetMap(map)) {
+    switch (ParseMap(map)) {
         case adams1:
         case adams2:
             return math.sqrt2;
@@ -126,7 +111,7 @@ export function GetMapScale(map) {
 
 export function GetMapContainerWidthHeight(map, mapSize, projectionsCount) {
     let containerWidthHeight = [mapSize, mapSize];
-    switch (GetMap(map)) {
+    switch (ParseMap(map)) {
         case grieger:
         case grieger_alt:
             containerWidthHeight[0] = mapSize * 2;
@@ -141,7 +126,7 @@ export function GetMapContainerWidthHeight(map, mapSize, projectionsCount) {
 export function GetMapCSSLeftOffset(map, mapSize, projectionIndex) {
     // left offset only ever applies on leftmost projection, eg index 0 
     if (projectionIndex != 0) { return 0; }
-    switch (GetMap(map)) {
+    switch (ParseMap(map)) {
         case grieger:
         case grieger_alt:
             return mapSize * -0.5;
@@ -150,7 +135,7 @@ export function GetMapCSSLeftOffset(map, mapSize, projectionIndex) {
 }
 export function GetMapCSSRotation(map) {
     if (!useCSSTransformations) { return 0; }
-    switch (GetMap(map)) {
+    switch (ParseMap(map)) {
         case grieger:
         case grieger_alt:
             console.warn("Warning: this is meant for Projections, whereas", map,
@@ -168,7 +153,7 @@ export function GetMapCSSRotation(map) {
 }
 export function GetMapCSSTranslation(map, mapSize) {
     if (!useCSSTransformations) { return [0, 0]; }
-    map = GetMap(map);
+    map = ParseMap(map);
     switch (map) {
         case adams1:
         case adams2:
@@ -210,7 +195,7 @@ export function GetProjectionFullRotation(map) {
     let lambda = 0;
     let phi = 0;
     let gamma = 0;
-    switch (GetMap(map)) {
+    switch (ParseMap(map)) {
         case peirce:
             gamma = 315;
             break;
@@ -244,7 +229,7 @@ let v = 0;
  * @see {@link maps} for all valid map name inputs
  */
 export function GetProjectionCenter(map) {
-    switch (GetMap(map)) {
+    switch (ParseMap(map)) {
         case adams1:
             return [0, 0];
         // return [45, 0];
@@ -264,7 +249,7 @@ export function GetProjectionCenter(map) {
  * @see {@link maps} for all valid map name inputs
  */
 export function GetMapProjectionClipAngle(map) {
-    switch (GetMap(map)) {
+    switch (ParseMap(map)) {
         case adams1:
         case adams2:
             return 90;
@@ -281,7 +266,7 @@ export function GetMapProjectionClipAngle(map) {
  * @returns {string[]} array of all projections involved in this map
  */
 export function GetMapProjectionsArray(map) {
-    switch (GetMap(map)) {
+    switch (ParseMap(map)) {
         case grieger:
             return [adams2, adams1, adams2];
         case grieger_alt:
@@ -292,7 +277,15 @@ export function GetMapProjectionsArray(map) {
     return [map];
 }
 
-function GetMap(map) {
+/**
+ * Gets the const reference name of the given map property (accommodating for alternate names). Returns null if not found.
+ *
+ * @param {string} map name of map projection you want
+ * @return {string} map projection name, per const refs at top of maps.js
+ * @example Eg, inputting "triptychial" returns {@link grieger [grieger]}
+ * @see {@link maps} for all valid map name inputs
+ */
+export function ParseMap(map) {
     // quick check 
     maps.forEach(element => {
         if (element[1] == map) { return map; }
