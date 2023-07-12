@@ -172,24 +172,27 @@ export class MapData {
             xyFromLatLong = this.XYPointAtLatLongPoint(latLongAtPoint, false, true);
             console.log("B0 Result : " + xyFromLatLong, est);
             console.log(" ");
-            PPP = 1;
-            console.log("B1 XY from LatLong, Avg False, Offset True (LLAP:", latLongAtPoint, ")");
-            xyFromLatLong = this.XYPointAtLatLongPoint(latLongAtPoint, false, true);
-            console.log("B1 Result : " + xyFromLatLong, est);
-            console.log(" ");
-            PPP = 2;
-            console.log("B2 XY from LatLong, Avg False, Offset True (LLAP:", latLongAtPoint, ")");
-            xyFromLatLong = this.XYPointAtLatLongPoint(latLongAtPoint, false, true);
-            console.log("B2 Result : " + xyFromLatLong, est);
-            console.log(" ");
-            // console.log("C XY from LatLong, Avg True, Offset False");
-            // xyFromLatLong = this.XYPointAtLatLongPoint(latLongAtPoint, true, false);
-            // console.log("C Result : " + xyFromLatLong, est);
-            // console.log(" ");
-            // console.log("D XY from LatLong, Avg False, Offset False");
-            // xyFromLatLong = this.XYPointAtLatLongPoint(latLongAtPoint, false, false);
-            // console.log("D Result : " + xyFromLatLong, est);
-            // console.log(" ");
+            let evenMoreLogging = false;
+            if (evenMoreLogging) {
+                PPP = 1;
+                console.log("B1 XY from LatLong, Avg False, Offset True (LLAP:", latLongAtPoint, ")");
+                xyFromLatLong = this.XYPointAtLatLongPoint(latLongAtPoint, false, true);
+                console.log("B1 Result : " + xyFromLatLong, est);
+                console.log(" ");
+                PPP = 2;
+                console.log("B2 XY from LatLong, Avg False, Offset True (LLAP:", latLongAtPoint, ")");
+                xyFromLatLong = this.XYPointAtLatLongPoint(latLongAtPoint, false, true);
+                console.log("B2 Result : " + xyFromLatLong, est);
+                console.log(" ");
+                // console.log("C XY from LatLong, Avg True, Offset False");
+                // xyFromLatLong = this.XYPointAtLatLongPoint(latLongAtPoint, true, false);
+                // console.log("C Result : " + xyFromLatLong, est);
+                // console.log(" ");
+                // console.log("D XY from LatLong, Avg False, Offset False");
+                // xyFromLatLong = this.XYPointAtLatLongPoint(latLongAtPoint, false, false);
+                // console.log("D Result : " + xyFromLatLong, est);
+                // console.log(" ");
+            }
         }
 
         console.log("Global XY Input:", xyGlobal);
