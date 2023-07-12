@@ -132,45 +132,56 @@ export class MapData {
 
 
         let latLongAtPoint = this.LatLongAtPoint(xyGlobal);
-        let pointratio = this.GetPointRatio(xyGlobal, false);
+        // let pointratio = this.GetPointRatio(xyGlobal, false);
         let localXY = this.GetContainerPointOffset(xyGlobal);
-        let ratioToXYLocal = this.PointRatioToXY(pointratio);
-        let ratioToXYGlobal = this.PointRatioToXY(pointratio, false);
-        let latLongfromLocal = this.LatLongAtPoint(xyGlobal, true);
+        // let ratioToXYLocal = this.PointRatioToXY(pointratio);
+        // let ratioToXYGlobal = this.PointRatioToXY(pointratio, false);
+        // let latLongfromLocal = this.LatLongAtPoint(xyGlobal, true);
         
         // TODO: determine why LatLong collection is borked on grieger (non-alt) with leftoffset / limited container size 
 
-        console.log("       ");
-        console.log("GlobalXY Input: " + xyGlobal);
-        // return;
-        console.log("LocalXY From GlobalXY: " + localXY);
-        console.log("LatLong From GlobalXY: " + latLongAtPoint);
-        console.log("PointRatio From GlobalXY: " + pointratio);
-        console.log("LocalXY From PointRatio: " + ratioToXYLocal);
-        console.log("GlobalXY From PointRatio: " + ratioToXYGlobal);
-        console.log("LatLong From LocalXY: " + latLongfromLocal);
+        // console.log("       ");
+        // console.log("GlobalXY Input: " + xyGlobal);
+        // // return;
+        // console.log("LocalXY From GlobalXY: " + localXY);
+        // console.log("LatLong From GlobalXY: " + latLongAtPoint);
+        // console.log("PointRatio From GlobalXY: " + pointratio);
+        // console.log("LocalXY From PointRatio: " + ratioToXYLocal);
+        // console.log("GlobalXY From PointRatio: " + ratioToXYGlobal);
+        // console.log("LatLong From LocalXY: " + latLongfromLocal);
 
         let est = "(Target: ~" + Math.round(xyGlobal[0]) +
             "," + Math.round(xyGlobal[1]) + ")";
 
-        console.log(" ");
-        console.log(" ");
-        console.log(" ");
-        console.log("LatLong Input: " + latLongAtPoint);
-        console.log("GlobalXY Input: " + xyGlobal);
-        console.log("LocalXY Reference: " + localXY);
+        // console.log(" ");
+        // console.log(" ");
+        // console.log(" ");
+        // console.log("LatLong Input: " + latLongAtPoint);
+        // console.log("GlobalXY Input: " + xyGlobal);
+        // console.log("LocalXY Reference: " + localXY);
 
         let moreLogging = true;
         if (moreLogging) {
-            console.log(" ");
-            console.log("A XY from LatLong, Avg True, Offset True");
+            // console.log(" ");
+            // console.log("A XY from LatLong, Avg True, Offset True");
             let xyFromLatLong = this.XYPointAtLatLongPoint(latLongAtPoint, true, true, true);
-            console.log("A Result : " + xyFromLatLong, est);
-            console.log(" ");
+            // console.log("A Result : " + xyFromLatLong, est);
+            // console.log(" ");
+
+
             PPP = 0;
             console.log("B0 XY from LatLong, Avg False, Offset True (LLAP:", latLongAtPoint, ")");
             xyFromLatLong = this.XYPointAtLatLongPoint(latLongAtPoint, false, true);
             console.log("B0 Result : " + xyFromLatLong, est);
+
+            let diffX = xyGlobal[0] - xyFromLatLong[0];
+            let diffY = xyGlobal[1] - xyFromLatLong[1];
+            if (diffX < -1 || diffX > 1 || diffY < -1 || diffY > 1) {
+                console.log("%cBAD: DiffX/Y:", "color:red; font-weight: bold", diffX, '/', diffY);
+            } else {
+                console.log("%cGOOD, within 1px diff :)", "color:green; font-weight: bold");
+            }
+
             console.log(" ");
             let evenMoreLogging = false;
             if (evenMoreLogging) {
