@@ -26,13 +26,42 @@ let geojson = GetGeoJSON();
 let mapIndex = 0;
 
 /**
+ * Creates all necessary new instances of {@link MapData} to load into this module
+ * @param {Module} module Module to load the {@link MapData} array into 
+ * @returns {MapData[]} MapData array for all the maps loaded into this module
+ */
+export function CreateMaps(module) {
+    //TODO: Clarify architecture (maps/projections, instead of maps/map/projections)
+    // This is a hacky solution to an issue with loading multiple projections into 
+    // a single map from around July 2023 (hence the projections v1 branch)
+    // loading multiple projections into a single map was buggy and didn't really work
+    // however, loading multiple individual maps of 1 projection each worked fine
+    // so we now load multiple single maps, 1 projection each, and put them beside
+    // each other as we otherwise would in a map with multiple projections.
+    // it's complicated and silly but here we are ¯\_(ツ)_/¯ 
+    let map = module.map;
+    let maps = m.GetMapProjectionsArray(map);
+    let mapDatas = [];
+    for (let i = 0; i < maps.length; i++) {
+        let mapData = CreateMap(maps[i], module, i);
+        if (mapData == null) {
+            console.warn("Failed creating MapData from map", maps[i], "index", i,
+                ", module", module, ", all maps:", maps, "continuing loop");
+            continue;
+        }
+        mapDatas.push(mapData);
+    }
+    return mapDatas;
+}
+
+/**
  * Creates a new instance of {@link MapData} for use with the given {@link Module module}
- * @param {Module} module Module to load {@link MapData} into 
+ * @param {Module} parentModule Module to load {@link MapData} into 
  * @returns {MapData}
  */
-export function CreateMap(module) {
+function CreateMap(map, parentModule, mapIndex) {
 
-    let map = module.map;
+    let map = parentModule.map;
 
     if (map == null || map == "") {
         console.error('null/empty map projection specified, cannot create');
@@ -47,7 +76,7 @@ export function CreateMap(module) {
     let loadedProjections = 0;
 
     let mapData = new MapData(
-        module
+        parentModule
     );
 
     // generate projections 

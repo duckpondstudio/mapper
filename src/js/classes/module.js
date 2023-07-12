@@ -20,7 +20,7 @@ export let modules = [];
  */
 export function CreateModule(map) {
     let module = new Module(map);
-    module.mapData = CreateMap(module);
+    module.mapDatas = CreateMap(module);
     modules.push(module);
     return module;
 }
@@ -76,9 +76,9 @@ export class Module {
     moduleId;
 
     /** 
-     * @type {MapData}
+     * @type {MapData[]}
      * @memberof Module */
-    mapData;
+    mapDatas;
 
     titleBar;
 
