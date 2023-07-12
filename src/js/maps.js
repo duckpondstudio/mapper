@@ -1,4 +1,5 @@
 export const grieger = 'grieger';
+export const diptych = 'diptych';
 export const adams1 = 'adams1';
 export const adams2 = 'adams2';
 export const grieger_alt = 'grieger_alt';
@@ -28,6 +29,8 @@ const maps = [
         grieger, 'grieger triptychial', 'triptychial'],
     ['Grieger Triptychial (Alt)',
         grieger_alt, 'grieger triptychial', 'triptychial'],
+    ['Adams HIAS Diptychial',
+        diptych, 'grieger diptychial', 'adams diptychial', 'diptychial'],
     ['Peirce Quincuncial ',
         peirce, 'pierce'],
     ['Adams Hemisphere-In-A-Square (Atlantic)',
@@ -260,6 +263,23 @@ export function GetMapProjectionClipAngle(map) {
             return 90;
     }
     return 0;
+}
+
+/**
+ * Get an array of projections for this map 
+ * @param {string} map name of map projection you want
+ * @returns {string[]} array of all projections involved in this map
+ */
+export function GetMapProjectionsArray(map) {
+    switch (GetMap(map)) {
+        case grieger:
+            return [adams2, adams1, adams2];
+        case grieger_alt:
+            return [adams2_alt, adams1_alt, adams2_alt];
+        case diptych:
+            return [adams2, adams1];
+    }
+    return [map];
 }
 
 function GetMap(map) {
