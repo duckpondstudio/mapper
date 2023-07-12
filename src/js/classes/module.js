@@ -1,5 +1,5 @@
 import { MapData } from "./mapdata";
-import { CreateMap } from "../mapmaker";
+import { CreateMaps } from "../mapmaker";
 import { ClickedModule } from "../input";
 import * as m from '../maps';
 const feather = require('feather-icons');
@@ -20,7 +20,7 @@ export let modules = [];
  */
 export function CreateModule(map) {
     let module = new Module(map);
-    module.mapDatas = CreateMap(module);
+    module.mapDatas = CreateMaps(module);
     modules.push(module);
     return module;
 }

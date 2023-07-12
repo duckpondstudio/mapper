@@ -48,10 +48,10 @@ export class MapData {
      *  Can also call {@link AddProjection} at any time.
      *  @memberof MapData */
     constructor(
-        module, projections = []) {
+        module, index, projections = []) {
         this.map = module.map;
         this.module = module;
-        this.index = this.module.moduleId;
+        this.index = index;
 
         // create projections container 
         this.mapContainer = document.createElement('div');

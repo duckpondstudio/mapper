@@ -19,11 +19,7 @@ let mapSize = 180;
 
 const usePerMapBorder = false;
 
-let maps = [];
-
 let geojson = GetGeoJSON();
-
-let mapIndex = 0;
 
 /**
  * Creates all necessary new instances of {@link MapData} to load into this module
@@ -61,8 +57,6 @@ export function CreateMaps(module) {
  */
 function CreateMap(map, parentModule, mapIndex) {
 
-    let map = parentModule.map;
-
     if (map == null || map == "") {
         console.error('null/empty map projection specified, cannot create');
         return;
@@ -76,7 +70,7 @@ function CreateMap(map, parentModule, mapIndex) {
     let loadedProjections = 0;
 
     let mapData = new MapData(
-        parentModule
+        parentModule, mapIndex
     );
 
     // generate projections 
@@ -96,10 +90,6 @@ function CreateMap(map, parentModule, mapIndex) {
         mapData.mapContainer.style.height = containerWidthHeight[1] + 'px';
 
     }, 0);
-
-    mapIndex++;
-
-    maps.push(mapData);
 
     function RetrieveProjection(projection, mapData) {
 
