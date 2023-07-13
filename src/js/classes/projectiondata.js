@@ -291,8 +291,8 @@ export class ProjectionData {
         if (debugXYLatLong) { console.log('P' + this.index, "xy output:", xy); }
         let mapSize = this.GetContainerFullSize();
         console.log("Mapsize:", mapSize);
-        if (xy[0] < 0) { xy[0] = (xy[0] * -1) + mapSize[0]; }
-        if (xy[1] < 0) { xy[1] = (xy[1] * -1) + mapSize[1]; }
+        // if (xy[0] < 0) { xy[0] = (xy[0] * -1) + mapSize[0]; }
+        // if (xy[1] < 0) { xy[1] = (xy[1] * -1) + mapSize[1]; }
         if (debugXYLatLong) { console.log('P' + this.index, "xy postMapSize output:", xy); }
         // let xy = this.projection(latLong.slice());
         xy = this.ApplySVGTransformOffsetsToPoint(xy, true);
