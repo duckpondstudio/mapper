@@ -428,7 +428,7 @@ export class MapData {
      * @memberof MapData
      */
     GetContainerXOffset(x) {
-        return x - this.#containerRect.left;
+        return x - this.GetContainerOriginX();
     }
     /** Find the Y offset of the given point from this container's origin
      * @param {number} y Y-coord you want to find offset from this container for
@@ -436,7 +436,7 @@ export class MapData {
      * @memberof MapData
      */
     GetContainerYOffset(y) {
-        return y - this.#containerRect.top;
+        return y - this.GetContainerOriginY();
     }
 
     GetContainerWidth() {
