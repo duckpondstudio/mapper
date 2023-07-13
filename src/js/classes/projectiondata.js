@@ -4,6 +4,7 @@ import { parse } from 'transform-parser';
 import { ClickedProjection } from "../input";
 import * as math from '../utils/math';
 import * as m from '../maps';
+import * as e from '../utils/element';
 
 /** if true, fires a click event directly on the projection SVG, bypassing {@link baseinput} */
 const debugClickOnProjection = false;
@@ -36,7 +37,7 @@ export class ProjectionData {
         this.projectionSize = projectionSize;
         this.svg = svg;
         this.mapData = mapData;
-        this.#containerRect = this.svgContainer.getBoundingClientRect();
+        this.#containerRect = e.GetBoundingGlobalRect(this.svgContainer);
         // add click event 
         this.svgContainer.addEventListener('click', mouseEvent => {
             this.mapData.module.Select(); ClickedProjection(mouseEvent, this);
@@ -92,9 +93,6 @@ export class ProjectionData {
         return [this.GetContainerXOffset(x), this.GetContainerYOffset(y)];
     }
     GetContainerXOffset(x) {
-        console.log("GXOFF x:", x);
-        console.log("GXOFF contR.L:", this.#containerRect.left);
-        console.log("GXOFF x-contR.L:", (x - this.#containerRect.left));
         return x - this.#containerRect.left;
     }
     GetContainerYOffset(y) {
@@ -302,7 +300,7 @@ export class ProjectionData {
         // if (xy[1] < 0) { xy[1] = (xy[1] * -1) + mapSize[1]; }
         if (debugXYLatLong) { console.log('P' + this.index, "xy postMapSize output:", xy); }
         // let xy = this.projection(latLong.slice());
-        xy = this.ApplySVGTransformOffsetsToPoint(xy, true);
+        xy = math.RoundNumArray(this.ApplySVGTransformOffsetsToPoint(xy, true));
         if (debugXYLatLong) { console.log('P' + this.index, "xy post svg:", xy); }
         if (offsetToProjection) {
             // let origin = this.GetContainerFullOrigin();

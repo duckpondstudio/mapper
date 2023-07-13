@@ -481,7 +481,9 @@ export class MapData {
         if (offsetToProjection) { x = this.GetContainerXOffset(x); y = this.GetContainerYOffset(y); }
         let origin = zeroOrigin ? [0, 0] : this.GetContainerOrigin();
         let extent = zeroOrigin ? size : this.GetContainerExtent();
+        console.log("CONSTRAIN, x", x, "y", y, "offset", offsetToProjection, "zeroOri", zeroOrigin, ", size:", size, ", origin:", origin, ", extent:", extent)
         // x coordinate
+        console.log("updating X, x:", x, ", size:", size, ", origin:", origin, ", extent:", extent);
         if (size[0] == 0) {
             // zero width, x must match
             x = origin[0];
@@ -494,17 +496,25 @@ export class MapData {
             }
         }
         // y coordinate
+        console.log("updating Y, y:", y, ", size:", size, ", origin:", origin, ", extent:", extent);
         if (size[1] == 0) {
             // zero height, y must match
             y = origin[1];
+            console.log("Y0: ", y);
         } else {
             // ensure within bounds 
+            console.log("Y1: ", y);
             if (y < origin[1]) {
+                console.log("Y2A: ", y);
                 while (y < origin[1]) { y += size[1]; }
+                console.log("Y2B: ", y);
             } else if (y > extent[1]) {
+                console.log("Y3A: ", y);
                 while (y > extent[1]) { y -= size[1]; }
+                console.log("Y3B: ", y);
             }
         }
+        console.log("Y4: ", y);
         return [x, y];
     }
 
@@ -588,7 +598,7 @@ export class MapData {
         }
         if (debugXYLatLong) {
             console.log("getting XY at latlong", latLong, 'useAvgXY', useAvgXY,
-            'offsetProjection', offsetProjection, "constrainToContainer", constrainToContainer);
+                'offsetProjection', offsetProjection, "constrainToContainer", constrainToContainer);
             console.log("map:", this.map, "mapdata:", this);
         }
         // determine default projection index 
@@ -658,9 +668,9 @@ export class MapData {
             // not within bounds, constrain within container 
             console.log("PRE MAP CONSTRAINT:", xy, "offset:", (offsetProjection));
             xy = this.ConstrainPointWithinContainer(xy, offsetProjection);
-            console.log("POST MAP CONSTRAINT:", xy); 
+            console.log("POST MAP CONSTRAINT:", xy);
         }
-        return xy;
+        return math.RoundNumArray(xy);
     }
 
     LatLongAtXY(x, y, useAvgLatLong = true, offsetProjection = false) {
