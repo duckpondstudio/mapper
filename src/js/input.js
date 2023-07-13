@@ -125,7 +125,7 @@ function LossOfFocusEvent(event) {
  * @see {@link InputSetup} calls this method
  */
 function SetMousePosition(mouseEvent) {
-    SetCursorPosition(mouseEvent.clientX, mouseEvent.clientY);
+    SetCursorPosition(mouseEvent.pageX, mouseEvent.pageY);
 };
 /**
  * Assigns the current cursor position based on the supplied XY coordinates 

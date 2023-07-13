@@ -6,6 +6,7 @@ import { ProjectionData } from './projectiondata';
 import * as m from '../maps';
 import * as disp from '../utils/display';
 import * as math from '../utils/math';
+import * as e from '../utils/element'
 
 // see bottom for code examples
 
@@ -81,6 +82,10 @@ export class MapData {
         for (let i = 0; i < projections.length; i++) {
             this.AddProjection(projections[i]);
         }
+
+        // define initial container rect
+        // this.#UpdateSize();
+
     }
 
     /** 
@@ -97,7 +102,12 @@ export class MapData {
     }
 
     #UpdateSize() {
+        console.log("");
+        console.log("This:", this);
         this.#containerRect = this.mapContainer.getBoundingClientRect();
+        console.log("Local BCR:", this.#containerRect);
+        this.#containerRect = e.GetBoundingGlobalRect(this.mapContainer);
+        console.log("Global BCR:", this.#containerRect);
         let width = this.#containerRect.width;
         let height = this.#containerRect.height;
         disp.SetHDPICanvasSize(this.mapCanvas, width, height);
@@ -131,9 +141,13 @@ export class MapData {
     AddDotAtGlobalPoint(xyGlobal, id = null, style = dotStyle.default) {
 
 
-        let latLongAtPoint = this.LatLongAtPoint(xyGlobal);
+        console.log("xy global input is:", xyGlobal);
+        console.log("container origin is:", this.GetContainerOrigin());
+        let xyLocal = this.GetContainerPointOffset(xyGlobal);
+        console.log("XY Local is:", xyLocal);
+        return;
+        let latLongAtPoint = this.LatLongAtPoint(xyLocal);
         // let pointratio = this.GetPointRatio(xyGlobal, false);
-        let localXY = this.GetContainerPointOffset(xyGlobal);
         // let ratioToXYLocal = this.PointRatioToXY(pointratio);
         // let ratioToXYGlobal = this.PointRatioToXY(pointratio, false);
         // let latLongfromLocal = this.LatLongAtPoint(xyGlobal, true);
@@ -143,12 +157,12 @@ export class MapData {
         // console.log("       ");
         // console.log("GlobalXY Input: " + xyGlobal);
         // // return;
-        // console.log("LocalXY From GlobalXY: " + localXY);
+        // console.log("xyLocal From GlobalXY: " + xyLocal);
         // console.log("LatLong From GlobalXY: " + latLongAtPoint);
         // console.log("PointRatio From GlobalXY: " + pointratio);
-        // console.log("LocalXY From PointRatio: " + ratioToXYLocal);
+        // console.log("xyLocal From PointRatio: " + ratioToXYLocal);
         // console.log("GlobalXY From PointRatio: " + ratioToXYGlobal);
-        // console.log("LatLong From LocalXY: " + latLongfromLocal);
+        // console.log("LatLong From xyLocal: " + latLongfromLocal);
 
         let est = "(Target: ~" + Math.round(xyGlobal[0]) +
             "," + Math.round(xyGlobal[1]) + ")";
@@ -158,7 +172,7 @@ export class MapData {
         // console.log(" ");
         // console.log("LatLong Input: " + latLongAtPoint);
         // console.log("GlobalXY Input: " + xyGlobal);
-        // console.log("LocalXY Reference: " + localXY);
+        // console.log("xyLocal Reference: " + xyLocal);
 
         let moreLogging = true;
         if (moreLogging) {
@@ -207,7 +221,7 @@ export class MapData {
         }
 
         console.log("Global XY Input:", xyGlobal);
-        console.log("Local XY Input:", localXY);
+        console.log("Local XY Input:", xyLocal);
 
         return;
         this.AddDotAtLatLongPointMapRatioPoint(
