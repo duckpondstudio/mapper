@@ -134,6 +134,7 @@ export function GetProjectionCSSLeftOffset(map, mapSize, projectionIndex) {
     return 0;
 }
 export function GetProjectionCSSRotation(map) {
+    // return 0;
     if (!useCSSTransformations) { return 0; }
     switch (ParseMap(map)) {
         case grieger:
@@ -152,6 +153,7 @@ export function GetProjectionCSSRotation(map) {
     return 0;
 }
 export function GetProjectionCSSTranslation(map, mapSize) {
+    // return [0, 0];
     if (!useCSSTransformations) { return [0, 0]; }
     map = ParseMap(map);
     switch (map) {
@@ -268,11 +270,22 @@ export function GetProjectionClipAngle(map) {
 export function GetMapProjectionsArray(map) {
     switch (ParseMap(map)) {
         case grieger:
-            return [adams2, adams1, adams2];
+            return [
+                adams2,
+                adams1,
+                adams2,
+            ];
         case grieger_alt:
-            return [adams2_alt, adams1_alt, adams2_alt];
+            return [
+                adams2_alt,
+                adams1_alt,
+                adams2_alt,
+            ];
         case diptych:
-            return [adams2, adams1];
+            return [
+                adams1,
+                adams2,
+            ];
     }
     return [map];
 }

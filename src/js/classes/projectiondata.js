@@ -50,6 +50,13 @@ export class ProjectionData {
                 projectionReference.OutputDataAtPoint(pointer, false);
             });
         }
+
+        svg.append("circle")
+            .attr("cx", 0)
+            .attr("cy", 0)
+            .attr("r", 5)
+            .attr("fill", "red")
+            .attr("transform", `translate(${d3Projection([0, 0])})`);
     }
 
     /** 
