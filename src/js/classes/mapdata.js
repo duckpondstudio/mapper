@@ -392,14 +392,14 @@ export class MapData {
     /** Convenience function, uses {@link GetContainerXYOffset} and adds 1 */
     ContainerGlobalToLocalXY(xGlobal, yGlobal) {
         return [this.ContainerGlobalToLocalX(xGlobal),
-            this.ContainerGlobalToLocalY(yGlobal)];
-        }
-        /** Convenience function, uses {@link GetContainerXOffset} and adds 1 */
-        ContainerGlobalToLocalX(xGlobal) {
-            return this.GetContainerXOffset(xGlobal) + 1;
-        }
-        /** Convenience function, uses {@link GetContainerYOffset} and adds 1 */
-        ContainerGlobalToLocalY(yGlobal) {
+        this.ContainerGlobalToLocalY(yGlobal)];
+    }
+    /** Convenience function, uses {@link GetContainerXOffset} and adds 1 */
+    ContainerGlobalToLocalX(xGlobal) {
+        return this.GetContainerXOffset(xGlobal) + 1;
+    }
+    /** Convenience function, uses {@link GetContainerYOffset} and adds 1 */
+    ContainerGlobalToLocalY(yGlobal) {
         return this.GetContainerYOffset(yGlobal) + 1;
     }
 
@@ -487,14 +487,27 @@ export class MapData {
         if (size[0] == 0) {
             // zero width, x must match
             x = origin[0];
+            console.log("X0: ", x);
         } else {
             // ensure within bounds 
-            if (x < origin[0]) {
+            console.log("X1: ", x);
+            let bugfix = this.index > 0 && x == origin[0];
+            if (x < origin[0] || bugfix) {
+                console.log("X2A: ", x);
+                if (this.index > 0) {
+                    // TODO: determine 1px offset bug on maps with index > 0
+                    // without this, clicking the 1px at the right creates an error
+                    if (x <= origin[0]) { x += size[0] * this.index; }
+                }
                 while (x < origin[0]) { x += size[0]; }
+                console.log("X2B: ", x);
             } else if (x > extent[0]) {
+                console.log("X3A: ", x);
                 while (x > extent[0]) { x -= size[0]; }
+                console.log("X3B: ", x);
             }
         }
+        console.log("X4: ", x);
         // y coordinate
         console.log("updating Y, y:", y, ", size:", size, ", origin:", origin, ", extent:", extent);
         if (size[1] == 0) {
