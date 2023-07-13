@@ -6,6 +6,8 @@ export const diptych = 'diptych';
 export const adams1 = 'adams1';
 /** Adams Hemisphere-In-A-Square (Pacific) */
 export const adams2 = 'adams2';
+/** Grieger Triptychial (Full) */
+export const grieger_full = 'grieger_full';
 /** Grieger Triptychial (Alt) */
 export const grieger_alt = 'grieger_alt';
 /** Adams Hemisphere-In-A-Square (Atlantic) (Alt) */
@@ -30,8 +32,10 @@ export const equirectangular = 'equirectangular';
 const maps = [
     ['Grieger Triptychial',
         grieger, 'grieger triptychial', 'triptychial'],
+    ['Grieger Triptychial (Full)',
+        grieger_full, 'grieger full', 'triptychial full'],
     ['Grieger Triptychial (Alt)',
-        grieger_alt, 'grieger triptychial', 'triptychial'],
+        grieger_alt, 'grieger alt', 'triptychial alt'],
     ['Adams HIAS Diptychial',
         diptych, 'grieger diptychial', 'adams diptychial', 'diptychial'],
     ['Peirce Quincuncial',
@@ -139,6 +143,7 @@ export function GetProjectionCSSRotation(map) {
     switch (ParseMap(map)) {
         case grieger:
         case grieger_alt:
+        case grieger_full:
             console.warn("Warning: this is meant for Projections, whereas", map,
                 "is a map made of multiple individual projections");
             break;
@@ -270,6 +275,7 @@ export function GetProjectionClipAngle(map) {
 export function GetMapProjectionsArray(map) {
     switch (ParseMap(map)) {
         case grieger:
+        case grieger_full:
             return [
                 adams2,
                 adams1,
