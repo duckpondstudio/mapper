@@ -128,18 +128,21 @@ export class MapData {
     AddDotAtLatLong(lat, long, id = null, style = dotStyle.default) { return this.AddDotAtLatLongPoint([lat, long], id, style); }
     AddDotAtGlobalPoint(xyGlobal, id = null, style = dotStyle.default) {
 
-
+        console.log("");
+        console.log("");
+        console.log("");
+        console.log("");
         console.log("xy global input is:", xyGlobal);
         console.log("container origin is:", this.GetContainerOrigin());
-        let xyLocal = this.GetContainerPointOffset(xyGlobal);
+        let xyLocal = this.ContainerGlobalToLocalPoint(xyGlobal);
         console.log("XY Local is:", xyLocal);
-        return;
+        // return;
         let latLongAtPoint = this.LatLongAtPoint(xyLocal);
         // let pointratio = this.GetPointRatio(xyGlobal, false);
         // let ratioToXYLocal = this.PointRatioToXY(pointratio);
         // let ratioToXYGlobal = this.PointRatioToXY(pointratio, false);
         // let latLongfromLocal = this.LatLongAtPoint(xyGlobal, true);
-        
+
         // TODO: determine why LatLong collection is borked on grieger (non-alt) with leftoffset / limited container size 
 
         // console.log("       ");
@@ -380,6 +383,24 @@ export class MapData {
     }
     GetContainerExtentY() {
         return this.GetContainerOriginY() + this.GetContainerHeight();
+    }
+
+    /** Convenience function, uses {@link GetContainerXYOffset} and adds 1 */
+    ContainerGlobalToLocalPoint(xyGlobal) {
+        return this.ContainerGlobalToLocalXY(xyGlobal[0], xyGlobal[1]);
+    }
+    /** Convenience function, uses {@link GetContainerXYOffset} and adds 1 */
+    ContainerGlobalToLocalXY(xGlobal, yGlobal) {
+        return [this.ContainerGlobalToLocalX(xGlobal),
+            this.ContainerGlobalToLocalY(yGlobal)];
+        }
+        /** Convenience function, uses {@link GetContainerXOffset} and adds 1 */
+        ContainerGlobalToLocalX(xGlobal) {
+            return this.GetContainerXOffset(xGlobal) + 1;
+        }
+        /** Convenience function, uses {@link GetContainerYOffset} and adds 1 */
+        ContainerGlobalToLocalY(yGlobal) {
+        return this.GetContainerYOffset(yGlobal) + 1;
     }
 
     /** Find the XY offset of the current cursor position from this container's origin
