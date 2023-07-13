@@ -64,9 +64,6 @@ export class MapData {
             this.module.Select(); ClickedMap(mouseEvent, this);
         });
 
-        // define container rect
-        this.#containerRect = this.mapContainer.getBoundingClientRect();
-
         // create map canvas 
         this.mapCanvas = disp.CreateHDPICanvas();
         this.mapCanvas.id = 'mod' + this.module.moduleId + '_mapCanvas';
@@ -82,10 +79,6 @@ export class MapData {
         for (let i = 0; i < projections.length; i++) {
             this.AddProjection(projections[i]);
         }
-
-        // define initial container rect
-        // this.#UpdateSize();
-
     }
 
     /** 
@@ -102,12 +95,7 @@ export class MapData {
     }
 
     #UpdateSize() {
-        console.log("");
-        console.log("This:", this);
-        this.#containerRect = this.mapContainer.getBoundingClientRect();
-        console.log("Local BCR:", this.#containerRect);
         this.#containerRect = e.GetBoundingGlobalRect(this.mapContainer);
-        console.log("Global BCR:", this.#containerRect);
         let width = this.#containerRect.width;
         let height = this.#containerRect.height;
         disp.SetHDPICanvasSize(this.mapCanvas, width, height);
