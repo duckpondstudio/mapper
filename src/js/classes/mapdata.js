@@ -593,7 +593,7 @@ export class MapData {
             // iterate thru all latitude/longitude, and return the average
             if (debugXYLatLong) { console.log("processing avg latlong>xy across", this.projections.length, "projections"); }
             for (let i = 0; i < this.projections.length; i++) {
-                let projXY = this.projections[i].XYPointAtLatLongPoint(latLong, !offsetProjection, constrainToContainer, true);
+                let projXY = this.projections[i].XYPointAtLatLongPoint(latLong, offsetProjection, constrainToContainer, true);
                 // console.log("Proj", i, "XYPointAtLatLong", projXY);
                 // remap local-to-projection point to global point
                 // projXY = this.projections[i].MapProjectionLocalPointToGlobalPoint(projXY);
@@ -632,7 +632,7 @@ export class MapData {
                 }
             }
             // get projection-local XY
-            xy = projection.XYPointAtLatLongPoint(latLong, !offsetProjection, constrainToContainer, true);
+            xy = projection.XYPointAtLatLongPoint(latLong, offsetProjection, constrainToContainer, true);
         }
         // remap local-to-projection to global point using default projection
         console.log("PRE XY MAP PROJ LOCAL-TO-GLOBAL:", xy);
@@ -641,14 +641,14 @@ export class MapData {
 
 
         // lastly, failsafe ensure the returned point is within the bounds of this container
-        // if (constrainToContainer && !this.IsPointWithinContainer(xy, !offsetProjection)) {
+        // if (constrainToContainer && !this.IsPointWithinContainer(xy, offsetProjection)) {
         // console.log("XY:", xy);
         // console.log("Point within F:", this.IsPointWithinContainer(xy, false));
         // console.log("Point within T:", this.IsPointWithinContainer(xy, true));
         if (constrainToContainer) {
             // not within bounds, constrain within container 
-            console.log("PRE MAP CONSTRAINT:", xy, "!offset:", (!offsetProjection));
-            xy = this.ConstrainPointWithinContainer(xy, !offsetProjection);
+            console.log("PRE MAP CONSTRAINT:", xy, "offset:", (offsetProjection));
+            xy = this.ConstrainPointWithinContainer(xy, offsetProjection);
             console.log("POST MAP CONSTRAINT:", xy); 
         }
         return xy;
@@ -677,7 +677,7 @@ export class MapData {
             let avgLatLong = [0, 0];
             // iterate thru all latitude/longitude, and return the average
             for (let i = 0; i < this.projections.length; i++) {
-                let latLong = this.projections[i].LatLongAtPoint(xy, !offsetProjection);
+                let latLong = this.projections[i].LatLongAtPoint(xy, offsetProjection);
                 if (i == 0) {
                     avgLatLong = latLong;
                 } else {
@@ -699,7 +699,7 @@ export class MapData {
                 console.warn("Could not get LatLong at point: ", xy, ", on map: ", this.map,
                     ", no projection found at point, attempting to get avgLatLong of ",
                     this.projections.length, " projections instead. OffsetProjection: ", offsetProjection);
-                return this.LatLongAtPoint(xy, !offsetProjection, true);
+                return this.LatLongAtPoint(xy, offsetProjection, true);
             } else {
                 console.error("Cannot get LatLong at point: ", xy, ", projection at point null, ",
                     "ensure point is valid (bounds check?). AvgLatLong false, OffsetProjection ",
@@ -707,7 +707,7 @@ export class MapData {
                 return null;
             }
         }
-        return projection.LatLongAtPoint(xy, !offsetProjection);
+        return projection.LatLongAtPoint(xy, offsetProjection);
     }
 
     GetProjectionAtPoint(xy, offsetToProjection = false) {
