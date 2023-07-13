@@ -11,7 +11,7 @@ const defaultRounding = 'default';
  * @param {string} [roundingType=generousRounding] Rounding type to use? See {@link RoundRect}
  * @returns {DOMRect} The {@link DOMRect} for this element, positioned globally
  */
-export function GetBoundingGlobalRect(element, roundingType = generousRounding) {
+export function GetBoundingGlobalRect(element, roundingType = defaultRounding) {
     let rect = getBoundingClientRect(element);
     let globalOffset = GetGlobalXYOffset(element);
     rect.x = globalOffset.x;
