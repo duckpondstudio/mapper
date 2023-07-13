@@ -37,7 +37,7 @@ export class ProjectionData {
         this.projectionSize = projectionSize;
         this.svg = svg;
         this.mapData = mapData;
-        this.#containerRect = e.GetBoundingGlobalRect(this.svgContainer);
+        this.CalculateContainerRect();
         // add click event 
         this.svgContainer.addEventListener('click', mouseEvent => {
             this.mapData.module.Select(); ClickedProjection(mouseEvent, this);
@@ -58,6 +58,10 @@ export class ProjectionData {
             .attr("r", 5)
             .attr("fill", "red")
             .attr("transform", `translate(${d3Projection([0, 0])})`);
+    }
+
+    CalculateContainerRect() {
+        this.#containerRect = e.GetBoundingGlobalRect(this.svgContainer);
     }
 
     /** 
