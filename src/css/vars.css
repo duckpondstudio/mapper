@@ -5,7 +5,7 @@
     /* ---    SIZING & POS    --- */
     /* -------------------------- */
 
-    --module-width: min(600px, calc(100% - 96px));
+    --module-width: min(800px, calc(100% - 96px));
     --submodule-height-min: 60px;
 
     /* -------------------------- */
