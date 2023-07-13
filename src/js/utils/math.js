@@ -191,3 +191,38 @@ export function ModuloNumArrayBy(numArray, value) {
     }
     return numArray;
 }
+
+
+/**
+ * Rounds every value in the given array of numbers. 
+ * @param {number[]} numArray Array of numbers to round
+ * @returns {number[]}
+ */
+export function RoundNumArray(numArray) {
+    for (let i = 0; i < numArray.length; i++) {
+        numArray[i] = Math.round(numArray[i]);
+    }
+    return numArray;
+}
+/**
+ * Rounds up (ceil) every value in the given array of numbers. 
+ * @param {number[]} numArray Array of numbers to round up 
+ * @returns {number[]}
+ */
+export function CeilNumArray(numArray) {
+    for (let i = 0; i < numArray.length; i++) {
+        numArray[i] = Math.ceil(numArray[i]);
+    }
+    return numArray;
+}
+/**
+ * Rounds down (floor) every value in the given array of numbers. 
+ * @param {number[]} numArray Array of numbers to round down 
+ * @returns {number[]}
+ */
+export function FloorNumArray(numArray) {
+    for (let i = 0; i < numArray.length; i++) {
+        numArray[i] = Math.floor(numArray[i]);
+    }
+    return numArray;
+}
