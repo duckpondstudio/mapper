@@ -1,5 +1,5 @@
 import { MapData } from "./mapdata";
-import { CreateMaps } from "../mapmaker";
+import { CreateMaps, mapSize } from "../mapmaker";
 import { ClickedModule } from "../input";
 import * as m from '../maps';
 const feather = require('feather-icons');
@@ -120,8 +120,12 @@ export class Module {
         this.titleBar.appendChild(titleText);
 
         // add map submodule 
+        let mapsCount = m.GetMapProjectionsArray(map).length;
+        let mapSubModuleWidthHeight = m.GetMapContainerWidthHeight(map, mapSize, mapsCount);
         this.mapSubModule = document.createElement('div');
         this.mapSubModule.setAttribute('class', 'submodule map');
+        this.mapSubModule.style.width = mapSubModuleWidthHeight[0] + 'px';
+        this.mapSubModule.style.height = mapSubModuleWidthHeight[1] + 'px';
         this.mapSubModule.id = 'mod' + this.moduleId + '_mapCont';
         this.container.appendChild(this.mapSubModule);
 
