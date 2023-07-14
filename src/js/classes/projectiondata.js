@@ -307,8 +307,8 @@ export class ProjectionData {
         xy = math.RoundNumArray(this.ApplySVGTransformOffsetsToPoint(xy, true));
         if (debugXYLatLong) { console.log('P' + this.index, "xy post svg:", xy); }
         if (offsetToProjection) {
-            // let origin = this.GetContainerFullOrigin();
-            let origin = this.GetContainerOrigin();
+            let origin = this.GetContainerFullOrigin();
+            // let origin = this.GetContainerOrigin();
             if (debugXYLatLong) { console.log('P' + this.index, 'move xy', xy, 'by origin', origin); }
             xy[0] += origin[0];
             xy[1] += origin[1];

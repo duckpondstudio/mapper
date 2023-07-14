@@ -214,6 +214,7 @@ export class MapData {
 
         console.log("Global XY Input:", xyGlobal);
         console.log("Local XY Input:", xyLocal);
+        console.log("LatLong:", latLongAtPoint);
 
         return;
         this.AddDotAtLatLongPointMapRatioPoint(
