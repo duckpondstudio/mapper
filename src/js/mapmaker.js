@@ -97,7 +97,8 @@ function CreateMap(map, parentModule, mapIndex) {
     function RetrieveProjection(projection, mapData) {
 
         // store current projection index, because projectionsCount iterates on an async timer 
-        let currentProjectionIndex = projectionsCount;
+        let currentProjectionIndex = mapIndex;
+        // TODO: split out map/projection indices (part of projection/map overhaul)
 
         if (mapData == null) {
             console.error("null mapData, can't retrieve projection, projectionType: " + map);
