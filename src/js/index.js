@@ -8,8 +8,10 @@ window.addEventListener('load', function () {
     // window is loaded 
     InputSetup();
     // CreateModule(m.diptych);
+    CreateModule(m.grieger);
+    // CreateModule(m.grieger_full);
     // CreateModule(m.adams1);
-    CreateModule(m.adams2);
+    // CreateModule(m.adams2);
     // CreateModule(m.adams2);
     // CreateModule(m.adams2);
     // CreateModule(m.adams2);
