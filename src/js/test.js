@@ -19,71 +19,37 @@ export const testKey = 't';
 export function NumericTest(num) {
     console.group("Numeric Test " + num);
     switch (num) {
+
         case 1:
-            // example lat long + xy outputs
-            console.groupCollapsed('Greenland, ' + m.EXAMPLE_LAT_LONG_GREENLAND
-                + ", Target XY: " + m.EXAMPLE_XY_GREENLAND);
-            console.log("XY at Greenland:",
-                current.map.XYPointAtLatLongPoint(m.EXAMPLE_LAT_LONG_GREENLAND));
-            console.log("Target XY:", m.EXAMPLE_XY_GREENLAND);
-            console.groupEnd();
-            console.groupCollapsed('FalklandIsles, ' + m.EXAMPLE_LAT_LONG_FALKLAND_ISLES
-                + ", Target XY: " + m.EXAMPLE_XY_FALKLAND_ISLES);
-            console.log("XY at FalklandIsles:",
-                current.map.XYPointAtLatLongPoint(m.EXAMPLE_LAT_LONG_FALKLAND_ISLES));
-            console.log("Target XY:", m.EXAMPLE_XY_FALKLAND_ISLES);
-            console.groupEnd();
-            console.groupCollapsed('Australia, ' + m.EXAMPLE_LAT_LONG_AUSTRALIA
-                + ", Target XY: " + m.EXAMPLE_XY_AUSTRALIA);
-            console.log("XY at Australia:",
-                current.map.XYPointAtLatLongPoint(m.EXAMPLE_LAT_LONG_AUSTRALIA));
-            console.log("Target XY:", m.EXAMPLE_XY_AUSTRALIA);
-            console.groupEnd();
-            console.groupCollapsed('India, ' + m.EXAMPLE_LAT_LONG_INDIA
-                + ", Target XY: " + m.EXAMPLE_XY_INDIA);
-            console.log("XY at India:",
-                current.map.XYPointAtLatLongPoint(m.EXAMPLE_LAT_LONG_INDIA));
-            console.log("Target XY:", m.EXAMPLE_XY_INDIA);
-            console.groupEnd();
-            console.groupCollapsed('Vancouver, ' + m.EXAMPLE_LAT_LONG_VANCOUVER
-                + ", Target XY: " + m.EXAMPLE_XY_VANCOUVER);
-            console.log("XY at Vancouver:",
-                current.map.XYPointAtLatLongPoint(m.EXAMPLE_LAT_LONG_VANCOUVER));
-            console.log("Target XY:", m.EXAMPLE_XY_VANCOUVER);
-            console.groupEnd();
-            console.groupCollapsed('Hawaii, ' + m.EXAMPLE_LAT_LONG_HAWAII
-                + ", Target XY: " + m.EXAMPLE_XY_HAWAII);
-            console.log("XY at Hawaii:",
-                current.map.XYPointAtLatLongPoint(m.EXAMPLE_LAT_LONG_HAWAII));
-            console.log("Target XY:", m.EXAMPLE_XY_HAWAII);
-            console.groupEnd();
-            console.groupCollapsed('Galapagos, ' + m.EXAMPLE_LAT_LONG_GALAPAGOS
-                + ", Target XY: " + m.EXAMPLE_XY_GALAPAGOS);
-            console.log("XY at Galapagos:",
-                current.map.XYPointAtLatLongPoint(m.EXAMPLE_LAT_LONG_GALAPAGOS));
-            console.log("Target XY:", m.EXAMPLE_XY_GALAPAGOS);
-            console.groupEnd();
-
             break;
+        
         case 2:
-
             break;
+        
         case 3:
             break;
+        
         case 4:
             break;
+        
         case 5:
             break;
+        
         case 6:
             break;
+        
         case 7:
             break;
+        
         case 8:
             break;
+        
         case 9:
             break;
+        
         case 0:
             break;
+        
     }
     console.groupEnd("Numeric Test " + num);
 }
