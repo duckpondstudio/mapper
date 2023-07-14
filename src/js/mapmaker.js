@@ -67,7 +67,11 @@ function CreateMap(map, parentModule, mapIndex) {
         return;
     }
 
-    let projectionsCount = 0;
+    let totalMapsCount = m.GetMapProjectionsArray(parentModule.map).length;
+    
+    let projections = m.GetMapProjectionsArray(map);
+    let projectionsCount = projections.length;
+    let projectionsLoading = 0;
     let loadedProjections = 0;
 
     let mapData = new MapData(
@@ -78,7 +82,6 @@ function CreateMap(map, parentModule, mapIndex) {
     setTimeout(() => {
 
         // get all projections for this map 
-        let projections = m.GetMapProjectionsArray(map);
         // retrieve projections for spawning prep 
         for (let i = 0; i < projections.length; i++) {
             RetrieveProjection(projections[i], mapData);
@@ -88,8 +91,9 @@ function CreateMap(map, parentModule, mapIndex) {
         let containerWidthHeight = m.GetMapContainerWidthHeight(map, mapSize, projectionsCount);
         // assign size to mapContainer
         let leftOffset = m.GetMapCSSLeftOffset(parentModule.map, mapSize, mapIndex);
+        let rightOffset = m.GetMapCSSRightOffset(parentModule.map, mapSize, totalMapsCount, mapIndex);
         console.log("LEFT", leftOffset, ", map:", map, "mapsize", mapSize, "mapIndex:", mapIndex);
-        mapData.mapContainer.style.width = (containerWidthHeight[0] + leftOffset) + 'px';
+        mapData.mapContainer.style.width = (containerWidthHeight[0] + leftOffset + rightOffset) + 'px';
         mapData.mapContainer.style.height = containerWidthHeight[1] + 'px';
 
     }, 0);
@@ -251,7 +255,7 @@ function CreateMap(map, parentModule, mapIndex) {
         }, 50);// nominal delay to ENSURE loadedProjections is incremented properly
 
         // increment projection index 
-        projectionsCount++;
+        projectionsLoading++;
     }
 
     return mapData;
