@@ -137,6 +137,17 @@ export function GetMapCSSLeftOffset(map, mapSize, projectionIndex) {
     }
     return 0;
 }
+export function GetMapCSSRightOffset(map, mapSize, projectionsCount, projectionIndex) {
+    // right offset only ever applies on rightmost projection
+    console.log("Get right offset pCount", projectionsCount, "pIndex", projectionIndex);
+    if (projectionIndex < projectionsCount - 1 || projectionsCount == 0) { return 0; }
+    switch (ParseMap(map)) {
+        case grieger:
+        case grieger_alt:
+            return mapSize * -0.5;
+    }
+    return 0;
+}
 export function GetProjectionCSSRotation(map) {
     // return 0;
     if (!useCSSTransformations) { return 0; }
