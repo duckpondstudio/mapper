@@ -15,7 +15,8 @@ import * as math from './utils/math';
 
 import * as d3 from 'd3';
 
-let mapSize = 180;
+/** Default size in px of maps */
+export const mapSize = 180;// TODO: make this a per-map property
 
 const usePerMapBorder = false;
 
