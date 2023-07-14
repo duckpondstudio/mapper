@@ -372,17 +372,3 @@ export const EXAMPLE_LAT_LONG_ITALY = [42.33, 12.84];// 250,200
 export const EXAMPLE_LAT_LONG_HAWAII = [21, -155.75];// 420,122
 // *: cursor pos is likely to change, it's based on js/css web test setup on june 29 2023
 // *: also it's VERY approximate, even moreso than the lat/long. Values +/- 5-10px are expected
-
-
-export const EXAMPLE_XY_VANCOUVER = [259, 113];
-export const EXAMPLE_XY_AUSTRALIA = [409, 213];
-export const EXAMPLE_XY_MADAGASCAR = [244, 275];
-export const EXAMPLE_XY_RIO_BRAZIL = [161, 199];
-export const EXAMPLE_XY_FALKLAND_ISLES = [118, 205];
-export const EXAMPLE_XY_MCMURDO_STN = [63, 172];
-export const EXAMPLE_XY_GREENLAND = [259, 162];
-export const EXAMPLE_XY_GULF_OF_MEXICO = [210, 114];
-export const EXAMPLE_XY_GALAPAGOS = [130, 112];
-export const EXAMPLE_XY_INDIA = [303, 239];
-export const EXAMPLE_XY_ITALY = [250, 200];
-export const EXAMPLE_XY_HAWAII = [420, 122];
