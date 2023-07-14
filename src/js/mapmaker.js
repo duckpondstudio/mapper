@@ -87,7 +87,9 @@ function CreateMap(map, parentModule, mapIndex) {
         // define mapContainer size based on map
         let containerWidthHeight = m.GetMapContainerWidthHeight(map, mapSize, projectionsCount);
         // assign size to mapContainer
-        mapData.mapContainer.style.width = containerWidthHeight[0] + 'px';
+        let leftOffset = m.GetMapCSSLeftOffset(parentModule.map, mapSize, mapIndex);
+        console.log("LEFT", leftOffset, ", map:", map, "mapsize", mapSize, "mapIndex:", mapIndex);
+        mapData.mapContainer.style.width = (containerWidthHeight[0] + leftOffset) + 'px';
         mapData.mapContainer.style.height = containerWidthHeight[1] + 'px';
 
     }, 0);
@@ -145,7 +147,7 @@ function CreateMap(map, parentModule, mapIndex) {
             .projection(d3Projection);
 
         // left offset (adjust first map size - use projection width for right map cutoff)
-        let leftOffset = m.GetProjectionCSSLeftOffset(map, mapSize, currentProjectionIndex);
+        let leftOffset = m.GetMapCSSLeftOffset(map, mapSize, currentProjectionIndex);
 
         // prepare relevant transformations 
         let transform;

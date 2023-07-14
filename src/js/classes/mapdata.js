@@ -7,6 +7,7 @@ import * as m from '../maps';
 import * as disp from '../utils/display';
 import * as math from '../utils/math';
 import * as e from '../utils/element'
+import { mapSize } from '../mapmaker';
 
 // see bottom for code examples
 
@@ -396,7 +397,9 @@ export class MapData {
     }
     /** Convenience function, uses {@link GetContainerXOffset} and adds 1 */
     ContainerGlobalToLocalX(xGlobal) {
-        return this.GetContainerXOffset(xGlobal) + 1;
+        let leftOffset = m.GetMapCSSLeftOffset(this.module.map, mapSize, this.index);
+        console.log("LeftOffset:", leftOffset);
+        return this.GetContainerXOffset(xGlobal) + 1 - leftOffset;
     }
     /** Convenience function, uses {@link GetContainerYOffset} and adds 1 */
     ContainerGlobalToLocalY(yGlobal) {

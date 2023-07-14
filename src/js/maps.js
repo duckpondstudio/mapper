@@ -127,7 +127,7 @@ export function GetMapContainerWidthHeight(map, mapSize, projectionsCount) {
     return containerWidthHeight;
 }
 
-export function GetProjectionCSSLeftOffset(map, mapSize, projectionIndex) {
+export function GetMapCSSLeftOffset(map, mapSize, projectionIndex) {
     // left offset only ever applies on leftmost projection, eg index 0 
     if (projectionIndex != 0) { return 0; }
     switch (ParseMap(map)) {
