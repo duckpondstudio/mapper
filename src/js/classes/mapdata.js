@@ -668,7 +668,7 @@ export class MapData {
                 }
             }
             // get projection-local XY
-            xy = projection.XYPointAtLatLongPoint(latLong, offsetProjection, constrainToContainer, true);
+            xy = projection.XYPointAtLatLongPoint(latLong, offsetProjection, !constrainToContainer, true);
         }
         // remap local-to-projection to global point using default projection
         console.log("PRE XY MAP PROJ LOCAL-TO-GLOBAL:", xy);
@@ -677,15 +677,9 @@ export class MapData {
 
 
         // lastly, failsafe ensure the returned point is within the bounds of this container
-        // if (constrainToContainer && !this.IsPointWithinContainer(xy, offsetProjection)) {
-        // console.log("XY:", xy);
-        // console.log("Point within F:", this.IsPointWithinContainer(xy, false));
-        // console.log("Point within T:", this.IsPointWithinContainer(xy, true));
         if (constrainToContainer) {
             // not within bounds, constrain within container 
-            console.log("PRE MAP CONSTRAINT:", xy, "offset:", (offsetProjection));
             xy = this.ConstrainPointWithinContainer(xy, offsetProjection);
-            console.log("POST MAP CONSTRAINT:", xy);
         }
         return math.RoundNumArray(xy);
     }

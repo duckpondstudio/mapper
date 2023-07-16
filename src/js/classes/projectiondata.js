@@ -270,8 +270,8 @@ export class ProjectionData {
      * @return {number[]} Two-value number[] array, where [0] = X and [1] = Y
      * @memberof ProjectionData
      */
-    XYPointAtLatLong(lat, long, offsetFromProjection = true, zeroOrigin = false) {
-        return this.XYPointAtLatLongPoint([lat, long], offsetFromProjection, zeroOrigin);
+    XYPointAtLatLong(lat, long, offsetFromProjection = true, constrainToContainer = false, zeroOrigin = false) {
+        return this.XYPointAtLatLongPoint([lat, long], offsetFromProjection, constrainToContainer, zeroOrigin);
     }
     /**
      * Gets the X and Y coordinate from the given [latitude, longitude] using this projection
@@ -287,7 +287,7 @@ export class ProjectionData {
      * @return {number[]} Two-value number[] array, where [0] = X and [1] = Y
      * @memberof ProjectionData
      */
-    XYPointAtLatLongPoint(latLong, offsetToProjection = false, constrainToContainer = true, zeroOrigin = false) {
+    XYPointAtLatLongPoint(latLong, offsetToProjection = false, constrainToContainer = false, zeroOrigin = false) {
 
         let fixedLatLong = latLong.slice();
         if (debugXYLatLong) { console.log('P' + this.index, "latlong input:", latLong, "offset:", offsetToProjection); }
@@ -299,16 +299,12 @@ export class ProjectionData {
         let xy = this.d3Projection(fixedLatLong.reverse());
         if (debugXYLatLong) { console.log('P' + this.index, "xy output:", xy); }
         let mapSize = this.GetContainerFullSize();
-        console.log("Mapsize:", mapSize);
-        // if (xy[0] < 0) { xy[0] = (xy[0] * -1) + mapSize[0]; }
-        // if (xy[1] < 0) { xy[1] = (xy[1] * -1) + mapSize[1]; }
         if (debugXYLatLong) { console.log('P' + this.index, "xy postMapSize output:", xy); }
         // let xy = this.projection(latLong.slice());
         xy = math.RoundNumArray(this.ApplySVGTransformOffsetsToPoint(xy, true));
         if (debugXYLatLong) { console.log('P' + this.index, "xy post svg:", xy); }
         if (offsetToProjection) {
             let origin = this.GetContainerFullOrigin();
-            // let origin = this.GetContainerOrigin();
             if (debugXYLatLong) { console.log('P' + this.index, 'move xy', xy, 'by origin', origin); }
             xy[0] += origin[0];
             xy[1] += origin[1];
@@ -317,9 +313,7 @@ export class ProjectionData {
         // if (constrainToContainer && !this.mapData.IsPointWithinContainer(xy, offsetToProjection)) {
         if (constrainToContainer) {
             // not within bounds, constrain within container 
-            console.log("PRE CONSTRAIN:", xy, "OFFSET:", offsetToProjection, "ZERO:", zeroOrigin);
-            // xy = this.ConstrainPointWithinContainer(xy, offsetToProjection, zeroOrigin);
-            console.log("POST CONSTRAIN:", xy);
+            xy = this.ConstrainPointWithinContainer(xy, offsetToProjection, zeroOrigin);
         }
         if (debugXYLatLong) { console.log('P' + this.index, "xy after constraint:", xy); }
 
