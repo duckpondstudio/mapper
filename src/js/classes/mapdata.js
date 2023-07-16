@@ -250,34 +250,6 @@ export class MapData {
         return false;
     }
 
-    /** Updates all rendered map dots
-     */
-    #UpdateDots() {
-
-        console.log("REMOVE ME");
-        return;
-
-        // iterate thru all projections 
-        this.projections.forEach(projection => {
-            let svg = projection.svg;
-
-            // check if dotGroup exists 
-            let dotGroup = svg.select('.dotGroup');
-            if (dotGroup.empty()) {
-                svg.append('g').attr('class', 'dotGroup').raise();
-                dotGroup = svg.select('.dotGroup');
-            } else {
-                // remove all current map dots 
-                svg.selectAll('.mapDot').remove();
-            }
-            //TODO Only render dots on THIS projection, or adjacent + within 2x dot size/radius of its projection's edge  
-            let dots = dotGroup.selectAll('circle')
-                .data(this.#mapDots)// data input line 
-                .enter();
-            CreateDot(dots, projection);
-        });
-    }
-
 
     GetContainerOrigin() {
         return [this.GetContainerOriginX(), this.GetContainerOriginY()];
