@@ -68,7 +68,6 @@ function CreateMap(map, parentModule, mapIndex) {
     }
 
     let totalMapsCount = m.GetMapProjectionsArray(parentModule.map).length;
-    
     let projections = m.GetMapProjectionsArray(map);
     let projectionsCount = projections.length;
     let projectionsLoading = 0;
@@ -92,7 +91,6 @@ function CreateMap(map, parentModule, mapIndex) {
         // assign size to mapContainer
         let leftOffset = m.GetMapCSSLeftOffset(parentModule.map, mapSize, mapIndex);
         let rightOffset = m.GetMapCSSRightOffset(parentModule.map, mapSize, totalMapsCount, mapIndex);
-        console.log("LEFT", leftOffset, ", map:", map, "mapsize", mapSize, "mapIndex:", mapIndex);
         mapData.mapContainer.style.width = (containerWidthHeight[0] + leftOffset + rightOffset) + 'px';
         mapData.mapContainer.style.height = containerWidthHeight[1] + 'px';
 

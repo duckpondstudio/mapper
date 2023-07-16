@@ -8,7 +8,7 @@ import * as e from '../utils/element';
 
 /** if true, fires a click event directly on the projection SVG, bypassing {@link baseinput} */
 const debugClickOnProjection = false;
-const debugXYLatLong = true;
+const debugXYLatLong = false;
 const debugSVGConversion = false;
 
 //TODO: move sizing logic (GetContainerSize, etc) into a parent class for both MapData and ProjectionData
@@ -145,7 +145,6 @@ export class ProjectionData {
         if (offsetToProjection) { x = this.GetContainerXOffset(x); y = this.GetContainerYOffset(y); }
         let origin = zeroOrigin ? [0, 0] : this.GetContainerOrigin();
         let extent = zeroOrigin ? size : this.GetContainerExtent();
-        console.log("Constrain, XY:", x, y, "ORIGIN:", origin, "EXTENT:", extent);
         // x coordinate
         if (size[0] == 0) {
             // zero width, x must match
@@ -300,7 +299,6 @@ export class ProjectionData {
         if (debugXYLatLong) { console.log('P' + this.index, "xy output:", xy); }
         let mapSize = this.GetContainerFullSize();
         if (debugXYLatLong) { console.log('P' + this.index, "xy postMapSize output:", xy); }
-        // let xy = this.projection(latLong.slice());
         xy = math.RoundNumArray(this.ApplySVGTransformOffsetsToPoint(xy, true));
         if (debugXYLatLong) { console.log('P' + this.index, "xy post svg:", xy); }
         if (offsetToProjection) {

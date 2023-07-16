@@ -139,7 +139,6 @@ export function GetMapCSSLeftOffset(map, mapSize, projectionIndex) {
 }
 export function GetMapCSSRightOffset(map, mapSize, projectionsCount, projectionIndex) {
     // right offset only ever applies on rightmost projection
-    console.log("Get right offset pCount", projectionsCount, "pIndex", projectionIndex);
     if (projectionIndex < projectionsCount - 1 || projectionsCount == 0) { return 0; }
     switch (ParseMap(map)) {
         case grieger:
@@ -226,8 +225,6 @@ export function GetProjectionFullRotation(map) {
             gamma = 225;
             break;
         case adams1_alt:
-            // phi = 135;
-            // gamma = 315;
             phi = 315;
             gamma = 45;
             break;
@@ -250,12 +247,8 @@ export function GetProjectionCenter(map) {
     switch (ParseMap(map)) {
         case adams1:
             return [0, 0];
-        // return [45, 0];
-        // return [0, 45];
         case adams2:
             return [0, 0];
-        // return [180, -45];
-        // return [-45, 180];
     }
     return [0, 0];
 }
