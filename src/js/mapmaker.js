@@ -178,7 +178,7 @@ function CreateMap(map, parentModule, mapIndex) {
         }
 
 
-        let svgContainerId = "map_" + map + "_projection_" + currentProjectionIndex;
+        let svgContainerId = "mod_" + parentModule.moduleId + "_map_" + map + "_projection_" + currentProjectionIndex;
 
         // temp solution to prevent map class rendering on specific map/projections 
         let svgClass = "map";
