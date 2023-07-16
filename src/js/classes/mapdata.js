@@ -373,14 +373,17 @@ export class MapData {
             x = origin[0];
         } else {
             // ensure within bounds 
-            let bugfix = this.index > 0 && x == origin[0];
+            let bugfix = x == origin[0];
             if (x < origin[0] || bugfix) {
-                if (this.index > 0) {
-                    // TODO: determine 1px offset bug on maps with index > 0
-                    // without this, clicking the 1px at the right creates an error
-                    if (x <= origin[0]) { x += size[0] * this.index; }
+                // without this, clicking the 1px at the right creates an error
+                if (x == origin[0]) {
+                    // x += size[0] * this.index;
+                    // attempted fix - seems not to like it, keeping for reference
+                    // however, keeping the while loop out of x == origin[0] looks good! 
                 }
-                while (x < origin[0]) { x += size[0]; }
+                else {
+                    while (x < origin[0]) { x += size[0]; }
+                }
             } else if (x > extent[0]) {
                 while (x > extent[0]) { x -= size[0]; }
             }
