@@ -127,7 +127,7 @@ export class MapData {
     }
     AddDotAtLatLong(lat, long, id = null, style = dotStyle.default) { return this.AddDotAtLatLongPoint([lat, long], id, style); }
     AddDotAtGlobalPoint(xyGlobal, id = null, style = dotStyle.default) {
-        
+
         this.AddDotAtLatLongPointMapRatioPoint(
             this.LatLongAtPoint(xyGlobal),
             this.GetPointRatio(xyGlobal, false), id, style);
@@ -282,7 +282,6 @@ export class MapData {
     /** Convenience function, uses {@link GetContainerXOffset} and adds 1 */
     ContainerGlobalToLocalX(xGlobal) {
         let leftOffset = m.GetMapCSSLeftOffset(this.module.map, mapSize, this.index);
-        console.log("LeftOffset:", leftOffset);
         return this.GetContainerXOffset(xGlobal) + 1 - leftOffset;
     }
     /** Convenience function, uses {@link GetContainerYOffset} and adds 1 */
@@ -368,53 +367,36 @@ export class MapData {
         if (offsetToProjection) { x = this.GetContainerXOffset(x); y = this.GetContainerYOffset(y); }
         let origin = zeroOrigin ? [0, 0] : this.GetContainerOrigin();
         let extent = zeroOrigin ? size : this.GetContainerExtent();
-        console.log("CONSTRAIN, x", x, "y", y, "offset", offsetToProjection, "zeroOri", zeroOrigin, ", size:", size, ", origin:", origin, ", extent:", extent)
         // x coordinate
-        console.log("updating X, x:", x, ", size:", size, ", origin:", origin, ", extent:", extent);
         if (size[0] == 0) {
             // zero width, x must match
             x = origin[0];
-            console.log("X0: ", x);
         } else {
             // ensure within bounds 
-            console.log("X1: ", x);
             let bugfix = this.index > 0 && x == origin[0];
             if (x < origin[0] || bugfix) {
-                console.log("X2A: ", x);
                 if (this.index > 0) {
                     // TODO: determine 1px offset bug on maps with index > 0
                     // without this, clicking the 1px at the right creates an error
                     if (x <= origin[0]) { x += size[0] * this.index; }
                 }
                 while (x < origin[0]) { x += size[0]; }
-                console.log("X2B: ", x);
             } else if (x > extent[0]) {
-                console.log("X3A: ", x);
                 while (x > extent[0]) { x -= size[0]; }
-                console.log("X3B: ", x);
             }
         }
-        console.log("X4: ", x);
         // y coordinate
-        console.log("updating Y, y:", y, ", size:", size, ", origin:", origin, ", extent:", extent);
         if (size[1] == 0) {
             // zero height, y must match
             y = origin[1];
-            console.log("Y0: ", y);
         } else {
             // ensure within bounds 
-            console.log("Y1: ", y);
             if (y < origin[1]) {
-                console.log("Y2A: ", y);
                 while (y < origin[1]) { y += size[1]; }
-                console.log("Y2B: ", y);
             } else if (y > extent[1]) {
-                console.log("Y3A: ", y);
                 while (y > extent[1]) { y -= size[1]; }
-                console.log("Y3B: ", y);
             }
         }
-        console.log("Y4: ", y);
         return [x, y];
     }
 
@@ -503,7 +485,6 @@ export class MapData {
         }
         // determine default projection index 
         // by default, use the middle projection (least likelihood of a point being out-of-container)
-        // let projID = this.projections.length <= 1 ? 0 : Math.floor(this.projections.length / 2);
         let defaultProjectionID = PPP;
         let projection = this.projections[defaultProjectionID];// [2]
         let xy = [0, 0];
@@ -513,9 +494,6 @@ export class MapData {
             if (debugXYLatLong) { console.log("processing avg latlong>xy across", this.projections.length, "projections"); }
             for (let i = 0; i < this.projections.length; i++) {
                 let projXY = this.projections[i].XYPointAtLatLongPoint(latLong, offsetProjection, constrainToContainer, true);
-                // console.log("Proj", i, "XYPointAtLatLong", projXY);
-                // remap local-to-projection point to global point
-                // projXY = this.projections[i].MapProjectionLocalPointToGlobalPoint(projXY);
                 let x = projXY[0];
                 let y = projXY[1];
                 if (i == 0) {
@@ -525,12 +503,10 @@ export class MapData {
                     xy[0] += x;
                     xy[1] += y;
                 }
-                console.log("avg project for p%i:", i, projXY, " | projected xy:", xy);
-            }
+                }
             xy[0] /= this.projections.length;
             xy[1] /= this.projections.length;
-            console.log("avg projected XY final:", xy);
-        } else {
+            } else {
             // NON-average, just use one projection
             // projection nullcheck 
             if (projection == null) {
@@ -554,11 +530,8 @@ export class MapData {
             xy = projection.XYPointAtLatLongPoint(latLong, offsetProjection, !constrainToContainer, true);
         }
         // remap local-to-projection to global point using default projection
-        console.log("PRE XY MAP PROJ LOCAL-TO-GLOBAL:", xy);
         xy = this.projections[defaultProjectionID].MapProjectionLocalPointToGlobalPoint(xy);
-        console.log("POST XY MAP PROJ LOCAL-TO-GLOBAL:", xy);
-
-
+      
         // lastly, failsafe ensure the returned point is within the bounds of this container
         if (constrainToContainer) {
             // not within bounds, constrain within container 
