@@ -15,6 +15,7 @@
     "devDependencies": {
         "@types/d3": "^7.4.0",
         "@types/d3-geo": "^3.0.3",
+        "clusterize.js": "^1.0.0",
         "css-loader": "^6.7.4",
         "d3": "^7.8.4",
         "d3-geo": "^3.1.0",
