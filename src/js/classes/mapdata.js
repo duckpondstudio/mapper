@@ -82,6 +82,11 @@ export class MapData {
         }
     }
 
+    /**
+     * Called when all projections in the module are successfully loaded 
+     */
+    AllProjectionsLoaded() { this.module.MapLoaded(this); }
+
     /** 
      * This {@link MapData} has been added to {@link document.body},
      * as called by its parent {@link Module}
@@ -506,10 +511,10 @@ export class MapData {
                     xy[0] += x;
                     xy[1] += y;
                 }
-                }
+            }
             xy[0] /= this.projections.length;
             xy[1] /= this.projections.length;
-            } else {
+        } else {
             // NON-average, just use one projection
             // projection nullcheck 
             if (projection == null) {
@@ -534,7 +539,7 @@ export class MapData {
         }
         // remap local-to-projection to global point using default projection
         xy = this.projections[defaultProjectionID].MapProjectionLocalPointToGlobalPoint(xy);
-      
+
         // lastly, failsafe ensure the returned point is within the bounds of this container
         if (constrainToContainer) {
             // not within bounds, constrain within container 

@@ -39,6 +39,7 @@ export function CreateMaps(module) {
     let map = module.map;
     let maps = m.GetMapProjectionsArray(map);
     let mapDatas = [];
+    let mapsToLoad = maps.length;
     for (let i = 0; i < maps.length; i++) {
         let mapData = CreateMap(maps[i], module, i);
         if (mapData == null) {
@@ -248,6 +249,7 @@ function CreateMap(map, parentModule, mapIndex) {
 
             if (loadedProjections == 0) {
                 // done loading projections! 
+                mapData.AllProjectionsLoaded();
             }
 
         }, 50);// nominal delay to ENSURE loadedProjections is incremented properly

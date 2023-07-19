@@ -20,7 +20,6 @@ export let modules = [];
  */
 export function CreateModule(map) {
     let module = new Module(map);
-    module.mapDatas = CreateMaps(module);
     modules.push(module);
     return module;
 }
@@ -85,6 +84,8 @@ export class Module {
     mapSubModule;
     infoSubModule;
 
+    #mapsToLoad = 0;
+
     constructor(map) {
 
         // metadata setup 
@@ -134,9 +135,14 @@ export class Module {
         this.infoSubModule = document.createElement('div');
         this.infoSubModule.setAttribute('class', 'submodule info');
         this.infoSubModule.setAttribute('id', 'mod' + this.moduleId + '_infoSub');
+        // generate it to avoid errors but check if actually adding to document 
         if (_spawnInfo) {
             this.container.appendChild(this.infoSubModule);
         }
+
+        // generate maps 
+        this.mapDatas = CreateMaps(this);
+        this.#mapsToLoad = this.mapDatas.length;
 
         // add module to document body 
         document.body.appendChild(this.container);
@@ -147,6 +153,28 @@ export class Module {
 
         // if lastModule is null, assign it to the first generated one 
         if (_currentModule == null) { this.Select(); }
+    }
+
+    /**
+     * Called when a map (and its given projections) have finished loading
+     * @param {MapData} mapData MapData that has finished loading 
+     */
+    MapLoaded(mapData) {
+        this.#mapsToLoad--;
+        if (this.#mapsToLoad == 0) {
+            this.AllMapsLoaded();
+        } else if (this.#mapsToLoad < 0) {
+            console.error("ERROR: MapLoaded called from mapData", mapData,
+                "even though all maps have already loaded. Investigate");
+        }
+    }
+
+    /**
+     * Called when all maps in the module are successfully loaded 
+     */
+    AllMapsLoaded() {
+        // generate data overlay
+        console.log('create data overlay');
     }
 
     /** This {@link Module} has been added to {@link document.body} */
