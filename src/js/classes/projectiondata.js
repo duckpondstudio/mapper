@@ -52,12 +52,7 @@ export class ProjectionData {
             });
         }
 
-        svg.append("circle")
-            .attr("cx", 0)
-            .attr("cy", 0)
-            .attr("r", 5)
-            .attr("fill", "red")
-            .attr("transform", `translate(${d3Projection([0, 0])})`);
+        // this.DemoDot(m.EXAMPLE_LAT_LONG_VIETNAM);
     }
 
     CalculateContainerRect() {
@@ -467,5 +462,18 @@ export class ProjectionData {
      */
     OutputDataAtPoint(xy, offsetToProjection = true) {
         this.OutputDataAtXY(xy[0], xy[1], offsetToProjection);
+    }
+
+    /**
+     * Draws a red dot on the D3 projection's SVG at the given latitude/longitude (default 0,0)
+     * @param {number} latLong [Lat,Long] to render dot at (default 0,0)
+     */
+    DemoDot(latLong = [0, 0]) {
+        let xy = this.XYPointAtLatLongPoint(latLong, false);
+        this.svg.append("circle")
+            .attr("cx", xy[0])
+            .attr("cy", xy[1])
+            .attr("r", 5)
+            .attr("fill", "red");
     }
 }
