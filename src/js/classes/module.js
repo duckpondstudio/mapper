@@ -4,7 +4,7 @@ import { ClickedModule } from "../input";
 import * as m from '../maps';
 const feather = require('feather-icons');
 
-const _spawnData = false;
+const _spawnInfo = false;
 
 /** {@link Module} most recently interacted with (can be null) */
 let _currentModule = null;
@@ -83,7 +83,7 @@ export class Module {
     titleBar;
 
     mapSubModule;
-    dataSubModule;
+    infoSubModule;
 
     constructor(map) {
 
@@ -126,15 +126,16 @@ export class Module {
         this.mapSubModule.setAttribute('class', 'submodule map');
         this.mapSubModule.style.width = mapSubModuleWidthHeight[0] + 'px';
         this.mapSubModule.style.height = mapSubModuleWidthHeight[1] + 'px';
-        this.mapSubModule.id = 'mod' + this.moduleId + '_mapCont';
+        // TODO: make submodule IDs accessible/easily readable for IDs of their children
+        this.mapSubModule.id = 'mod' + this.moduleId + '_mapSub';
         this.container.appendChild(this.mapSubModule);
 
-        // add data container
-        this.dataSubModule = document.createElement('div');
-        this.dataSubModule.setAttribute('class', 'submodule data');
-        this.dataSubModule.setAttribute('id', 'mod' + this.moduleId + '_dataCont');
-        if (_spawnData) {
-            this.container.appendChild(this.dataSubModule);
+        // add info container
+        this.infoSubModule = document.createElement('div');
+        this.infoSubModule.setAttribute('class', 'submodule info');
+        this.infoSubModule.setAttribute('id', 'mod' + this.moduleId + '_infoSub');
+        if (_spawnInfo) {
+            this.container.appendChild(this.infoSubModule);
         }
 
         // add module to document body 

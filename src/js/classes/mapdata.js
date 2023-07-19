@@ -75,7 +75,7 @@ export class MapData {
         // create output 
         this.#output = document.createElement('p');
         this.#output.setAttribute('id', 'mod' + module.moduleId + '_map' + 1 + '_output_' + this.index);
-        this.module.dataSubModule.appendChild(this.#output);
+        this.module.infoSubModule.appendChild(this.#output);
         this.OutputText("Output goes here");
         for (let i = 0; i < projections.length; i++) {
             this.AddProjection(projections[i]);
