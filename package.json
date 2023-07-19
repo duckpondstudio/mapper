@@ -25,6 +25,7 @@
         "html-webpack-plugin": "^5.5.1",
         "jquery": "^3.7.0",
         "json-loader": "^0.5.7",
+        "konva": "^9.2.0",
         "mini-css-extract-plugin": "^2.7.6",
         "postcss-loader": "^7.3.0",
         "sass-loader": "^13.2.2",
