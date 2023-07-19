@@ -73,12 +73,23 @@ export class Module {
 
     map;
     container;
+    /**
+     * Numeric ID value for this {@link Module}
+     * @type {Number}
+     * @see {@link ID} for getting a value to assign to DOM .id property
+     */
     moduleId;
 
-    /** 
+    /**
+     * Array of all {@link MapData} maps loaded into this module 
      * @type {MapData[]}
      * @memberof Module */
     mapDatas;
+    /**
+     * Canvas overlaid on all module maps for rendering data points
+     * @type {DataOverlay}
+     * @memberof Module
+     */
     dataOverlay;
 
     titleBar;
@@ -96,7 +107,7 @@ export class Module {
 
         // create container 
         this.container = document.createElement('div');
-        this.container.id = "mod" + this.moduleId + "_" + map;
+        this.container.id = this.ID();
         this.container.setAttribute('class', 'module background');
         // add selection event listener to container 
         this.container.addEventListener('click', mouseEvent => {
@@ -105,7 +116,7 @@ export class Module {
 
         // add titlebar to module 
         this.titleBar = document.createElement('div');
-        this.titleBar.id = "mod" + this.moduleId + "_titleBar";
+        this.titleBar.id = this.ID("titleBar");
         this.titleBar.setAttribute('class', 'module titleBar');
         this.container.appendChild(this.titleBar);
 
@@ -117,7 +128,7 @@ export class Module {
 
         // add title to titlebar
         let titleText = document.createElement("h1");
-        titleText.setAttribute('id', 'mod' + this.moduleId + '_titleText');
+        titleText.setAttribute('id', this.ID('titleText'));
         titleText.innerHTML = m.GetMapFullName(map);
         titleText.setAttribute('class', 'contents text');
         this.titleBar.appendChild(titleText);
@@ -129,14 +140,13 @@ export class Module {
         this.mapSubModule.setAttribute('class', 'submodule map');
         this.mapSubModule.style.width = mapSubModuleWidthHeight[0] + 'px';
         this.mapSubModule.style.height = mapSubModuleWidthHeight[1] + 'px';
-        // TODO: make submodule IDs accessible/easily readable for IDs of their children
-        this.mapSubModule.id = 'mod' + this.moduleId + '_mapSub';
+        this.mapSubModule.id = this.ID('mapSub');
         this.container.appendChild(this.mapSubModule);
 
         // add info container
         this.infoSubModule = document.createElement('div');
         this.infoSubModule.setAttribute('class', 'submodule info');
-        this.infoSubModule.setAttribute('id', 'mod' + this.moduleId + '_infoSub');
+        this.infoSubModule.setAttribute('id', this.ID('infoSub'));
         // generate it to avoid errors but check if actually adding to document 
         if (_spawnInfo) {
             this.container.appendChild(this.infoSubModule);
@@ -155,6 +165,25 @@ export class Module {
 
         // if lastModule is null, assign it to the first generated one 
         if (_currentModule == null) { this.Select(); }
+    }
+
+    ID(...suffixes) {
+        let id = "mod" + this.moduleId;
+        if (suffixes == null) {
+            return id;
+        }
+        for (let i = 0; i < suffixes.length; i++) {
+            // add suffix value 
+            if (i > 0 && typeof (suffixes[i] === 'number' &&
+                typeof (suffixes[i - 1] === 'string'))) {
+                // if a number is preceded by a string, don't prefix underscore 
+                id += suffixes[i];
+            }
+            else {
+                id += "_" + suffixes[i];
+            }
+        }
+        return id;
     }
 
     /**

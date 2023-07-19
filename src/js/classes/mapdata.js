@@ -1,7 +1,6 @@
 import { ClickedMap, cursor } from '../input';
 import { Module } from './module';
 import { MapDot, dotStyle } from './mapdot';
-import { CreateDot } from './mapdot';
 import { ProjectionData } from './projectiondata';
 import * as m from '../maps';
 import * as disp from '../utils/display';
@@ -38,7 +37,7 @@ export class MapData {
     /** Array of map dots to render @type {MapDot[]} @memberof MapData*/
     #mapDots = [];
     /** Paragraph used for basic MapData data output @type {HTMLParagraphElement} @memberof MapData*/
-    #output;
+    #infoOutput;
     /** Rect for the size of this MapData, auto-updated on adding {@link projections}.
      *  @see mapContainer
      *  @type {HTMLParagraphElement} @memberof MapData*/
@@ -57,7 +56,7 @@ export class MapData {
 
         // create projections container 
         this.mapContainer = document.createElement('div');
-        this.mapContainer.setAttribute('id', 'mod' + this.module.moduleId + '_mapContainer');
+        this.mapContainer.setAttribute('id', this.module.ID('mapContainer'));
         this.mapContainer.setAttribute('class', 'mapContainer');
         this.module.mapSubModule.appendChild(this.mapContainer);
         // add click event to container 
@@ -67,15 +66,16 @@ export class MapData {
 
         // create map canvas 
         this.mapCanvas = disp.CreateHDPICanvas();
-        this.mapCanvas.id = 'mod' + this.module.moduleId + '_mapCanvas';
+        this.mapCanvas.id = this.module.ID('mapCanvas', this.index);
         this.mapCanvas.style.position = 'absolute';
         this.mapContainer.appendChild(this.mapCanvas);
         this.ctx = this.mapCanvas.getContext('2d', { alpha: true });
 
         // create output 
-        this.#output = document.createElement('p');
-        this.#output.setAttribute('id', 'mod' + module.moduleId + '_map' + 1 + '_output_' + this.index);
-        this.module.infoSubModule.appendChild(this.#output);
+        // TODO: move this to info submodule 
+        this.#infoOutput = document.createElement('p');
+        this.#infoOutput.setAttribute('id', this.module.ID('map', this.index, 'info'));
+        this.module.infoSubModule.appendChild(this.#infoOutput);
         this.OutputText("Output goes here");
         for (let i = 0; i < projections.length; i++) {
             this.AddProjection(projections[i]);
@@ -666,15 +666,15 @@ export class MapData {
      */
     OutputText() {
         if (!arguments || arguments.length == 0) {
-            this.#output.innerHTML = "";
+            this.#infoOutput.innerHTML = "";
             return;
         }
         if (arguments.length == 1) {
-            this.#output.innerHTML = arguments[0];
+            this.#infoOutput.innerHTML = arguments[0];
         } else {
-            this.#output.innerHTML = "";
+            this.#infoOutput.innerHTML = "";
             for (let i = 0; i < arguments.length; i++) {
-                this.#output.innerHTML += arguments[i] + "<br>";
+                this.#infoOutput.innerHTML += arguments[i] + "<br>";
             }
         }
     }
