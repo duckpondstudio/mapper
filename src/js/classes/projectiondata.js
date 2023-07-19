@@ -7,7 +7,7 @@ import * as m from '../maps';
 import * as e from '../utils/element';
 
 /** if true, fires a click event directly on the projection SVG, bypassing {@link baseinput} */
-const debugClickOnProjection = false;
+const debugClickOnProjection = true;
 const debugXYLatLong = false;
 const debugSVGConversion = false;
 
@@ -40,7 +40,7 @@ export class ProjectionData {
         this.CalculateContainerRect();
         // add click event 
         this.svgContainer.addEventListener('click', mouseEvent => {
-            this.mapData.module.Select(); ClickedProjection(mouseEvent, this);
+            this.Select(); ClickedProjection(mouseEvent, this);
         });
         // check for debug on click functionality 
         if (debugClickOnProjection) {
@@ -64,6 +64,8 @@ export class ProjectionData {
      * as called by its parent {@link MapData}
      */
     AddedToDocumentBody() { }
+
+    Select() { this.mapData.Select(); }
 
     GetContainerOrigin() {
         let raw = this.GetContainerFullOrigin();

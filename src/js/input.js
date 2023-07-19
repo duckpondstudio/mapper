@@ -337,6 +337,7 @@ export function ClickedProjection(mouseEvent, projection) {
 /** Uses {@link ProjectionData}'s OutputDataAtPoint to display long/lat coordinate information at the cursor */
 function TestUpdateCursorCoordinates() {
     // check if the current module's mapData contains the cursor 
+    console.log("Test Update");
     if (current.map.IsPointWithinContainer(cursor.point)) {
         let projection = current.map.GetProjectionAtPoint(cursor.point);
         if (projection != null) {

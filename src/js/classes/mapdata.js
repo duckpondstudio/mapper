@@ -1,5 +1,5 @@
 import { ClickedMap, cursor } from '../input';
-import { Module } from './module';
+import { Module, current } from './module';
 import { MapDot, dotStyle } from './mapdot';
 import { ProjectionData } from './projectiondata';
 import * as m from '../maps';
@@ -36,8 +36,6 @@ export class MapData {
     projections = [];
     /** Array of map dots to render @type {MapDot[]} @memberof MapData*/
     #mapDots = [];
-    /** Paragraph used for basic MapData data output @type {HTMLParagraphElement} @memberof MapData*/
-    #infoOutput;
     /** Rect for the size of this MapData, auto-updated on adding {@link projections}.
      *  @see mapContainer
      *  @type {HTMLParagraphElement} @memberof MapData*/
@@ -61,7 +59,7 @@ export class MapData {
         this.module.mapSubModule.appendChild(this.mapContainer);
         // add click event to container 
         this.mapContainer.addEventListener('click', mouseEvent => {
-            this.module.Select(); ClickedMap(mouseEvent, this);
+            this.Select(); ClickedMap(mouseEvent, this);
         });
 
         // create map canvas 
@@ -72,11 +70,6 @@ export class MapData {
         this.ctx = this.mapCanvas.getContext('2d', { alpha: true });
 
         // create output 
-        // TODO: move this to info submodule 
-        this.#infoOutput = document.createElement('p');
-        this.#infoOutput.setAttribute('id', this.module.ID('map', this.index, 'info'));
-        this.module.infoSubModule.appendChild(this.#infoOutput);
-        this.OutputText("Output goes here");
         for (let i = 0; i < projections.length; i++) {
             this.AddProjection(projections[i]);
         }
@@ -98,6 +91,11 @@ export class MapData {
         projections.forEach(projection => {
             projection.AddedToDocumentBody();
         });
+    }
+
+    Select() {
+        this.module.Select();
+        current.map = this;
     }
 
     #UpdateSize() {
@@ -664,25 +662,14 @@ export class MapData {
      * @param {...string} string Line or lines of text to display. Leave empty to clear text
      * @memberof MapData
      */
-    OutputText() {
-        if (!arguments || arguments.length == 0) {
-            this.#infoOutput.innerHTML = "";
-            return;
-        }
-        if (arguments.length == 1) {
-            this.#infoOutput.innerHTML = arguments[0];
-        } else {
-            this.#infoOutput.innerHTML = "";
-            for (let i = 0; i < arguments.length; i++) {
-                this.#infoOutput.innerHTML += arguments[i] + "<br>";
-            }
-        }
+    OutputText(...text) {
+        this.module.OutputText(...text);
     }
     /** Clears output text data
      * @memberof MapData
      */
     ClearOutput() {
-        this.OutputText();
+        this.module.ClearOutput();
     }
 }
 

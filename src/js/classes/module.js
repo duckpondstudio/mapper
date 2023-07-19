@@ -6,10 +6,12 @@ import * as m from '../maps';
 import { GetBoundingGlobalRect } from "../utils/element";
 const feather = require('feather-icons');
 
-const _spawnInfo = false;
+const _spawnInfo = true;
 
 /** {@link Module} most recently interacted with (can be null) */
 let _currentModule = null;
+/** {@link MapData} most recently interacted with (can be null) */
+let _currentMap = null;
 
 /** Array containing all loaded {@link Module modules}
  * @type {Module[]} */
@@ -51,8 +53,10 @@ export function CurrentModule() {
  * @export
  * @return {Module} */
 export function CurrentMap() {
-    if (_currentModule == null) { return null; }
-    return _currentModule.mapData;
+    if (_currentMap == null) {
+        if (_currentModule != null) { _currentMap = _currentModule.mapDatas[0]; }
+    }
+    return _currentMap;
 }
 /** 
  * Gets currently active {@link Module module} and {@link MapData map}. 
@@ -65,6 +69,13 @@ export const current = {
     get module() { return CurrentModule(); },
     /** Currently active {@link MapData map} @type {MapData} */
     get map() { return CurrentMap(); },
+    set map(mapData) {
+        if (!mapData instanceof MapData) {
+            console.warn("current.map setter MUST be type MapData, cannot set to", mapData);
+            return;
+        }
+        _currentMap = mapData;
+    }
 }
 
 /**
@@ -97,6 +108,9 @@ export class Module {
 
     mapSubModule;
     infoSubModule;
+
+    /** Paragraph used for basic MapData data output @type {HTMLParagraphElement} @memberof MapData*/
+    #infoOutput;
 
     #mapsToLoad = 0;
 
@@ -148,6 +162,11 @@ export class Module {
         this.infoSubModule = document.createElement('div');
         this.infoSubModule.setAttribute('class', 'submodule info');
         this.infoSubModule.setAttribute('id', this.ID('infoSub'));
+        // info output text 
+        this.#infoOutput = document.createElement('p');
+        this.#infoOutput.setAttribute('id', this.ID('infoSub', 'output'));
+        this.infoSubModule.appendChild(this.#infoOutput);
+        this.OutputText("Output goes here");
         // generate it to avoid errors but check if actually adding to document 
         if (_spawnInfo) {
             this.container.appendChild(this.infoSubModule);
@@ -226,6 +245,34 @@ export class Module {
      */
     GetMapRect() {
         return GetBoundingGlobalRect(this.mapSubModule);
+    }
+
+
+
+    /**
+     * Write the given values (single var or array) as text in this map's output field
+     * @param {...string} string Line or lines of text to display. Leave empty to clear text
+     * @memberof MapData
+     */
+    OutputText(...text) {
+        if (!text || text.length == 0) {
+            this.#infoOutput.innerHTML = "";
+            return;
+        }
+        if (text.length == 1) {
+            this.#infoOutput.innerHTML = text[0];
+        } else {
+            this.#infoOutput.innerHTML = "";
+            for (let i = 0; i < text.length; i++) {
+                this.#infoOutput.innerHTML += text[i] + "<br>";
+            }
+        }
+    }
+    /** Clears output text data
+     * @memberof MapData
+     */
+    ClearOutput() {
+        this.OutputText();
     }
 
     /** @static Singleton counter for all instantiated modules
