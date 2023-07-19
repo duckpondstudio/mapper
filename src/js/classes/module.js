@@ -1,6 +1,7 @@
 import { MapData } from "./mapdata";
 import { CreateMaps, mapSize } from "../mapmaker";
 import { ClickedModule } from "../input";
+import { DataOverlay } from './dataoverlay';
 import * as m from '../maps';
 const feather = require('feather-icons');
 
@@ -78,6 +79,7 @@ export class Module {
      * @type {MapData[]}
      * @memberof Module */
     mapDatas;
+    dataOverlay;
 
     titleBar;
 
@@ -162,7 +164,7 @@ export class Module {
     MapLoaded(mapData) {
         this.#mapsToLoad--;
         if (this.#mapsToLoad == 0) {
-            this.AllMapsLoaded();
+            this.#AllMapsLoaded();
         } else if (this.#mapsToLoad < 0) {
             console.error("ERROR: MapLoaded called from mapData", mapData,
                 "even though all maps have already loaded. Investigate");
@@ -172,9 +174,9 @@ export class Module {
     /**
      * Called when all maps in the module are successfully loaded 
      */
-    AllMapsLoaded() {
+    #AllMapsLoaded() {
         // generate data overlay
-        console.log('create data overlay');
+        this.dataOverlay = new DataOverlay();
     }
 
     /** This {@link Module} has been added to {@link document.body} */
