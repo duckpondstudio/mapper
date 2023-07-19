@@ -3,6 +3,7 @@ import { CreateMaps, mapSize } from "../mapmaker";
 import { ClickedModule } from "../input";
 import { DataOverlay } from './dataoverlay';
 import * as m from '../maps';
+import { GetBoundingGlobalRect } from "../utils/element";
 const feather = require('feather-icons');
 
 const _spawnInfo = false;
@@ -205,7 +206,9 @@ export class Module {
      */
     #AllMapsLoaded() {
         // generate data overlay
-        this.dataOverlay = new DataOverlay();
+        this.dataOverlay = new DataOverlay(this);
+        this.mapSubModule.prepend(this.dataOverlay.div);
+        this.dataOverlay.AddedToDocumentBody();
     }
 
     /** This {@link Module} has been added to {@link document.body} */
@@ -214,6 +217,15 @@ export class Module {
     /** Sets this Module as {@link _currentModule}, the most recently active module */
     Select() {
         _currentModule = this;
+    }
+
+    /**
+     * Quick reference getter to the global rect for the map submodule 
+     * @see {@link GetBoundingGlobalRect}
+     * @returns {DOMRect}
+     */
+    GetMapRect() {
+        return GetBoundingGlobalRect(this.mapSubModule);
     }
 
     /** @static Singleton counter for all instantiated modules
