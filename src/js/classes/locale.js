@@ -82,4 +82,23 @@ export class Locale {
     set continent(continent) {
         this._continent = continent;
     }
+
+    static IsValidLatitude(latitude) {
+        if (latitude == null || typeof (latitude) != 'number' || Number.isNaN(latitude)) {
+            return false;
+        }
+        return latitude >= -90 && latitude <= 90;
+    }
+    static IsValidLongitude(longitude) {
+        if (longitude == null || typeof (longitude) != 'number' || Number.isNaN(longitude)) {
+            return false;
+        }
+        return longitude >= -180 && longitude <= 180;
+    }
+    static IsValidLatLong(latLong) {
+        if (latLong == null || !Array.isArray(latLong) || latLong.length != 2) {
+            return false;
+        }
+        return this.IsValidLatitude(latLong[0]) && this.IsValidLongitude(latLong[1]);
+    }
 }
