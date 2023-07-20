@@ -12,6 +12,8 @@ import { mapSize } from '../mapmaker';
 
 //TODO: move sizing logic (GetContainerSize, etc) into a parent class for both MapData and ProjectionData
 
+// TODO: rename all instances of "latLong" to "geoPoint"
+
 const devicePixelRatio = window.devicePixelRatio;
 
 const debugXYLatLong = true;
