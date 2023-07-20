@@ -28,10 +28,6 @@ export class MapData {
     index = -1;
     /** Div that contains all {@link projections} @type {HTMLDivElement} @memberof MapData*/
     mapContainer;
-    /** Canvas for containing dots/data rendered on top of map @type {HTMLCanvasElement} @memberof MapData */
-    mapCanvas;
-    /** 2D render context for {@link mapCanvas} @type {CanvasRenderingContext2D} @memberof MapData */
-    ctx;
     /** Array of projections loaded in this MapData @type {ProjectionData[]} @memberof MapData*/
     projections = [];
     /** Array of map dots to render @type {MapDot[]} @memberof MapData*/
@@ -62,13 +58,6 @@ export class MapData {
             this.Select(); ClickedMap(mouseEvent, this);
         });
 
-        // create map canvas 
-        this.mapCanvas = disp.CreateHDPICanvas();
-        this.mapCanvas.id = this.module.ID('mapCanvas', this.index);
-        this.mapCanvas.style.position = 'absolute';
-        this.mapContainer.appendChild(this.mapCanvas);
-        this.ctx = this.mapCanvas.getContext('2d', { alpha: true });
-
         // create output 
         for (let i = 0; i < projections.length; i++) {
             this.AddProjection(projections[i]);
@@ -85,8 +74,6 @@ export class MapData {
      * as called by its parent {@link Module}
      */
     AddedToDocumentBody() {
-        // prevent right-click directly on map overlay canvas 
-        this.mapCanvas.oncontextmenu = function (e) { e.stopPropagation(); }
         // propogate addedtodocumentbody method to all child projections 
         projections.forEach(projection => {
             projection.AddedToDocumentBody();
@@ -102,7 +89,6 @@ export class MapData {
         this.#containerRect = e.GetBoundingGlobalRect(this.mapContainer);
         let width = this.#containerRect.width;
         let height = this.#containerRect.height;
-        disp.SetHDPICanvasSize(this.mapCanvas, width, height);
     }
 
     /** Add the given ProjectionData as a child of this MapData 
@@ -117,10 +103,6 @@ export class MapData {
     AddDotAtLatLongPointMapRatioPoint(latLong, xyMapRatio, id = null, style = dotStyle.default) {
 
 
-        this.ctx.beginPath();
-        this.ctx.strokeStyle = 'purple';
-        this.ctx.arc(200, 100, 50, 0, math.pi2);
-        this.ctx.stroke();
     }
 
     AddDotAtLatLongPoint(latLong, id = null, style = dotStyle.default) {
@@ -216,18 +198,10 @@ export class MapData {
     }
 
     #RenderDot(mapDot, checkForDuplicateDot = true) {
-        console.log("r", 1);
         if (checkForDuplicateDot && this.#MapDotAlreadyExists(mapDot)) {
-            console.log("r", -1);
             return;
         }
-        console.log("r", 2);
         this.#mapDots.push(mapDot);
-        console.log("r", 3);
-        this.ctx.beginPath();
-        this.ctx.arc(200, 100, 50, 0, math.pi2);
-        this.ctx.stroke();
-        console.log("r", 4);
 
     }
     #RemoveDot(mapDot) {
