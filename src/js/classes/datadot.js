@@ -1,3 +1,4 @@
+import { Locale } from "./locale";
 
 /** 
  * A DataDot is one unit of data, containing at least a 
@@ -5,6 +6,12 @@
  * */
 export class DataDot {
 
+    /** 
+     * @type {Locale}
+     */
+    locale;
+
+    
     value;
 
 
