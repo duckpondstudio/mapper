@@ -95,20 +95,58 @@ export class Locale {
                                 this.#localeDataIteration = -1;
                                 return;
                             }
-                            // don't break, fall to default
+                        // don't break, fall to default
                         default:
                             // more values, iterate through all and parse them in order
                             // under the assumption that the order is:
                             // number (latitude), number (longitude), string (geoPoint), 
                             // continent, country, region, city 
+                            let foundLatitude = false;
+                            let foundLongitude = false;
                             for (let i = 0; i < localeData.length; i++) {
-
+                                // nullcheck 
+                                if (localeData[i] == null) { continue; }
+                                // check for lat/long/geoPoint
+                                if (!foundLatitude || !foundLongitude) {
+                                    if (!foundLatitude && !foundLongitude &&
+                                        IsValidGeoPoint(localeData[i])) {
+                                        this.geoPoint = localeData[i];
+                                        foundLatitude = foundLongitude = true;
+                                        continue;
+                                    }
+                                    if (!foundLatitude && IsValidLatitude(localeData[i])) {
+                                        this.latitude = localeData[i];
+                                        foundLatitude = true;
+                                        continue;
+                                    }
+                                    if (!foundLongitude && IsValidLongitude(localeData[i])) {
+                                        this.longitude = localeData[i];
+                                        foundLongitude = true;
+                                        continue;
+                                    }
+                                }
+                                // check for object/string parse info 
+                                switch (typeof (localeData[i])) {
+                                    case 'object':
+                                        this.ParseLocaleObject(localeData[i]);
+                                        continue;
+                                    case 'string':
+                                        this.ParseInputString(localeData[i]);
+                                        continue;
+                                    default:
+                                        if (debugInvalidLocaleData) {
+                                            console.warn("Cannot parse invalid localeData array value, continuing, value:",
+                                                localeData[i], 'index:', i, ', localeData:', localeData);
+                                        }
+                                        continue;
+                                }
                             }
                             break;
 
                     }
                 } else {
                     // localeData IS an object, IS NOT an Array 
+                    this.ParseLocaleObject(localeObject);
                 }
                 break;
             case 'string':
@@ -126,10 +164,10 @@ export class Locale {
     }
 
     ParseLocaleObject(localeObject) {
-
+        // TODO: parse object, check for GeoPoint, then potential key:value pairs 
     }
     ParseInputString(localeString) {
-
+        // TODO: parse string, checking for continent/country name
     }
 
 
