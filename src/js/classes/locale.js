@@ -4,6 +4,8 @@
  * @type {number} */
 const localeIterationMax = 10;
 
+let debugInvalidLocaleData = false;
+
 export class Locale {
 
     /** failsafe to ensure ParseLocaleData doesn't eternally loop
@@ -13,9 +15,9 @@ export class Locale {
     constructor(...localeData) {
 
 
-        this.lat = 0;
-        this.long = 0;
-        this.geoPoint = [lat, long];
+        this.latitude = 0;
+        this.longitude = 0;
+        this.geoPoint = [this.latitude, this.longitude];
 
         this.city = null;
         this.region = null;
@@ -52,6 +54,7 @@ export class Locale {
                 if (Array.isArray(localeData)) {
                     switch (localeData.length) {
                         case 0:
+                            // nothing, ignore 
                             break;
                         case 1:
                             switch (typeof (localeData[0])) {
@@ -66,11 +69,14 @@ export class Locale {
                                     break;
                                 default:
                                     // can't do anything with a single number, bool, etc, ignore 
+                                    if (debugInvalidLocaleData) {
+                                        console.warn("Cannot parse invalid localeData[0]:", localeData);
+                                    }
                                     break;
                             }
                             break;
                         case 2:
-                            // two values - assume lat/long if both numbers or number-parseable strings
+                            // two values - assume lat/long, aka geoPoint, if both numbers or number-parseable strings
                             // if not, cascade to default case 
                             let valid = true;
                             if (valid && typeof (localeData[0] == 'string')) {
@@ -83,16 +89,20 @@ export class Locale {
                                 if (parseLong != NaN) { localeData[1] = parseLong; }
                                 else { valid = false; }
                             }
-                            if (valid && typeof (localeData[0]) == 'number' &&
-                                typeof (localeData[1]) == 'number') {
-
+                            if (valid && IsValidLatLong(localeData)) {
+                                this.latitude = localeData[0];
+                                this.longitude = localeData[1];
+                                return;
                             }
-                            break;
+                            // don't break, fall to default
                         default:
                             // more values, iterate through all and parse them in order
                             // under the assumption that the order is:
                             // number (latitude), number (longitude), string (geoPoint), 
                             // continent, country, region, city 
+                            for (let i = 0; i < localeData.length; i++) {
+
+                            }
                             break;
 
                     }
@@ -105,25 +115,31 @@ export class Locale {
                 break;
             default:
                 // can't do anything with a single number, bool, etc, ignore 
+                if (debugInvalidLocaleData) {
+                    console.warn("Cannot parse invalid localeData:", localeData);
+                }
                 break;
         }
 
         this.#localeDataIteration = -1;
     }
 
+    ParseLocaleObject(localeObject) {
+
+    }
     ParseInputString(localeString) {
 
     }
 
 
-    get lat() {
-        return this._lat;
+    get latitude() {
+        return this._latitude;
     }
-    get long() {
-        return this._long;
+    get longitude() {
+        return this._longitude;
     }
     get geoPoint() {
-        return [this._lat, this._long];
+        return [this._latitude, this._longitude];
     }
     get city() {
         return this._city;
@@ -138,16 +154,16 @@ export class Locale {
         return this._continent;
     }
 
-    set lat(lat) {
-        this._lat = lat;
+    set latitude(latitude) {
+        this._latitude = latitude;
     }
-    set long(long) {
-        this._long = long;
+    set longitude(longitude) {
+        this._longitude = longitude;
     }
     set geoPoint(geoPoint) {
         if (geoPoint == null) {
-            this._lat = null;
-            this._long = null;
+            this._latitude = null;
+            this._longitude = null;
             return;
         }
         if (!Array.isArray(geoPoint)) {
@@ -166,8 +182,8 @@ export class Locale {
                 geoPoint, "values must be null or type number, returning");
             return;
         }
-        this._lat = geoPoint[0];
-        this._long = geoPoint[1];
+        this._latitude = geoPoint[0];
+        this._longitude = geoPoint[1];
     }
     set city(city) {
         this._city = city;
