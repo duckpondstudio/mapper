@@ -89,9 +89,10 @@ export class Locale {
                                 if (parseLong != NaN) { localeData[1] = parseLong; }
                                 else { valid = false; }
                             }
-                            if (valid && IsValidLatLong(localeData)) {
-                                this.latitude = localeData[0];
-                                this.longitude = localeData[1];
+                            if (valid && IsValidGeoPoint(localeData)) {
+                                // got it, assign geoPoint 
+                                this.geoPoint = localeData;
+                                this.#localeDataIteration = -1;
                                 return;
                             }
                             // don't break, fall to default
@@ -210,10 +211,10 @@ export class Locale {
         }
         return longitude >= -180 && longitude <= 180;
     }
-    static IsValidLatLong(latLong) {
-        if (latLong == null || !Array.isArray(latLong) || latLong.length != 2) {
+    static IsValidGeoPoint(geoPoint) {
+        if (geoPoint == null || !Array.isArray(geoPoint) || geoPoint.length != 2) {
             return false;
         }
-        return this.IsValidLatitude(latLong[0]) && this.IsValidLongitude(latLong[1]);
+        return this.IsValidLatitude(geoPoint[0]) && this.IsValidLongitude(geoPoint[1]);
     }
 }
