@@ -19,7 +19,7 @@ const delimiters = [
 const terms = [
 
     ['latitude',
-        // plural/adjective
+        // plural/adjectives
         [
             'latitudes', 'latitudinal'
         ],
@@ -34,7 +34,7 @@ const terms = [
         ]],
 
     ['longitude',
-        // plural/adjective
+        // plural/adjectives
         [
             'longitudes', 'longitudinal'
         ],
@@ -50,67 +50,91 @@ const terms = [
         ]],
 
     ['coordinate',
+        // plural/adjectives
+        [
+            'coordinates', 'coords', 'orindates', 'ords'
+        ],
         // common alt names 
         [
+            'coord', 'ord', 'co'
         ],
         // common typos 
         [
+            'cordinate', 'cordinates', 'coordanate', 'coordanats',
+            'coordinats', 'cords'
         ]],
 
     ['geopoint',
+        // plural/adjectives
+        [
+            'geopoints', 'gpts'
+        ],
         // common alt names 
         [
+            'geopt', 'gpt'
         ],
         // common typos 
         [
+            'geopont', 'gpoint', 'geopint', 'gopoint', 'gopint'
         ]],
 
     ['continent',
+        // plural/adjectives
+        [
+            'continents'
+        ],
         // common alt names 
         [
+            'cont', 'conts', 'cnts'
         ],
         // common typos 
         [
+            'continant', 'continants', 'contenant', 'contenint'
         ]],
 
     ['country',
+        // plural/adjectives
+        [
+            'countries'
+        ],
         // common alt names 
         [
+            'cntr', 'ctry', 'co'
         ],
         // common typos 
         [
-        ]],
-
-    ['city',
-        // common alt names 
-        [
-        ],
-        // common typos 
-        [
-        ]],
-
-    ['town',
-        // common alt names 
-        [
-        ],
-        // common typos 
-        [
+            'countrys', 'contry', 'cuntry', 'contries', 'countreis'
         ]],
 
     ['region',
+        // plural/adjectives
+        [
+            'regions', 'states', 'provinces', 'prefectures', 'territories',
+            'districts', 'divisions', 'divs'
+        ],
         // common alt names 
         [
+            'state', 'province', 'prov', 'admin', 'prefecture', 'pref', 'territory',
+            'district', 'division', 'div'
         ],
         // common typos 
         [
+            'regin', 'provinse', 'prv', 'prefecshure', 'teritory',
         ]],
 
-    ['name',
+    ['city',
+        // plural/adjectives
+        [
+            'cities', 'town', 'municipalities'
+        ],
         // common alt names 
         [
+            'town', 'municipality', 'municipal', 'capital',
+            'metropolis', 'settlement', 'place', 'location', 'locale'
         ],
         // common typos 
         [
+            'citys', 'citi', 'towne', 'citie'
         ]],
 
 ];
@@ -123,7 +147,5 @@ const terms = [
 // geopoint
 // continent
 // country
-// city
-// town
 // region
-// name
+// city
