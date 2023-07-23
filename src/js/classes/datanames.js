@@ -232,8 +232,8 @@ const terms = [
         ],
         // common alt names 
         [
-            'coord', 'crds', 'cds',
-            'co-ord', 'co-ordinate',
+            'coord', 'crds', 'cds', 'crdnt',
+            'co-ord', 'co-ordinate', 'crdt',
             'co_ord', 'co_ordinate',
         ],
         // common typos 
@@ -252,7 +252,7 @@ const terms = [
             // note: we don't want to directly search for "point"
             // as that'll often be used for other things in datasets. 
             // the "geo" prefix is important
-            'geopt', 'gpt', 'geo point', 'geo-point', 'geo_point'
+            'geopt', 'gpt', 'geo point', 'geo-point', 'geo_point',
         ],
         // common typos 
         [
