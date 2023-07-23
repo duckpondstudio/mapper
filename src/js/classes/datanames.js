@@ -1,4 +1,37 @@
 
+
+/**
+ * 
+ * @param {string} inputString 
+ * @returns {string}
+ */
+export function GetTerm(inputString) {
+
+    // nullcheck + trim + tolowercase
+    if (inputString == null) { return null; }
+    inputString = inputString.trim().toLowerCase();
+
+    // first, quick check to see if it directly matches any terms 
+    terms.forEach(term => {
+        let termName = term[0];
+        if (termName.toLowerCase() == inputString) { return termName; }
+        term[1].forEach(plural => {
+            if (plural == inputString) { return termName; }
+        });
+        term[2].forEach(altName => {
+            if (altName == inputString) { return termName; }
+        });
+        term[3].forEach(typo => {
+            if (typo == inputString) { return termName; }
+        });
+    });
+
+    // could not find valid comparison 
+    return null;
+
+}
+
+
 /**
  * Potential delimiters found in names of {@link terms} to search
  */
@@ -10,7 +43,8 @@ const delimiters = [
  * Common terms found in data spreadsheets, typically column names 
  * @example terms[a][x]
  *  - a: term index, iterate through for all terms  
- *  - x = 0: string, name of the term, eg "latitude"
+ *  - x = 0: string, name of the term, eg "Latitude"
+ *  (Note that x[0] is NOT lowercase, and for comparison, should be made so)
  *  - x = 1: string[], plural/adjectives for term, eg "[latitudinal]"
  *  - x = 2: string[], common alt names for term, eg "[lat, lt]"
  *  - x = 3: string[], common typos for term, eg ["lattitude"]
@@ -18,7 +52,7 @@ const delimiters = [
  */
 const terms = [
 
-    ['latitude',
+    ['Latitude',
         // plural/adjectives
         [
             'latitudes', 'latitudinal'
@@ -33,7 +67,7 @@ const terms = [
             'lattittude', 'latitudal',
         ]],
 
-    ['longitude',
+    ['Longitude',
         // plural/adjectives
         [
             'longitudes', 'longitudinal'
@@ -49,14 +83,14 @@ const terms = [
             'longitute', 'longidude', 'longittude', 'longitudal'
         ]],
 
-    ['coordinate',
+    ['Coordinate',
         // plural/adjectives
         [
             'coordinates', 'coords', 'orindates', 'ords'
         ],
         // common alt names 
         [
-            'coord', 'ord', 'co'
+            'coord', 'co', 'ord', 'crds', 'cds'
         ],
         // common typos 
         [
@@ -64,13 +98,16 @@ const terms = [
             'coordinats', 'cords'
         ]],
 
-    ['geopoint',
+    ['GeoPoint',
         // plural/adjectives
         [
             'geopoints', 'gpts'
         ],
         // common alt names 
         [
+            // note: we don't want to directly search for "point"
+            // as that'll often be used for other things in datasets. 
+            // the "geo" prefix is important
             'geopt', 'gpt'
         ],
         // common typos 
@@ -78,7 +115,7 @@ const terms = [
             'geopont', 'gpoint', 'geopint', 'gopoint', 'gopint'
         ]],
 
-    ['continent',
+    ['Continent',
         // plural/adjectives
         [
             'continents'
@@ -92,7 +129,7 @@ const terms = [
             'continant', 'continants', 'contenant', 'contenint'
         ]],
 
-    ['country',
+    ['Country',
         // plural/adjectives
         [
             'countries'
@@ -106,7 +143,7 @@ const terms = [
             'countrys', 'contry', 'cuntry', 'contries', 'countreis'
         ]],
 
-    ['region',
+    ['Region',
         // plural/adjectives
         [
             'regions', 'states', 'provinces', 'prefectures', 'territories',
@@ -114,15 +151,16 @@ const terms = [
         ],
         // common alt names 
         [
-            'state', 'province', 'prov', 'admin', 'prefecture', 'pref', 'territory',
-            'district', 'division', 'div'
+            'state', 'province', 'prov', 'prv', 'administrative', 'admin',
+            'prefecture', 'pref', 'territory', 'district', 'division', 'div'
         ],
         // common typos 
         [
-            'regin', 'provinse', 'prv', 'prefecshure', 'teritory',
+            'regin', 'provinse', 'prv', 'prefecshure',
+            'teritory', 'territtory', 'terittory'
         ]],
 
-    ['city',
+    ['City',
         // plural/adjectives
         [
             'cities', 'town', 'municipalities'
