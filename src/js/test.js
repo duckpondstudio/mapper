@@ -1,3 +1,4 @@
+import { GetTerm } from "./classes/datanames";
 import { MapData } from "./classes/mapdata";
 import { Module, current } from './classes/module';
 import * as m from "./maps";
@@ -21,35 +22,68 @@ export function NumericTest(num) {
     switch (num) {
 
         case 1:
+
+            const terms = [
+
+                '',
+                'ioghweoh',
+                'butts',
+                'longitude',
+                'latitude',
+                'langidude',
+                'contnigt',
+                'town',
+                'city',
+                'gpt',
+                'goipont',
+                'crdnt',
+                'LATLONG',
+                'citys',
+                'township',
+                'country',
+                'co_ordinate',
+                'coord-inate',
+                'this sucks',
+                'this rules',
+
+
+            ];
+            
+            for (let i = 0; i < terms.length; i++) {
+
+                console.log("Term:", terms[i], "result:", GetTerm(terms[i]));
+
+            }
+            
             break;
-        
+
         case 2:
             break;
-        
+
         case 3:
             break;
-        
+
         case 4:
             break;
-        
+
         case 5:
             break;
-        
+
         case 6:
             break;
-        
+
         case 7:
             break;
-        
+
         case 8:
             break;
-        
+
         case 9:
             break;
-        
+
         case 0:
             break;
-        
+
     }
     console.groupEnd("Numeric Test " + num);
 }
