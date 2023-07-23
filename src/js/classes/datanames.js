@@ -130,15 +130,33 @@ function GetTermAndCoefficient(inputString) {
         }
         sortedTerms.sort((a, b) => b[1] - a[1]);
 
-        let maxTermCount = sortedTerms[0][1];
-
         // drop unused terms, only keep maximally appearing terms 
-        mostAccurate.termIDs = [sortedTerms[0][0]];
+        let maxTermCount = sortedTerms[0][1];
+        let validTerms = [];
+        for (let i = 0; i < sortedTerms.length; i++) {
+            if (sortedTerms[i][1] == maxTermCount) {
+                validTerms.push(sortedTerms[i][0]);
+            } else {
+                break;
+            }
+        }
+
+        // cull invalid terms from mostAccurate.termIDs
+        let newTermIDs = [];
+        for (let i = 0; i < mostAccurate.termIDs.length; i++) {
+            if (validTerms.includes(mostAccurate.termIDs[i].termName)) {
+                newTermIDs.push(mostAccurate.termIDs[i]);
+            }
+        }
+        mostAccurate.termIDs = newTermIDs;
+
+        // only include terms that equivalently appear max number of times
         for (let i = 1; i < sortedTerms.length; i++) {
             if (sortedTerms[i][1] == maxTermCount &&
                 !mostAccurate.termIDs.includes(sortedTerms[i][0])) {
                 mostAccurate.termIDs.push(sortedTerms[i][0]);
             } else {
+                // may as well break out as soon as we drop below the max
                 break;
             }
         }
