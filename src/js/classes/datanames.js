@@ -1,8 +1,7 @@
 import { diceCoefficient } from "dice-coefficient";
 
-const coeffBoundAccurate = 0.9;
-const coeffBoundLikely = 0.8;
-const coeffBoundPossible = 0.6;
+const coeffBoundAccurate = 0.92;
+const coeffBoundProbable = 0.7;
 
 /**
  * Takes an input string, 
@@ -32,7 +31,7 @@ export function GetTerm(inputString) {
         });
     });
 
-    // no quick match found, use dice coefficient
+    // no quick match found, use dice coefficient 
     let coeff = GetTermAndCoefficient(inputString);
 
     if (coeff.accuracy >= coeffBoundAccurate) {
@@ -43,18 +42,88 @@ export function GetTerm(inputString) {
     // check for delimiters
     if (delimiters.test(inputString)) {
         // at least one delimiter found - test as array 
+        let results = [coeff];
+        inputString.split(delimiters).forEach(splitString => {
+            if (splitString === null ||
+                typeof splitString !== 'string' ||
+                splitString.trim().length === 0) {
+                // empty/invalid value, do nothing 
+            } else {
+                // found delim values 
+                results.push(GetTermAndCoefficient(splitString));
+            }
+        });
+        // check if we actually got new values 
+        if (results.length > 1) {
+            // found multiple terms, sort by accuracy 
+            // TODO: low-pri, filter results by accuracy (accurate/probable)
+            results.sort((a, b) => b.accuracy - a.accuracy);
+            if (results[0].accuracy >= coeffBoundProbable) {
+                return results[0].termName;
+            }
+        } else {
+            // didn't get new values after checking delims,
+            // just return initial term if probably 
+            if (coeff.accuracy >= coeffBoundProbable) {
+                return coeff.termName;
+            }
+        }
+    } else {
+        // no delimiters found, return term if probable  
+        if (coeff.accuracy >= coeffBoundProbable) {
+            return coeff.termName;
+        }
     }
 
-    // could not find valid comparison 
+    // could not find reasonably valid comparison, returning null 
     return null;
 
 }
 
 function GetTermAndCoefficient(inputString) {
-    // assume inputString is valid/nonnull, per checks in GetTerm 
-    
+    // assume inputString is valid/nonnull, per checks in GetTerm
+
+    let mostAccurate = [
+        {
+            termName: null,
+            accuracy: -1
+        }
+    ];
+
+    // first, quick check to see if it directly matches any terms 
+    terms.forEach(term => {
+
+
+        // check direct name (note: diceCoefficient is case insensitive)
+        let coefficient = diceCoefficient(term[0], inputString);
+
+        // check plurals 
+        // check common alt names 
+        // check typos 
+
+        let termName = term[0];
+        if (termName.toLowerCase() == inputString) { return termName; }
+        term[1].forEach(plural => {
+            if (plural == inputString) { return termName; }
+        });
+        term[2].forEach(altName => {
+            if (altName == inputString) { return termName; }
+        });
+        term[3].forEach(typo => {
+            if (typo == inputString) { return termName; }
+        });
+    });
+
     // TODO: integrate n-grams for performance (see https://github.com/words/n-gram)
-    
+
+}
+
+function CompareAccuracy(mostAccurate, newTerm, inputString) {
+    let accuracy = diceCoefficient(newTerm, inputString);
+    if (accuracy >= mostAccurate) {
+        return accuracy;
+    }
+    return -1;
 }
 
 
