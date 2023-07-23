@@ -1,15 +1,21 @@
+import { diceCoefficient } from "dice-coefficient";
 
+const coeffBoundAccurate = 0.9;
+const coeffBoundLikely = 0.8;
+const coeffBoundPossible = 0.6;
 
 /**
- * 
+ * Takes an input string, 
  * @param {string} inputString 
- * @returns {string}
+ * @returns {string} Matching term if found. Null if no reasonable match found (or invalid)
  */
 export function GetTerm(inputString) {
 
     // nullcheck + trim + tolowercase
-    if (inputString == null) { return null; }
-    inputString = inputString.trim().toLowerCase();
+    if (inputString === null || typeof inputString !== 'string') { return null; }
+    inputString = inputString.trim();
+    if (inputString.length === 0) { return null; }
+    inputString = inputString.toLowerCase();
 
     // first, quick check to see if it directly matches any terms 
     terms.forEach(term => {
@@ -26,18 +32,36 @@ export function GetTerm(inputString) {
         });
     });
 
+    // no quick match found, use dice coefficient
+    let coeff = GetTermAndCoefficient(inputString);
+
+    if (coeff.accuracy >= coeffBoundAccurate) {
+        // found an accurate term, return it 
+        return coeff.termName;
+    }
+
+    // check for delimiters
+    if (delimiters.test(inputString)) {
+        // at least one delimiter found - test as array 
+    }
+
     // could not find valid comparison 
     return null;
 
 }
 
+function GetTermAndCoefficient(inputString) {
+    // assume inputString is valid/nonnull, per checks in GetTerm 
+    
+    // TODO: integrate n-grams for performance (see https://github.com/words/n-gram)
+    
+}
+
 
 /**
- * Potential delimiters found in names of {@link terms} to search
+ * Potential delimiters found in names of {@link terms} to search, using regex
  */
-const delimiters = [
-    ' ', '-', '_', ',', '.', ';', '/', '\\'
-];
+const delimiters = /[\s\-_,.;+\/\\]+/;
 
 /**
  * Common terms found in data spreadsheets, typically column names 
@@ -86,16 +110,20 @@ const terms = [
     ['Coordinate',
         // plural/adjectives
         [
-            'coordinates', 'coords', 'orindates', 'ords'
+            'coordinates', 'coords',
+            'co-ordinates', 'co-ords',
+            'co_ordinates', 'co_ords',
         ],
         // common alt names 
         [
-            'coord', 'co', 'ord', 'crds', 'cds'
+            'coord', 'crds', 'cds',
+            'co-ord', 'co-ordinate',
+            'co_ord', 'co_ordinate',
         ],
         // common typos 
         [
             'cordinate', 'cordinates', 'coordanate', 'coordanats',
-            'coordinats', 'cords'
+            'coordinats', 'cords', 'ordinates'
         ]],
 
     ['GeoPoint',
@@ -108,7 +136,7 @@ const terms = [
             // note: we don't want to directly search for "point"
             // as that'll often be used for other things in datasets. 
             // the "geo" prefix is important
-            'geopt', 'gpt'
+            'geopt', 'gpt', 'geo point', 'geo-point', 'geo_point'
         ],
         // common typos 
         [
