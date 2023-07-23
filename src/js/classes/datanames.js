@@ -405,6 +405,25 @@ const terms = [
         [
         ]],
 
+
+    /* TEMPLATE 
+
+    ['Term',
+        // plural/adjectives
+        [
+            'terms',
+        ],
+        // common alt names 
+        [
+            'alternative',
+        ],
+        // common typos 
+        [
+            'trem',
+        ]],
+
+    /**/
+
 ];
 
 /**
