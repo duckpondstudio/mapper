@@ -368,6 +368,43 @@ const terms = [
             'citys', 'citi', 'towne', 'citie'
         ]],
 
+
+    ['Latitude/Longitude',
+        // plural/adjectives
+        [
+            'latitude/longitudes', 'lat/longitudes', 'lat/longs',
+            'latitude-longitudes', 'lat-longitudes', 'lat-longs',
+            'latitude_longitudes', 'lat_longitudes', 'lat_longs',
+        ],
+        // common alt names 
+        [
+            'latitude/longitude', 'lat/longitude', 'lat/long',
+            'latitude-longitude', 'lat-longitude', 'lat-long',
+            'latitude_longitude', 'lat_longitude', 'lat_long',
+            'latitudelongitude', 'latlongitude', 'latlong'
+        ],
+        // common typos 
+        [
+        ]],
+
+    ['Longitude/Latitude',
+        // plural/adjectives
+        [
+            'longitude/latitudes', 'long/latitudes', 'long/lats',
+            'longitude-latitudes', 'long-latitudes', 'long-lats',
+            'longitude_latitudes', 'long_latitudes', 'long_lats',
+        ],
+        // common alt names 
+        [
+            'longitude/latitude', 'long/latitude', 'long/lat',
+            'longitude-latitude', 'long-latitude', 'long-lat',
+            'longitude_latitude', 'long_latitude', 'long_lat',
+            'longitudelatitude', 'longlatitude', 'longlat'
+        ],
+        // common typos 
+        [
+        ]],
+
 ];
 
 /**
