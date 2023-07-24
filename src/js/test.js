@@ -23,8 +23,14 @@ export function NumericTest(num) {
 
         case 1:
 
-            const terms = [
+            break;
 
+        case 2:
+            break;
+
+        case 3:
+            // check datanames.GetTerms against a bunch of potential inputs 
+            const terms = [
                 '',
                 'ioghweoh',
                 'butts',
@@ -50,22 +56,10 @@ export function NumericTest(num) {
                 'coord-inate',
                 'this sucks',
                 'this rules',
-
-
             ];
-            
             for (let i = 0; i < terms.length; i++) {
-
                 console.log("Term:", terms[i], "result:", GetTerm(terms[i]));
-
             }
-            
-            break;
-
-        case 2:
-            break;
-
-        case 3:
             break;
 
         case 4:
