@@ -2,6 +2,7 @@ import { GetTerm } from "./classes/datanames";
 import { MapData } from "./classes/mapdata";
 import { Module, current } from './classes/module';
 import * as m from "./maps";
+import { Test } from "./utils/color";
 
 // Default testkey: t           ----------------- SHIFT + T + Num
 
@@ -22,7 +23,7 @@ export function NumericTest(num) {
     switch (num) {
 
         case 1:
-
+            Test();
             break;
 
         case 2:
