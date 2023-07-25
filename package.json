@@ -37,6 +37,6 @@
         "webpack-dev-server": "^4.15.0"
     },
     "dependencies": {
-        "color": "^4.2.3"
+        "javascript-color-gradient": "^2.4.4"
     }
 }
