@@ -105,6 +105,7 @@ export class Module {
     dataOverlay;
 
     titleBar;
+    #titleText;
 
     mapSubModule;
     infoSubModule;
@@ -142,11 +143,11 @@ export class Module {
         this.titleBar.appendChild(icon);
 
         // add title to titlebar
-        let titleText = document.createElement("h1");
-        titleText.setAttribute('id', this.ID('titleText'));
-        titleText.innerHTML = m.GetMapFullName(map);
-        titleText.setAttribute('class', 'contents text');
-        this.titleBar.appendChild(titleText);
+        this.#titleText = document.createElement("h1");
+        this.#titleText.id = this.ID("titleBar_Text");
+        this.#titleText.setAttribute('class', 'contents text');
+        this.titleBar.appendChild(this.#titleText);
+        this.SetTitle(m.GetMapFullName(map));
 
         // add map submodule 
         let mapsCount = m.GetMapProjectionsArray(map).length;
@@ -157,6 +158,10 @@ export class Module {
         this.mapSubModule.style.height = mapSubModuleWidthHeight[1] + 'px';
         this.mapSubModule.id = this.ID('mapSub');
         this.container.appendChild(this.mapSubModule);
+
+        // generate maps 
+        this.mapDatas = CreateMaps(this);
+        this.#mapsToLoad = this.mapDatas.length;
 
         // add info container
         this.infoSubModule = document.createElement('div');
@@ -172,10 +177,6 @@ export class Module {
             this.container.appendChild(this.infoSubModule);
         }
 
-        // generate maps 
-        this.mapDatas = CreateMaps(this);
-        this.#mapsToLoad = this.mapDatas.length;
-
         // add module to document body 
         document.body.appendChild(this.container);
         this.AddedToDocumentBody();
@@ -185,6 +186,10 @@ export class Module {
 
         // if lastModule is null, assign it to the first generated one 
         if (_currentModule == null) { this.Select(); }
+    }
+
+    SetTitle(titleText) {
+        this.#titleText.innerHTML = titleText;
     }
 
     ID(...suffixes) {

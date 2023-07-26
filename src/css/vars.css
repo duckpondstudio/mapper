@@ -21,7 +21,7 @@
     
     --color-shadow: rgba(69, 42, 100, 0.1);
     
-    --color-window-border: rgba(213, 25, 69, 0.169);
+    --color-window-border: rgba(213, 25, 69, 0.1);
     --color-window-background-solid: rgb(255, 231, 231);
     --color-window-background-gradient-1: rgb(255, 231, 231);
     --color-window-background-gradient-2: rgb(255, 218, 210);
@@ -36,7 +36,7 @@
     --color-map-water-fill: rgb(213, 255, 232);
     --color-map-water-stroke: rgb(213, 255, 232);
 
-    --appearance-window-border-radius:6px 50px 2px 2px;
+    --appearance-window-border-radius:6px 6px 2px 2px;
 
     --appearance-map-border-radius: 5px 8px 2px 2px;
 

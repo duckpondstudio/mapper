@@ -12,5 +12,5 @@ window.addEventListener('load', function () {
     // TODO: very buggy rendering with non-square projections
     // CreateModule(m.equirectangular);
     
-    DemoUIObject('gradient');
+    // DemoUIObject('gradient');
 });
