@@ -75,7 +75,7 @@ function CreateMap(map, parentModule, mapIndex) {
     let loadedProjections = 0;
 
     let mapData = new MapData(
-        parentModule, mapIndex
+        parentModule, mapIndex, totalMapsCount
     );
 
     // generate projections 

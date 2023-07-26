@@ -72,8 +72,7 @@ h1 {
     /* outline-style: solid; */
     overflow: hidden;
     white-space: nowrap;
-    border-radius: 0px;
-    /* border-radius: var(--appearance-map-border-radius); */
+    /* border-radius: 0px; */
     filter: drop-shadow(var(--appearance-shadow-x) var(--appearance-shadow-y) var(--appearance-shadow-blur) var(--color-shadow));
     
    -webkit-user-drag: none;
@@ -82,6 +81,16 @@ h1 {
    -o-user-drag: none;
    /* "user-drag" seems to be an unknown property is VSCode - comment out unless needed later */
     /* user-drag: none; */
+}
+
+.mapContainer.first {
+    border-radius: var(--appearance-map-border-radius-first); 
+}
+.mapContainer.last {
+    border-radius: var(--appearance-map-border-radius-last);
+}
+.mapContainer.single {
+    border-radius: var(--appearance-map-border-radius);
 }
 
 .mapContainer .map {

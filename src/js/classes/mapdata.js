@@ -45,7 +45,7 @@ export class MapData {
      *  Can also call {@link AddProjection} at any time.
      *  @memberof MapData */
     constructor(
-        module, index, projections = []) {
+        module, index, totalMaps, projections = []) {
         this.map = module.map;
         this.module = module;
         this.index = index;
@@ -53,7 +53,17 @@ export class MapData {
         // create projections container 
         this.mapContainer = document.createElement('div');
         this.mapContainer.setAttribute('id', this.module.ID('mapContainer'));
-        this.mapContainer.setAttribute('class', 'mapContainer');
+        // determine class via number (first/last/both) (border rounding)
+        if (totalMaps == 1) {
+            this.mapContainer.setAttribute('class', 'mapContainer solid');
+        } else if (index == 0) {
+            this.mapContainer.setAttribute('class', 'mapContainer first');
+        } else if (index == totalMaps - 1) {
+            this.mapContainer.setAttribute('class', 'mapContainer last');
+        } else {
+            this.mapContainer.setAttribute('class', 'mapContainer');
+        }
+        // append module child to container 
         this.module.mapSubModule.appendChild(this.mapContainer);
         // add click event to container 
         this.mapContainer.addEventListener('click', mouseEvent => {

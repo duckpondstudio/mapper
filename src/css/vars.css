@@ -39,6 +39,8 @@
     --appearance-window-border-radius:6px 6px 2px 2px;
 
     --appearance-map-border-radius: 5px 8px 2px 2px;
+    --appearance-map-border-radius-first: 5px 0px 0px 2px;
+    --appearance-map-border-radius-last: 0px 8px 2px 0px;
 
     --appearance-shadow-x: 6px;
     --appearance-shadow-y: 5px;
