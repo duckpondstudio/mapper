@@ -65,8 +65,6 @@ let gradient_recent;
 
 export function Gradient(gradientName, reverse = false, shades = shadesDefault) {
 
-    // TODO: store local refs to gradients of given name/params when loaded 
-
     if (gradientName == null) {
         if (gradient_recent == null) {
             gradientName = gradient_default;
@@ -74,10 +72,8 @@ export function Gradient(gradientName, reverse = false, shades = shadesDefault) 
     }
     gradient_recent = gradientName;
 
-    let gradient = colormap({
-        colormap: gradientName,
-        nshades: shades
-    });
+    let gradient = GetColorMap(gradientName, shades);
+    
     return reverse ? gradient.reverse() : gradient;
 }
 
@@ -93,11 +89,11 @@ export function GradientCSS(gradientName,
         gradient_orientation: '90deg',
     },
     reverse = false, shades = shadesCSS) {
-    
+
     let gradient = Gradient(gradientName, reverse, shades);
     let css = cssParams.gradient_style +
         '(' + cssParams.gradient_orientation;
-    
+
     gradient.forEach(color => {
         css += ',' + color;
     });
@@ -105,6 +101,25 @@ export function GradientCSS(gradientName,
 
     return css;
 }
+
+/** store local ref to loaded {@link colormap colormaps} */ 
+let loadedColorMaps = {};
+
+function GetColorMap(gradientName, shades) {
+    // TODO: if loading a LOT, unload least recently used ones 
+    let id = gradientName + '_' + shades;
+    if (loadedColorMaps.hasOwnProperty(id)) {
+        return loadedColorMaps[id];
+    }
+    let gradient = colormap({
+        colormap: gradientName,
+        nshades: shades
+    });
+    loadedColorMaps[id] = gradient;
+    return gradient;
+}
+
+
 
 /**
  * Number of hex codes to load into CSS gradient. 
