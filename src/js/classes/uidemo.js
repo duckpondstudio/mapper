@@ -1,3 +1,4 @@
+import { GradientCSS } from "../utils/color";
 
 
 export function DemoUIObject(demoType) {
@@ -13,10 +14,7 @@ export function DemoUIObject(demoType) {
 
             // Create the linear-gradient CSS background property
 
-            let gradient = "linear-gradient(90deg, #00FFEB, #073ABB)";
-            // let gradient = "linear-gradient(to right, pink 0%, pink 30%, skyblue 50%, skyblue 100%)";
-
-            gradientImage.style.background = gradient;
+            gradientImage.style.background = GradientCSS();
 
             document.body.appendChild(gradientImage);
 
