@@ -151,15 +151,23 @@ module.exports = {
             },
 
             {
-                test: /\.(txt|csv)$/i,
-                loader: 'file-loader',
-                options: {
-                    outputPath: 'data',
-                    // base name/type directory 
-                    name: '[ext]/[name].[ext]',
-                    // hashed name, reduce likelihood of overwrite 
-                    // name: '[ext]/[name]-[md4:hash:base36:6].[ext]',
+                test: /\.csv$/,
+                type: 'asset/resource',
+                generator: {
+                    filename: 'data/[ext]/[name][ext]',
                 },
+                include: [path.resolve(__dirname, 'src/assets/csv')],
+                exclude: /node_modules/,
+
+                // test: /\.(txt|csv)$/i,
+                // loader: 'file-loader',
+                // options: {
+                //     outputPath: 'data',
+                //     // base name/type directory 
+                //     name: '[ext]/[name].[ext]',
+                //     // hashed name, reduce likelihood of overwrite 
+                //     // name: '[ext]/[name]-[md4:hash:base36:6].[ext]',
+                // },
             }
 
         ],
@@ -172,5 +180,11 @@ module.exports = {
     // build time optimization, see https://webpack.js.org/guides/development/#using-webpack-dev-server 
     optimization: {
         runtimeChunk: 'single',
+    },
+    resolve: {
+      alias: {
+        // Alias used for dynamic import of all .csv files in the assets/csv directory
+        csvFiles: path.resolve(__dirname, 'src/assets/csv'),
+      },
     },
 };
