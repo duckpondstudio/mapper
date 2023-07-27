@@ -118,7 +118,7 @@ module.exports = {
             //                                          module rules (with some presets)
 
             // Jquery (requires library): npm install --save-dev jquery
-            { 
+            {
                 test: require.resolve("jquery"),
                 loader: "expose-loader",
                 options: {
@@ -149,6 +149,18 @@ module.exports = {
                 test: /\.(woff|woff2|eot|ttf|otf)$/i,
                 type: 'asset/resource',
             },
+
+            {
+                test: /\.(txt|csv)$/i,
+                loader: 'file-loader',
+                options: {
+                    outputPath: 'data',
+                    // base name/type directory 
+                    name: '[ext]/[name].[ext]',
+                    // hashed name, reduce likelihood of overwrite 
+                    // name: '[ext]/[name]-[md4:hash:base36:6].[ext]',
+                },
+            }
 
         ],
     },

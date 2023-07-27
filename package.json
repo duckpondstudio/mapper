@@ -23,6 +23,7 @@
         "dice-coefficient": "^2.1.1",
         "fabric": "^5.3.0",
         "feather-icons": "^4.29.0",
+        "file-loader": "^6.2.0",
         "html-webpack-plugin": "^5.5.1",
         "jquery": "^3.7.0",
         "json-loader": "^0.5.7",
