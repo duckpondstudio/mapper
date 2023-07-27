@@ -9,7 +9,9 @@ export const dotStyle = {
     get default() { return this.circle; }
 }
 
-/** Data related to rendering dots on a map projection */
+/** Data related to rendering dots on a map projection 
+ * @deprecated 
+*/
 export class MapDot {
     /** Latitude for this dot
      * @type {number}
