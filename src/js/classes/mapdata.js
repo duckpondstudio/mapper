@@ -1,6 +1,6 @@
 import { ClickedMap, cursor } from '../input';
 import { Module, current } from './module';
-import { MapDot, dotStyle } from './mapdot';
+// import { MapDot, dotStyle } from './mapdot';
 import { ProjectionData } from './projectiondata';
 import * as m from '../maps';
 import * as disp from '../utils/display';
@@ -32,8 +32,6 @@ export class MapData {
     mapContainer;
     /** Array of projections loaded in this MapData @type {ProjectionData[]} @memberof MapData*/
     projections = [];
-    /** Array of map dots to render @type {MapDot[]} @memberof MapData*/
-    #mapDots = [];
     /** Rect for the size of this MapData, auto-updated on adding {@link projections}.
      *  @see mapContainer
      *  @type {HTMLParagraphElement} @memberof MapData*/
@@ -147,7 +145,7 @@ export class MapData {
     // AddDotAtProjectionRatio(xProjectionRatio, yProjectionRatio, id = null, style = dotStyle.default) { }
 
     /**
-     * Add a MapDot dot to this projection
+     * Add a DataDot dot to this projection
      * @param {number} x X coordinate of this dot (or latitude, see {@link posType})
      * @param {number} y X coordinate of this dot (or longitude, see {@link posType})
      * @param {number} [posType=0] Optional, default 0. Defines the rendering behaviour of this dot.
@@ -161,11 +159,7 @@ export class MapData {
      */
     AddDotXY(x, y, id = null, posType = 0, style = dotStyle.default) {
         // check if any dots matching exist 
-        if (this.#MapDotParamsAlreadyExists(x, y, id, posType, style)) { return; }
-        // create new mapDot
-        let mapDot = new MapDot(x, y, id, posType, style);
-
-        this.#RenderDot(mapDot, false);
+        console.log("ADD DOT AT XY");
     }
 
     RemoveDotsByXY(xy) {
