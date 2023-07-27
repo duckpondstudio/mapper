@@ -167,7 +167,7 @@ export class Locale {
         // TODO: parse object, check for GeoPoint, then potential key:value pairs 
     }
     ParseInputString(localeString) {
-        // TODO: parse string, checking for continent/country name
+        // TODO: parse string, checking for continent/country/city name
     }
 
 
