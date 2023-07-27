@@ -1,6 +1,9 @@
 import Konva from "konva";
 import { Module } from "./module";
 
+/**
+ * Handles the Konva overlay for visually displaying datadots on maps 
+ */
 export class DataOverlay {
 
     module;
