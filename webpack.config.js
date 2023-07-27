@@ -93,7 +93,7 @@ module.exports = {
     watch: true, // see: https://webpack.js.org/guides/development/#using-watch-mode
 
     entry: { //                                         entry: place to begin generating webpage from
-        index: './src/js/index.js',
+        index: './src/js/base/index.js',
     },
     plugins: [
         new HtmlWebpackPlugin({

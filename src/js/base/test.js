@@ -1,7 +1,7 @@
-import { GetTerm } from "./classes/datanames";
-import { MapData } from "./classes/mapdata";
-import { Module, current } from './classes/module';
-import * as m from "./maps";
+import { GetTerm } from "../data/datanames";
+import { MapData } from "../mapgen/mapdata";
+import { Module, current } from '../ui/module';
+import * as m from "../data/maps";
 
 // Default testkey: t           ----------------- SHIFT + T + Num
 

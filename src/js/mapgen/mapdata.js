@@ -1,11 +1,11 @@
-import { ClickedMap, cursor } from '../input';
-import { Module, current } from './module';
+import { ClickedMap, cursor } from '../base/input';
+import { Module, current } from '../ui/module';
 import { ProjectionData } from './projectiondata';
-import * as m from '../maps';
+import * as m from '../data/maps';
 import * as disp from '../utils/display';
 import * as math from '../utils/math';
 import * as e from '../utils/element'
-import { mapSize } from '../mapmaker';
+import { mapSize } from './mapmaker';
 
 // see bottom for code examples
 

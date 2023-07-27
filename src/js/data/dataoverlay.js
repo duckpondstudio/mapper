@@ -1,5 +1,5 @@
 import Konva from "konva";
-import { Module } from "./module";
+import { Module } from "../ui/module";
 
 /**
  * Handles the Konva overlay for visually displaying datadots on maps 

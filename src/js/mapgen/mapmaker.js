@@ -1,17 +1,17 @@
-import demoMap from './../assets/img/grieger-triptychial-political.png';
-import overlayGeo from './../assets/json/outline-safe.geojson';//       recommended for overlay sizing
-// import overlayGeo from './../assets/json/outline-simple.geojson';//  recommended for ocean rendering
-// import overlayGeo from './../assets/json/outline-default.geojson';// not recommended (SVG rendering errors)
+import demoMap from './../../assets/img/grieger-triptychial-political.png';
+import overlayGeo from './../../assets/json/outline-safe.geojson';//       recommended for overlay sizing
+// import overlayGeo from './../../assets/json/outline-simple.geojson';//  recommended for ocean rendering
+// import overlayGeo from './../../assets/json/outline-default.geojson';// not recommended (SVG rendering errors)
 
 // TODO: allow multiple geojson files to be imported onto a single map (eg to load land + ocean + lat/long lines separately)
 // TODO: allow separate geojson files on the same map to be independently toggled on/off (ideally without recalculating the same map)
 
-import { MapData } from './classes/mapdata';
-import { Module } from './classes/module';
-import { ProjectionData } from './classes/projectiondata';
-import { GetGeoJSON } from './geojsonparser';
-import * as m from './maps';
-import * as math from './utils/math';
+import { MapData } from './mapdata';
+import { Module } from '../ui/module';
+import { ProjectionData } from './projectiondata';
+import { GetGeoJSON } from '../utils/geojsonparser';
+import * as m from '../data/maps';
+import * as math from '../utils/math';
 
 import * as d3 from 'd3';
 

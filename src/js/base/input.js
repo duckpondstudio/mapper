@@ -1,9 +1,9 @@
 import * as d3 from 'd3';
 import * as test from './test';
-import { MapData } from './classes/mapdata';
-import { ProjectionData } from './classes/projectiondata';
-import { Module, current } from './classes/module';
-import { PreventKeyboardEventShiftKeyModification } from './utils/string.js';
+import { MapData } from '../mapgen/mapdata';
+import { ProjectionData } from '../mapgen/projectiondata';
+import { Module, current } from '../ui/module';
+import { PreventKeyboardEventShiftKeyModification } from '../utils/string.js';
 
 const keyEventDown = 'keyEventDown';
 const keyEventUp = 'keyEventUp';

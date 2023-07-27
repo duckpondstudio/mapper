@@ -1,9 +1,9 @@
 import { MapData } from "./mapdata";
 import * as d3 from 'd3';
 import { parse } from 'transform-parser';
-import { ClickedProjection } from "../input";
+import { ClickedProjection } from "../base/input";
 import * as math from '../utils/math';
-import * as m from '../maps';
+import * as m from '../data/maps';
 import * as e from '../utils/element';
 
 /** if true, fires a click event directly on the projection SVG, bypassing {@link baseinput} */

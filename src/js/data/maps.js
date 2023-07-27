@@ -57,7 +57,7 @@ const maps = [
 import * as d3 from 'd3';
 import * as d3gp from 'd3-geo-projection';
 
-import * as math from './utils/math';
+import * as math from '../utils/math';
 
 const useCSSTransformations = true;
 

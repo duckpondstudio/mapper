@@ -1,8 +1,8 @@
-import { MapData } from "./mapdata";
-import { CreateMaps, mapSize } from "../mapmaker";
-import { ClickedModule } from "../input";
-import { DataOverlay } from './dataoverlay';
-import * as m from '../maps';
+import { MapData } from "../mapgen/mapdata";
+import { CreateMaps, mapSize } from "../mapgen/mapmaker";
+import { ClickedModule } from "../base/input";
+import { DataOverlay } from '../data/dataoverlay';
+import * as m from '../data/maps';
 import { GetBoundingGlobalRect } from "../utils/element";
 const feather = require('feather-icons');
 

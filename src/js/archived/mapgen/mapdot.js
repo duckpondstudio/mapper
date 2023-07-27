@@ -1,8 +1,8 @@
 import * as d3 from 'd3';
-import { ProjectionData } from './projectiondata';
-import { MapData } from './mapdata';
+import { ProjectionData } from '../../mapgen/projectiondata';
+import { MapData } from '../../mapgen/mapdata';
 
-/** Container of all styles for MapDot */
+/** Container of all styles for MapDot @deprecated */
 export const dotStyle = {
     get circle() { return 'crc'; },
     get square() { return 'sqr'; },
@@ -163,6 +163,7 @@ export class MapDot {
     }
 }
 
+/** @deprecated */
 export function CreateDot(d3DotsGroup, projection) {
     d3DotsGroup.append('circle')
         .attr('class', 'mapDot')

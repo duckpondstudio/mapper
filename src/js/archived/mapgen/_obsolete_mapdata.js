@@ -1,12 +1,12 @@
-import { ClickedMap, cursor } from '../input';
+import { ClickedMap, cursor } from '../../input';
 import { Module, current } from './module';
 import { MapDot, dotStyle } from './mapdot';
 import { ProjectionData } from './projectiondata';
-import * as m from '../maps';
-import * as disp from '../utils/display';
-import * as math from '../utils/math';
-import * as e from '../utils/element'
-import { mapSize } from '../mapmaker';
+import * as m from '../../data/maps';
+import * as disp from '../../utils/display';
+import * as math from '../../utils/math';
+import * as e from '../../utils/element'
+import { mapSize } from '../../mapgen/mapmaker';
 
 // see bottom for code examples
 
