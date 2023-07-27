@@ -1,4 +1,4 @@
-import { Locale } from "./locale";
+import { DataLocale } from "./datalocale";
 
 
 /** 
@@ -8,7 +8,7 @@ import { Locale } from "./locale";
 export class DataDot {
 
 
-    /** Local reference for {@link locale this.locale} @type {Locale} */
+    /** Local reference for {@link locale this.locale} @type {DataLocale} */
     #_locale;
     /** Local reference for {@link value this.value} @type {Number} */
     #_value;
@@ -19,7 +19,7 @@ export class DataDot {
         }
         if (localeData != null && localeData != undefined
             && localeData.length > 0) {
-            this.locale = new Locale(localeData);
+            this.locale = new DataLocale(localeData);
         }
     }
 
@@ -40,16 +40,16 @@ export class DataDot {
     }
 
     /**
-     * @type {Locale}
+     * @type {DataLocale}
      */
     get locale() {
         if (this.#_locale == null) {
-            this.locale = new Locale();
+            this.locale = new DataLocale();
         }
         return this.#_locale;
     }
     /**
-     * @type {Locale}
+     * @type {DataLocale}
      */
     set locale(locale) {
         this.#_locale = locale;

@@ -1,12 +1,12 @@
 /** 
- * Max number of iterations {@link Locale.ParseLocaleData ParseLocaleData} 
+ * Max number of iterations {@link DataLocale.ParseLocaleData ParseLocaleData} 
  * can self-loop before returning
  * @type {number} */
 const localeIterationMax = 10;
 
 let debugInvalidLocaleData = false;
 
-export class Locale {
+export class DataLocale {
 
     /** failsafe to ensure ParseLocaleData doesn't eternally loop
      * @type {number} */
