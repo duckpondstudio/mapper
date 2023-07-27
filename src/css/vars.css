@@ -18,33 +18,38 @@
     --color-bg-solid: rgb(251, 226, 183);
     --color-bg-gradient-1: rgb(255, 213, 227);
     --color-bg-gradient-2: rgb(246, 246, 182);
-    
+
     --color-shadow: rgba(69, 42, 100, 0.1);
-    
+
     --color-window-border: rgba(213, 25, 69, 0.1);
     --color-window-background-solid: rgb(255, 231, 231);
     --color-window-background-gradient-1: rgb(255, 231, 231);
     --color-window-background-gradient-2: rgb(255, 218, 210);
     --color-window-background-alpha: rgba(231, 167, 182, 0.213);
-    
+
     --color-map-default-fill: rgb(213, 213, 213);
     --color-map-default-stroke: rgb(69, 69, 69);
-    
+
     --color-map-land-fill: rgb(236, 195, 252);
     --color-map-land-stroke: rgb(177, 120, 169);
 
     --color-map-water-fill: rgb(213, 255, 232);
     --color-map-water-stroke: rgb(213, 255, 232);
 
-    --appearance-window-border-radius:6px 6px 2px 2px;
+    --appearance-window-border-radius: 6px 6px 2px 2px;
 
-    --appearance-map-border-radius: 5px 8px 2px 2px;
-    --appearance-map-border-radius-first: 5px 0px 0px 2px;
-    --appearance-map-border-radius-last: 0px 8px 2px 0px;
+    --appearance-map-border-radius-topLeft: 7px;
+    --appearance-map-border-radius-topRight: 9px;
+    --appearance-map-border-radius-bottomRight: 6px;
+    --appearance-map-border-radius-bottomLeft: 6px;
+
+    --appearance-map-border-radius: var(--appearance-map-border-radius-topLeft) var(--appearance-map-border-radius-topRight) var(--appearance-map-border-radius-bottomRight) var(--appearance-map-border-radius-bottomLeft);
+    --appearance-map-border-radius-first: var(--appearance-map-border-radius-topLeft) 0px 0px var(--appearance-map-border-radius-bottomLeft);
+    --appearance-map-border-radius-last: 0px var(--appearance-map-border-radius-topRight) var(--appearance-map-border-radius-bottomRight) 0px;
 
     --appearance-shadow-x: 6px;
     --appearance-shadow-y: 5px;
     --appearance-shadow-blur: 0.369px;
 
-    
+
 }
