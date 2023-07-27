@@ -1,10 +1,10 @@
-// import geoEarth from './../../assets/json/demo.geojson';
-// import geoEarth from './../../assets/json/outline-default.geojson';
-import geoEarth from './../../assets/json/ne_50m_land.geojson';
+// import geoEarth from './../../assets/geojson/demo.geojson';
+// import geoEarth from './../../assets/geojson/outline-default.geojson';
+import geoEarth from './../../assets/geojson/ne_50m_land.geojson';
 
-// import geoOcean from './../../assets/json/outline-safe.geojson';//    recommended for overlay sizing
-import geoOcean from './../../assets/json/outline-simple.geojson';//     recommended for ocean rendering
-// import geoOcean from './../../assets/json/outline-default.geojson';// not recommended (SVG rendering errors)
+// import geoOcean from './../../assets/geojson/outline-safe.geojson';//    recommended for overlay sizing
+import geoOcean from './../../assets/geojson/outline-simple.geojson';//     recommended for ocean rendering
+// import geoOcean from './../../assets/geojson/outline-default.geojson';// not recommended (SVG rendering errors)
 
 // GeoJSON geo-types per the GeoJSON spec at https://rdrr.io/cran/geoops/man/geojson-types.html June 18 2023
 /** Collection geo-types (non-singular-objects) in GeoJSON format (generally containing collections), lowercase */
