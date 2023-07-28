@@ -4,6 +4,7 @@ import { Module, current } from '../ui/module';
 import * as m from "../data/maps";
 import { ParseCSVLocal } from "../utils/parse_csv";
 import { WriteCSV, WriteTestCSV } from "../utils/write_csv";
+import * as dc from "../data/datacreator";
 
 // Default testkey: t           ----------------- SHIFT + T + Num
 
@@ -25,7 +26,7 @@ export function NumericTest(num) {
 
         case 1:
             
-            ParseCSVLocal('continent-codes');
+            dc.BuildContinents();
             
             break;
 
