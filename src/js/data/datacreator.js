@@ -10,14 +10,20 @@ let csvParseCount = 0;
 let csvSuccessCount = 0;
 
 export function BuildContinents() {
-    currentCSV = new CSVData('all_continents',
+    currentCSV = new CSVData('ContinentsData',
         'name', 'code', 'm49', 'alt_names');
-    ParseCSV('continent-codes', ParseCSVSuccess, ParseCSVError, 'continents', 1);
+    ParseCSV('continent-codes', 'continents', 1);
+}
+export function BuildCountries() {
+}
+export function BuildRegions() {
+}
+export function BuildCities() {
 }
 
-function ParseCSV(localFileName, onComplete, onError, type, step) {
+function ParseCSV(localFileName, type, step) {
     csvParseCount++;
-    ParseCSVLocal(localFileName, onComplete, onError, { type: type, step: step });
+    ParseCSVLocal(localFileName, ParseCSVSuccess, ParseCSVError, { type: type, step: step });
 }
 
 function ParseCSVSuccess(results, file, callbackParam = null) {
