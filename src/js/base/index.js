@@ -1,5 +1,6 @@
 import(/* webpackPreload: true */ './../../css/fonts.css');
 import(/* webpackPreload: true */ './../../css/style.css');
+
 import { CreateModule } from "../ui/module";
 import { DemoUIObject } from '../ui/uidemo';
 import { InputSetup } from './input';
@@ -9,7 +10,8 @@ window.addEventListener('load', function () {
     // window is loaded
     // import CSV files 
     ImportAllFiles(require.context('./../../assets/export', true,
-        /\.(csv|txt|xlsx?|xls)$/));
+        /\.(csv|txt|xlsx?|xls)$/
+    ));
     // import setup data 
     InputSetup();
     CreateModule(m.grieger);
