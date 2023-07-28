@@ -47,6 +47,7 @@ function DownloadCSV(csvString, fileName = 'download') {
  * @param {string} ext Extension of downloaded file 
  */
 function DownloadString(string, fileName = 'download', ext = 'txt') {
+    string = string.replaceAll(' ', '%20');// ensure spaces are properly encoded 
     a.href = 'data:attachment/' + ext + ',' + string;
     a.target = '_blank';
     a.download = fileName + '.' + ext;
