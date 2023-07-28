@@ -2,7 +2,7 @@ import { GetTerm } from "../data/datanames";
 import { MapData } from "../mapgen/mapdata";
 import { Module, current } from '../ui/module';
 import * as m from "../data/maps";
-import { ReadLocalCSV } from "../utils/parse_csv";
+import { ParseCSVLocal } from "../utils/parse_csv";
 import { WriteCSV, WriteTestCSV } from "../utils/write_csv";
 
 // Default testkey: t           ----------------- SHIFT + T + Num
@@ -25,7 +25,7 @@ export function NumericTest(num) {
 
         case 1:
             
-            ReadLocalCSV('continent-codes');
+            ParseCSVLocal('continent-codes');
             
             break;
 
