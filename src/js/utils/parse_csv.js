@@ -1,30 +1,32 @@
 import * as Papa from 'papaparse';
 
-// import csvTest from '../../assets/export/csv/continent-codes.csv';
-
-
 /**
  * 
  * @param {string} fileName 
  */
-export function TestReadCSV(fileName) {
+export function ReadLocalCSV(fileName) {
 
     let filePath = 'data/csv/' + fileName;
     if (!filePath.endsWith('.csv')) {
         filePath += '.csv';
     }
+    ParseCSV(filePath, true);
+}
+export function ParseCSVURL(url) {
+    ParseCSV(url, true);
+}
+export function ParseCSVString(csvString) {
+    ParseCSV(csv, false);
+}
 
-    console.log("Reading CSV file:", filePath);
 
-    let parsedObject = Papa.parse(filePath, {
-        download: true,
-        // delimiter: ',',
-        // TODO: integrate step/streaming, see: https://www.papaparse.com/docs
+function ParseCSV(csv, download = false) {
+    console.log("Parse CSV:", csv, "(Download:" + download + ")");
+    Papa.parse(csv, {
+        download: download,
         complete: ParseComplete,
-
-    });
-
-
+        error: ParseError
+    })
 }
 
 function ParseComplete(results, file) {
