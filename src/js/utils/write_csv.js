@@ -1,10 +1,10 @@
 /** Const ref to download link @type {HTMLAnchorElement} */
 const a = document.createElement('a');
 
-export function WriteCSV(...rows) {
-    WriteCSVWithDelim(',', ...rows);
+export function WriteCSV(fileName, ...rows) {
+    WriteCSVWithDelim(fileName, ',', ...rows);
 }
-export function WriteCSVWithDelim(delimiter, ...rows) {
+export function WriteCSVWithDelim(fileName, delimiter, ...rows) {
 
     if (rows == null || rows.length == 0) { return; }
 
@@ -25,7 +25,7 @@ export function WriteCSVWithDelim(delimiter, ...rows) {
 
     let csvString = csvRows.join('%0A');
 
-    DownloadCSV(csvString);
+    DownloadCSV(csvString, fileName);
 }
 
 /**
