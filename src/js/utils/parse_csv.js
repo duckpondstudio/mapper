@@ -8,23 +8,23 @@ let debugParseCSV = false;
  * 
  * @param {string} fileName 
  */
-export function ParseCSVLocal(fileName, onComplete, onError) {
+export function ParseCSVLocal(fileName, onComplete, onError, callbackParam = null) {
 
     let filePath = 'data/csv/' + fileName;
     if (!filePath.endsWith('.csv')) {
         filePath += '.csv';
     }
-    ParseCSV(filePath, onComplete, onError, true);
+    ParseCSV(filePath, onComplete, onError, true, callbackParam);
 }
-export function ParseCSVURL(url, onComplete, onError) {
-    ParseCSV(url, onComplete, onError, true);
+export function ParseCSVURL(url, onComplete, onError, callbackParam = null) {
+    ParseCSV(url, onComplete, onError, true, callbackParam);
 }
-export function ParseCSVString(csvString, onComplete, onError) {
-    ParseCSV(csvString, onComplete, onError, false);
+export function ParseCSVString(csvString, onComplete, onError, callbackParam = null) {
+    ParseCSV(csvString, onComplete, onError, false, callbackParam);
 }
 
 
-function ParseCSV(csv, onComplete, onError, download = false) {
+function ParseCSV(csv, onComplete, onError, download = false, callbackParam = null) {
     if (debugParseCSV) {
         console.log("Parse CSV:", csv, "(Download:" + download + ")");
     }
@@ -33,13 +33,13 @@ function ParseCSV(csv, onComplete, onError, download = false) {
         complete: (results, file) => {
             ParseComplete(results, file);
             if (onComplete != null) {
-                onComplete(results, file);
+                onComplete(results, file, callbackParam);
             }
         },
         error: (error, file) => {
             ParseError(error, file);
             if (onError != null) {
-                onError(error, file);
+                onError(error, file, callbackParam);
             }
         }
     })
