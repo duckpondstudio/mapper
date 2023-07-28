@@ -9,7 +9,7 @@ import overlayGeo from './../../assets/geojson/outline-safe.geojson';//       re
 import { MapData } from './mapdata';
 import { Module } from '../ui/module';
 import { ProjectionData } from './projectiondata';
-import { GetGeoJSON } from '../utils/geojsonparser';
+import { GetGeoJSON } from '../utils/parse_geojson';
 import * as m from '../data/maps';
 import * as math from '../utils/math';
 

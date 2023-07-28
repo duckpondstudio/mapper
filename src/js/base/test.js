@@ -2,7 +2,7 @@ import { GetTerm } from "../data/datanames";
 import { MapData } from "../mapgen/mapdata";
 import { Module, current } from '../ui/module';
 import * as m from "../data/maps";
-import { TestReadCSV } from "../utils/dataparser";
+import { TestReadCSV } from "../utils/parse_csv";
 
 // Default testkey: t           ----------------- SHIFT + T + Num
 
