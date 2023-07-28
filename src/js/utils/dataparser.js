@@ -1,6 +1,6 @@
 import * as Papa from 'papaparse';
 
-import csvTest from '../../assets/csv/continent-codes.csv';
+// import csvTest from '../../assets/export/csv/continent-codes.csv';
 
 
 /**
