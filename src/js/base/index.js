@@ -8,16 +8,17 @@ import * as m from '../data/maps';
 window.addEventListener('load', function () {
     // window is loaded
     // import CSV files 
-    importAllCsvFiles(require.context('./../../assets/csv', true, /\.csv$/));
+    ImportAllFiles(require.context('./../../assets/export', true,
+        /\.(csv|txt|xlsx?|xls)$/));
     // import setup data 
     InputSetup();
     CreateModule(m.grieger);
     // TODO: very buggy rendering with non-square projections
     // CreateModule(m.equirectangular);
-
     // DemoUIObject('gradient');
 });
 
-async function importAllCsvFiles(r) {
-    r.keys().forEach(r);  
+
+async function ImportAllFiles(r) {
+    r.keys().forEach(r);
 } 

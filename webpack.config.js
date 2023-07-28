@@ -151,24 +151,18 @@ module.exports = {
             },
 
             {
-                test: /\.csv$/,
+                test: /\.(csv|txt|xlsx?|xls)$/, // Match csv, txt, xls, and xlsx extensions
                 type: 'asset/resource',
                 generator: {
-                    filename: 'data/[ext]/[name][ext]',
+                    filename: (pathData) => {
+                        var extension = pathData.module.rawRequest.split('.').pop();
+                        if (extension == null || extension == '') { extension = '_'; }
+                        return `data/${extension}/[name][ext]`;
+                    },
                 },
-                include: [path.resolve(__dirname, 'src/assets/csv')],
+                include: [path.resolve(__dirname, 'src/assets/export')],
                 exclude: /node_modules/,
-
-                // test: /\.(txt|csv)$/i,
-                // loader: 'file-loader',
-                // options: {
-                //     outputPath: 'data',
-                //     // base name/type directory 
-                //     name: '[ext]/[name].[ext]',
-                //     // hashed name, reduce likelihood of overwrite 
-                //     // name: '[ext]/[name]-[md4:hash:base36:6].[ext]',
-                // },
-            }
+            },
 
         ],
     },
@@ -182,9 +176,9 @@ module.exports = {
         runtimeChunk: 'single',
     },
     resolve: {
-      alias: {
-        // Alias used for dynamic import of all .csv files in the assets/csv directory
-        csvFiles: path.resolve(__dirname, 'src/assets/csv'),
-      },
+        alias: {
+            // Alias used for dynamic import of all .csv files in the assets/csv directory
+            csvFiles: path.resolve(__dirname, 'src/assets/export/csv'),
+        },
     },
 };
