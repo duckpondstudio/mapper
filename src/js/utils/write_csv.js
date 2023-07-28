@@ -1,15 +1,6 @@
 /** Const ref to download link @type {HTMLAnchorElement} */
 const a = document.createElement('a');
 
-export function WriteTestCSV() {
-    let s = [['id', 'x2', 'rand', 'test']];
-    for (let i = 0; i < 20; i++) {
-        let r = [i, i * 2, Math.round(Math.random() * 100), 'test'];
-        s.push(r);
-    }
-    WriteCSV(...s);
-}
-
 export function WriteCSV(...rows) {
     WriteCSVWithDelim(',', ...rows);
 }
@@ -60,4 +51,14 @@ function DownloadString(string, fileName = 'download', ext = 'txt') {
     a.target = '_blank';
     a.download = fileName + '.' + ext;
     a.click();
+}
+
+
+export function WriteTestCSV() {
+    let s = [['id', 'x2', 'rand', 'test']];
+    for (let i = 0; i < 20; i++) {
+        let r = [i, i * 2, Math.round(Math.random() * 100), 'test'];
+        s.push(r);
+    }
+    WriteCSV(...s);
 }
