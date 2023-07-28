@@ -1,5 +1,7 @@
 import * as Papa from 'papaparse';
 
+//TODO: look into parsers for other filetypes, eg https://www.npmjs.com/package/xlsx 
+
 /**
  * 
  * @param {string} fileName 
