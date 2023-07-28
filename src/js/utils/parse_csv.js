@@ -1,39 +1,57 @@
 import * as Papa from 'papaparse';
 
-//TODO: look into parsers for other filetypes, eg https://www.npmjs.com/package/xlsx 
+//TODO: look into parsers for other filetypes, eg https://www.npmjs.com/package/xlsx
+
+let debugParseCSV = false;
 
 /**
  * 
  * @param {string} fileName 
  */
-export function ReadLocalCSV(fileName) {
+export function ParseCSVLocal(fileName, onComplete, onError) {
 
     let filePath = 'data/csv/' + fileName;
     if (!filePath.endsWith('.csv')) {
         filePath += '.csv';
     }
-    ParseCSV(filePath, true);
+    ParseCSV(filePath, onComplete, onError, true);
 }
-export function ParseCSVURL(url) {
-    ParseCSV(url, true);
+export function ParseCSVURL(url, onComplete, onError) {
+    ParseCSV(url, onComplete, onError, true);
 }
-export function ParseCSVString(csvString) {
-    ParseCSV(csv, false);
+export function ParseCSVString(csvString, onComplete, onError) {
+    ParseCSV(csvString, onComplete, onError, false);
 }
 
 
-function ParseCSV(csv, download = false) {
-    console.log("Parse CSV:", csv, "(Download:" + download + ")");
+function ParseCSV(csv, onComplete, onError, download = false) {
+    if (debugParseCSV) {
+        console.log("Parse CSV:", csv, "(Download:" + download + ")");
+    }
     Papa.parse(csv, {
         download: download,
-        complete: ParseComplete,
-        error: ParseError
+        complete: (results, file) => {
+            ParseComplete(results, file);
+            if (onComplete != null) {
+                onComplete(results, file);
+            }
+        },
+        error: (error, file) => {
+            ParseError(error, file);
+            if (onError != null) {
+                onError(error, file);
+            }
+        }
     })
 }
 
 function ParseComplete(results, file) {
-    console.log("Parse complete,", results, file);
+    if (debugParseCSV) {
+        console.log("Parse complete,", results, file);
+    }
 }
 function ParseError(error, file) {
-    console.log("Parse error:", error, file);
+    if (debugParseCSV) {
+        console.log("Parse error:", error, file);
+    }
 }
