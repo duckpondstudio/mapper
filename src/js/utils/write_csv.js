@@ -1,8 +1,16 @@
 /** Const ref to download link @type {HTMLAnchorElement} */
 const a = document.createElement('a');
 
+/** Default delimiter to use */
+const defaultDelim = ',';
+/** Used to temporarily replace delimiter in individual entries, 
+ * so entry count doesn't get broken */
+const delimReplacement = '||**||';
+/** Used to signify start/end of a single cell with value containing the delimiter */
+const delimQuote = '"';
+
 export function WriteCSV(fileName, rows) {
-    WriteCSVWithDelim(fileName, ',', rows);
+    WriteCSVWithDelim(fileName, defaultDelim, rows);
 }
 export function WriteCSVWithDelim(fileName, delimiter, rows) {
 
@@ -17,7 +25,20 @@ export function WriteCSVWithDelim(fileName, delimiter, rows) {
     let csvRows = [];
     for (let i = 0; i < rows.length; i++) {
         if (Array.isArray(rows[i])) {
-            csvRows.push(rows[i].join(delimiter));
+            // determine if individual entries contain the delimiter
+            let delimFound = false;
+            for (let j = 0; j < rows[i].length; j++) {
+                if (typeof rows[i][j] === 'string' &&
+                    rows[i][j].indexOf(delimiter) >= 0) {
+                    delimFound = true;
+                    rows[i][j] = delimQuote + rows[i][j].replaceAll(delimiter, delimReplacement) + delimQuote;
+                }
+            }
+            let row = rows[i].join(delimiter);
+            if (delimFound) {
+                row = row.replaceAll(delimReplacement, delimiter);
+            }
+            csvRows.push(row);
         } else {
             csvRows.push(rows[i]);
         }
