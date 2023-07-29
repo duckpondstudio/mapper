@@ -2,6 +2,7 @@
 
 import { ParseCSVLocal } from "../utils/parse_csv";
 import { WriteCSV } from "../utils/write_csv";
+import * as location from './dataclasses';
 
 let debugDataCreator = true;
 
@@ -10,21 +11,17 @@ let csvParseCount = 0;
 let csvSuccessCount = 0;
 
 export function BuildContinents() {
-    currentCSV = new CSVData('ContinentsData',
-        'name', 'code', 'm49', 'altnames');
+    currentCSV = new CSVData('ContinentsData', location.Continent.dataFields);
     ParseCSV('continent-codes', 'continents', 1);
 }
 export function BuildCountries() {
-    currentCSV = new CSVData('CountriesData',
-        'name', 'continent', 'iso2', 'iso3', 'ccn', 'cioc', 'continent', 'latitude', 'longitude', 'altnames');
+    currentCSV = new CSVData('CountriesData', location.Country.dataFields);
 }
 export function BuildRegions() {
-    currentCSV = new CSVData('RegionsData',
-        'name', 'continent', 'country', 'a1code', 'a2codes', 'latitude', 'longitude', 'altnames');
+    currentCSV = new CSVData('RegionsData', location.Region.dataFields);
 }
 export function BuildCities() {
-    currentCSV = new CSVData('CitiesData',
-        'name', 'continent', 'country', 'a1code', 'a2code', 'latitude', 'longitude', 'altnames');
+    currentCSV = new CSVData('CitiesData', location.City.dataFields);
 }
 
 function ParseCSV(localFileName, type, step) {
@@ -102,7 +99,7 @@ class CSVData {
     rowLabels;
     rows;
 
-    constructor(fileName, ...rowLabels) {
+    constructor(fileName, rowLabels) {
         this.fileName = fileName;
         this.rowLabels = rowLabels;
         this.rows = [rowLabels];
