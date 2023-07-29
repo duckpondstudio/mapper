@@ -34,14 +34,11 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
     if (debugDataCreator) {
         console.log("CSV file results:", results);
     }
-    console.log(1);
     switch (callbackParam.type) {
         case 'continents':
             switch (callbackParam.step) {
                 case 1:
-                    console.log(2);
                     for (let i = 1; i < results.data.length; i++) {
-                        console.log(3 + ',', i);
                         currentCSV.AddRow(
                             results.data[i][2],
                             results.data[i][0],
@@ -106,7 +103,6 @@ class CSVData {
     }
 
     AddRow(...row) {
-        console.log("add row", row);
         if (row.length != this.rowLabels.length) {
             if (debugDataCreator) {
                 console.warn("Row length", row.length, "does not match rowLabels length",
@@ -116,7 +112,6 @@ class CSVData {
             row.length = this.rowLabels.length;
         }
         this.rows.push(row);
-        console.log("pushed row, rows:", this.rows);
     }
 
     Save() {
