@@ -30,15 +30,31 @@ export function BuildCities() {
     // return ['name', 'continent', 'country', 'a1code', 'a2code', 'latitude', 'longitude', 'altnames'];
 }
 
+let locationsArray = [];
+
+/**
+ * Adds the following data to a list of objects containing relevant 
+ * location data. Allows us to combine multiple data sources from different 
+ * sheets, without re-generating the same data.
+ * (eg one sheet has City Name and Country, another sheet has City Name and
+ * Admin1Code, we put both into one object and convert that object to a row)
+ * @param {string} type 
+ * @param  {...string} data 
+ */
 function BuildLocationArray(type, ...data) {
     switch (type) {
         case 'continents':
+            // ['name', 'code', 'm49', 'altnames'];
+            let continent = new location.Continent();
             break;
         case 'countries':
+            // ['name', 'continent', 'iso2', 'iso3', 'ccn', 'fips', 'cioc', 'continent', 'latitude', 'longitude', 'altnames'];
             break;
         case 'regions':
+            // ['name', 'continent', 'country', 'a1code', 'a2codes', 'latitude', 'longitude', 'altnames'];
             break;
         case 'cities':
+            // ['name', 'continent', 'country', 'a1code', 'a2code', 'latitude', 'longitude', 'altnames'];
             break;
     }
 }
@@ -79,7 +95,7 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
                 case 1:
                     for (let i = 1; i < results.data.length; i++) {
                         let csvRow = results.data[i];
-                        // 'name', 'continent', 'iso2', 'iso3', 'ccn', 'fips', 'cioc', 'continent', 'latitude', 'longitude', 'altnames'];
+                        // ['name', 'continent', 'iso2', 'iso3', 'ccn', 'fips', 'cioc', 'continent', 'latitude', 'longitude', 'altnames'];
                         let fips = csvRow[3];
                         if (fips == null || fips == '') { fips = csvRow[18]; }// "equivalent fips code"
                         BuildLocationArray(callbackParam.type,
@@ -103,6 +119,7 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
                 case 1:
                     for (let i = 1; i < results.data.length; i++) {
                         let csvRow = results.data[i];
+                        // ['name', 'continent', 'country', 'a1code', 'a2codes', 'latitude', 'longitude', 'altnames'];
                         currentCSV.AddRow(
                             // csvRow[2], // name 
                         );
@@ -115,6 +132,7 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
                 case 1:
                     for (let i = 1; i < results.data.length; i++) {
                         let csvRow = results.data[i];
+                        // ['name', 'continent', 'country', 'a1code', 'a2code', 'latitude', 'longitude', 'altnames'];
                         currentCSV.AddRow(
                             // csvRow[2], // name 
                         );
