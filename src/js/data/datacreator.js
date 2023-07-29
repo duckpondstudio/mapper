@@ -11,14 +11,20 @@ let csvSuccessCount = 0;
 
 export function BuildContinents() {
     currentCSV = new CSVData('ContinentsData',
-        'name', 'code', 'm49', 'alt_names');
+        'name', 'code', 'm49', 'altnames');
     ParseCSV('continent-codes', 'continents', 1);
 }
 export function BuildCountries() {
+    currentCSV = new CSVData('CountriesData',
+        'name', 'continent', 'iso2', 'iso3', 'ccn', 'cioc', 'continent', 'latitude', 'longitude', 'altnames');
 }
 export function BuildRegions() {
+    currentCSV = new CSVData('RegionsData',
+        'name', 'continent', 'country', 'a1code', 'a2codes', 'latitude', 'longitude', 'altnames');
 }
 export function BuildCities() {
+    currentCSV = new CSVData('CitiesData',
+        'name', 'continent', 'country', 'a1code', 'a2code', 'latitude', 'longitude', 'altnames');
 }
 
 function ParseCSV(localFileName, type, step) {
