@@ -10,7 +10,7 @@ export class Country {
     /** All fields (eg columns) for this location type
      * @type {string[]} */
     static get dataFields() {
-        return ['name', 'continent', 'iso2', 'iso3', 'ccn', 'cioc', 'continent', 'latitude', 'longitude', 'altnames'];
+        return ['name', 'continent', 'iso2', 'iso3', 'ccn', 'fips', 'cioc', 'continent', 'latitude', 'longitude', 'altnames'];
     }
 }
 export class Region {
