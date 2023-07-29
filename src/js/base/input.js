@@ -319,7 +319,7 @@ export function ClickedModule(mouseEvent, module) {
  * @param {MapData} mapData {@link MapData} that was clicked on
  */
 export function ClickedMap(mouseEvent, mapData) {
-    mapData.AddDotAtGlobalPoint(cursor.point);
+    // mapData.AddDotAtGlobalPoint(cursor.point);
 }
 
 /**
