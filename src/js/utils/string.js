@@ -1,4 +1,48 @@
 /**
+ * Surround the input string with the given surroundWith string, before and after
+ * @param {string} input String to modify 
+ * @param {string} surroundWith 
+ * @returns {string} Input string surrounded with the given value
+ */
+export function SurroundString(input, surroundWith) {
+    if (!input.startsWith(surroundWith)) { input = surroundWith + input; }
+    if (!input.endsWith(surroundWith)) { input = input + surroundWith; }
+    return input;
+}
+/**
+ * Prefix and suffix the input string with the given prefix/suffix values 
+ * @param {string} input String to modify 
+ * @param {string} prefixWith String to prefix the input with (before) 
+ * @param {string} suffixWith String to suffix the input with (after)
+ * @returns {string} Input string prefixed/suffixed with the given values 
+ */
+export function PrefixSuffixString(input, prefixWith, suffixWith) {
+    input = PrefixString(input, prefixWith);
+    input = SuffixString(input, suffixWith);
+    return input;
+}
+/**
+ * Prefix the input string with the given value  
+ * @param {string} input String to modify 
+ * @param {string} prefixWith String to prefix the input with (before) 
+ * @returns {string} Input string prefixed with the given value
+ */
+export function PrefixString(input, prefixWith) {
+    if (!input.startsWith(prefixWith)) { input = prefixWith + input; }
+    return input;
+}
+/**
+ * Suffix the input string with the given suffix value 
+ * @param {string} input String to modify 
+ * @param {string} suffixWith String to suffix the input with (after)
+ * @returns {string} Input string suffixed with the given value
+ */
+export function SuffixString(input, suffixWith) {
+    if (!input.endsWith(suffixWith)) { input = input + suffixWith; }
+    return input;
+}
+
+/**
  * Prevents modification of a KeyboardEvent's {@link KeyboardEvent.key Key} property's letters/numbers by pressing the Shift key
  * @example If the key provided is '@', returns '2'.
  * @param {KeyboardEvent} keyEvent {@link KeyboardEvent} to modify 
