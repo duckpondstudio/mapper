@@ -43,6 +43,16 @@ export function SuffixString(input, suffixWith) {
 }
 
 /**
+ * Returns true if the inputString both starts and ends with the searchString 
+ * @param {string} inputString 
+ * @param {string} searchString 
+ * @returns 
+ */
+export function StartsAndEndsWith(inputString, searchString) {
+    return inputString.startsWith(searchString) && inputString.endsWith(searchString);
+}
+
+/**
  * Prevents modification of a KeyboardEvent's {@link KeyboardEvent.key Key} property's letters/numbers by pressing the Shift key
  * @example If the key provided is '@', returns '2'.
  * @param {KeyboardEvent} keyEvent {@link KeyboardEvent} to modify 
