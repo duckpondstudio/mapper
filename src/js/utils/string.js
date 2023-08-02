@@ -53,6 +53,15 @@ export function StartsAndEndsWith(inputString, searchString) {
 }
 
 /**
+ * Returns true if input string is null, empty, or whitespace
+ * @param {string} inputString String to check  
+ * @returns {boolean} True if string is null, empty, or whitespace
+ */
+export function IsNullOrEmptyOrWhitespace(inputString) {
+    return inputString === null || inputString.match(/^ *$/) !== null;
+}
+
+/**
  * Prevents modification of a KeyboardEvent's {@link KeyboardEvent.key Key} property's letters/numbers by pressing the Shift key
  * @example If the key provided is '@', returns '2'.
  * @param {KeyboardEvent} keyEvent {@link KeyboardEvent} to modify 
