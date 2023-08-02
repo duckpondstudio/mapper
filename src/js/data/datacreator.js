@@ -13,6 +13,11 @@ let debugDataCreator = true;
  * @see BuildLocationArray
  */
 const addEmptyRows = false;
+/** If true, remove empty rows from the end of a location array's file export 
+ * @type {boolean}
+ * @see Save
+ */
+const removeEmptyRowsFromExportEnd = true;
 
 let currentCSV;
 let csvParseCount = 0;
@@ -241,23 +246,25 @@ class CSVData {
             this.rows = [];
         }
         // clear out null end rows 
-        if (this.rows.length > 0) {
-            let length = this.rows.length;
-            for (let i = this.rows.length - 1; i >= 0; i--) {
-                let foundNonNullEntry = false;
-                for (let j = 0; j < this.rows[j].length; j++) {
-                    if (!stringUtils.IsNullOrEmptyOrWhitespace(this.rows[i][j])) {
-                        foundNonNullEntry = true;
+        if (removeEmptyRowsFromExportEnd) {
+            if (this.rows.length > 0) {
+                let length = this.rows.length;
+                for (let i = this.rows.length - 1; i >= 0; i--) {
+                    let foundNonNullEntry = false;
+                    for (let j = 0; j < this.rows[j].length; j++) {
+                        if (!stringUtils.IsNullOrEmptyOrWhitespace(this.rows[i][j])) {
+                            foundNonNullEntry = true;
+                            break;
+                        }
+                    };
+                    if (foundNonNullEntry) {
                         break;
                     }
-                };
-                if (foundNonNullEntry) {
-                    break;
+                    length--;
                 }
-                length--;
+                // update length, remove excessive entries 
+                this.rows.length = length;
             }
-            // update length, remove excessive entries 
-            this.rows.length = length;
         }
         WriteCSV(this.fileName, this.rows);
     }
