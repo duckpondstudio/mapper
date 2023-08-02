@@ -1,6 +1,8 @@
 import * as csv from '../utils/write_csv';
 import * as stringUtils from '../utils/string';
 
+const autoAddQuotesAroundDelimEntries = false;
+
 export class Location {
     /** All fields (eg columns) for this location type
      * @type {string[]} */
@@ -35,12 +37,10 @@ export class Location {
                     }
                 } else if (typeof value !== 'string') {
                     entry = entry.toString().trim();
-                    if (entry.indexOf(delimiter) >= 0)
-                        entry = stringUtils.SurroundString(entry, csv.delimQuote);
                 }
-                if (entry.indexOf(delimiter) >= 0) {
-                    if (!entry.startsWith(csv.delimQuote)) { entry = csv.delimQuote + entry; }
-                    if (!entry.endsWith(csv.delimQuote)) { entry = entry + csv.delimQuote; }
+                entry = entry.trim();
+                if (autoAddQuotesAroundDelimEntries && entry.indexOf(delimiter) >= 0) {
+                    entry = stringUtils.SurroundString(entry, csv.delimQuote);
                 }
                 row.push(entry);
             }
@@ -62,9 +62,22 @@ export class Location {
 
     constructor(...data) {
         for (let i = 0; i < this.dataFields.length; i++) {
-            this[this.dataFields[i]] =
-                data != null && data.length >= i + 1 ?
-                    data[i] : null;
+            let value;
+            if (data != null && data.length >= i + 1 && data[i] !== null) {
+                value = data[i];
+                if (typeof value === 'string') {
+                    value = value.trim();
+                    if (autoAddQuotesAroundDelimEntries) {
+                        if (value.indexOf(csv.defaultDelim >= 0)) {
+                            value = stringUtils.SurroundString(
+                                value, csv.delimQuote);
+                        }
+                    }
+                }
+            } else {
+                value = null;
+            }
+            this[this.dataFields[i]] = value;
         }
     }
 
