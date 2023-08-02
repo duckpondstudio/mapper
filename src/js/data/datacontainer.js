@@ -1,16 +1,24 @@
-import * as location from './dataclasses';
+import * as dataClasses from './dataclasses';
 
 export class LocationsContainer {
 
-    /** Array containing all continents 
-     * @type {Continent[]}
+    /** Array containing all locations 
+     * @type {Location[]}
     */
-    continents;
+    locations;
+
+    #dataFieldsLoaded = false;
 
     constructor() {
-        this.continents = [];
+        this.locations = [];
         this.maps = {};
-        this.dataFields = location.Continent.dataFields;
+    }
+
+    #LoadDataFields(fromLocation) {
+        if (this.#dataFieldsLoaded) {
+            return;
+        }
+        this.dataFields = fromLocation.dataFields;
         // add searchname / searchaltnames for pre-calc toLocaleLowerCase versions of names 
         this.dataFields.push('searchname');
         this.dataFields.push('searchaltnames');
@@ -20,54 +28,47 @@ export class LocationsContainer {
         }
     }
 
-    AddContinent(continent, checkForExisting = false) {
-        if (continent === null) { return; }
+    AddLocation(location, checkForExisting = false) {
+        if (location === null) { return; }
+        this.#LoadDataFields(location);
+        // ensure searchname and searchaltnames present 
+        if (location.name !== null &&
+            location.searchname === null) {
+            location.searchname = location.name;
+        }
+        if (location.altnames !== null &&
+            location.altsearchnames === null) {
+            location.altsearchnames = location.altnames;
+        }
+        // check if location is an existing one 
         if (checkForExisting) {
-            let existing = this.GetContinent(
-                existing.name,
-                existing.code,
-                existing.m49,
-                existing.altnames);
+            let existing = this.GetLocation(
+                ...location.dataFields);
             if (existing !== null) {
-                existing.AddData(continent);
+                existing.AddData(location);
                 return;
             }
         }
-        // new continent, ensure searchname and searchaltnames present 
-        if (continent.name !== null &&
-            continent.searchname === null) {
-            continent.searchname = continent.name;
-        }
-        if (continent.altnames !== null &&
-            continent.altsearchnames === null) {
-            continent.altsearchnames = continent.altnames;
-        }
         // add to array 
-        console.log("PUSHING TO ARRAY:", continent);
-        console.trace();
-        this.continents.push(continent);
+        this.locations.push(location);
     }
 
-    // return ['name', 'code', 'm49', 'altnames'];
-    GetContinent(name = null, code = null, m49 = null, altnames = null) {
-        if (name !== null) {
-            name = name.toLocaleLowerCase();
-        }
-        let continent = this.GetContinentBySearch({ searchname: name, code: code, m49: m49 });
-        if (continent !== null) { return continent; }
+    GetLocation(...dataFields) {
+        let location = this.GetLocationBySearch(dataFields);
+        if (location !== null) { return location; }
         if (altnames !== null && altnames.length > 0) {
             altnames.forEach(altName => {
-                continent = this.GetContinent(altName);
-                if (continent !== null) {
-                    return continent;
+                location = this.GetLocation(altName);
+                if (location !== null) {
+                    return location;
                 }
             });
         }
-        return continent;
+        return location;
     }
-    GetContinentBySearch(searchDataFields) {
+    GetLocationBySearch(searchDataFields) {
 
-        if (this.continents.length == 0 || searchDataFields === null) {
+        if (this.locations.length == 0 || searchDataFields === null) {
             return null;
         }
 
@@ -87,20 +88,20 @@ export class LocationsContainer {
             }
             // check if search data fields 
             if (searchDataFields[field] !== null) {
-                const continentByField = this.continents[field].get(searchDataFields[field]);
-                if (continentByField !== undefined) {
-                    return continentByField;
+                const locationByField = this.locations[field].get(searchDataFields[field]);
+                if (locationByField !== undefined) {
+                    return locationByField;
                 }
             }
         }
 
         // If no exact match found, try searching alternate names
         if (searchDataFields.searchname !== null) {
-            for (const continent of this.continents) {
-                if (continent.altsearchnames) {
-                    for (const altName of continent.altsearchnames) {
+            for (const location of this.locations) {
+                if (location.altsearchnames) {
+                    for (const altName of location.altsearchnames) {
                         if (altName === searchDataFields.searchname) {
-                            return continent;
+                            return location;
                         }
                     }
                 }

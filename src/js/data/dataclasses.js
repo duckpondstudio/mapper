@@ -1,17 +1,17 @@
 import * as csv from '../utils/write_csv';
 import * as stringUtils from '../utils/string';
 
-export class Continent {
+export class Location {
     /** All fields (eg columns) for this location type
      * @type {string[]} */
-    static get dataFields() {
-        return ['name', 'code', 'm49', 'altnames'];
+    get dataFields() {
+        return ['name', 'altnames'];
     }
     /** Gets all the values in altnames, if any, in a string[] array 
      * @type {string[]} */
     get altNamesArray() {
         if (this.altnames !== null) {
-            return Continent.AltNamesArray(this.altnames);
+            return this.AltNamesArray(this.altnames);
         }
         return [];
     }
@@ -21,7 +21,7 @@ export class Continent {
     }
     ParseDataAsRow(delimiter = csv.defaultDelim, includeNullValues = true, returnFullyNullRows = false) {
         let row = [];
-        Continent.dataFields.forEach(field => {
+        this.dataFields.forEach(field => {
             let entry = this[field];
             if (entry == null) {
                 // ignore, null  
@@ -36,7 +36,7 @@ export class Continent {
                 } else if (typeof value !== 'string') {
                     entry = entry.toString().trim();
                     if (entry.indexOf(delimiter) >= 0)
-                    entry = stringUtils.SurroundString(entry, csv.delimQuote);
+                        entry = stringUtils.SurroundString(entry, csv.delimQuote);
                 }
                 if (entry.indexOf(delimiter) >= 0) {
                     if (!entry.startsWith(csv.delimQuote)) { entry = csv.delimQuote + entry; }
@@ -61,8 +61,8 @@ export class Continent {
     }
 
     constructor(...data) {
-        for (let i = 0; i < Continent.dataFields.length; i++) {
-            this[Continent.dataFields[i]] =
+        for (let i = 0; i < this.dataFields.length; i++) {
+            this[this.dataFields[i]] =
                 data != null && data.length >= i + 1 ?
                     data[i] : null;
         }
@@ -87,15 +87,15 @@ export class Continent {
     }
 
     /**
-     * 
-     * @param {Continent} combine Location who's data to add into this one 
+     * Combine data from the given Location into this one 
+     * @param {Location} combine Location who's data to add into this one 
      */
     AddData(combine) {
-        Continent.dataFields.forEach(field => {
+        this.dataFields.forEach(field => {
             if (field == 'altnames') {
                 if (combine.altnames !== null) {
                     let currentAltNames = this.altNamesArray;
-                    let newAltNames = Continent.AltNamesToArray(combine.altnames);
+                    let newAltNames = this.AltNamesToArray(combine.altnames);
                     let anyPushed = false;
                     newAltNames.forEach(newAltName => {
                         if (!currentAltNames.includes(newAltName)) {
@@ -121,24 +121,31 @@ export class Continent {
         });
     }
 }
-export class Country {
+export class Continent extends Location {
     /** All fields (eg columns) for this location type
      * @type {string[]} */
-    static get dataFields() {
+    get dataFields() {
+        return ['name', 'code', 'm49', 'altnames'];
+    }
+}
+export class Country extends Location {
+    /** All fields (eg columns) for this location type
+     * @type {string[]} */
+    get dataFields() {
         return ['name', 'continent', 'iso2', 'iso3', 'ccn', 'fips', 'cioc', 'latitude', 'longitude', 'altnames'];
     }
 }
-export class Region {
+export class Region extends Location {
     /** All fields (eg columns) for this location type
      * @type {string[]} */
-    static get dataFields() {
+    get dataFields() {
         return ['name', 'continent', 'country', 'a1code', 'a2codes', 'latitude', 'longitude', 'altnames'];
     }
 }
-export class City {
+export class City extends Location {
     /** All fields (eg columns) for this location type
      * @type {string[]} */
-    static get dataFields() {
+    get dataFields() {
         return ['name', 'continent', 'country', 'a1code', 'a2code', 'latitude', 'longitude', 'altnames'];
     }
 }

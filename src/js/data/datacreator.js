@@ -24,22 +24,22 @@ let csvParseCount = 0;
 let csvSuccessCount = 0;
 
 export function BuildContinents() {
-    currentCSV = new CSVData('ContinentsData', location.Continent.dataFields);
+    currentCSV = new CSVData('ContinentsData', location.Continent.prototype.dataFields);
     // return ['name', 'code', 'm49', 'altnames'];
     ParseCSV('continent-codes', 'continents', 1);
 }
 export function BuildCountries() {
-    currentCSV = new CSVData('CountriesData', location.Country.dataFields);
+    currentCSV = new CSVData('CountriesData', location.Country.prototype.dataFields);
     // return ['name', 'continent', 'iso2', 'iso3', 'ccn', 'fips', 'cioc', 'continent', 'latitude', 'longitude', 'altnames'];
     ParseCSV('countryInfo', 'countries', 1);
 }
 export function BuildRegions() {
-    currentCSV = new CSVData('RegionsData', location.Region.dataFields);
+    currentCSV = new CSVData('RegionsData', location.Region.prototype.dataFields);
     // return ['name', 'continent', 'country', 'a1code', 'a2codes', 'latitude', 'longitude', 'altnames'];
 
 }
 export function BuildCities() {
-    currentCSV = new CSVData('CitiesData', location.City.dataFields);
+    currentCSV = new CSVData('CitiesData', location.City.prototype.dataFields);
     // return ['name', 'continent', 'country', 'a1code', 'a2code', 'latitude', 'longitude', 'altnames'];
 }
 
@@ -70,7 +70,7 @@ function BuildLocationArray(type, ...data) {
         case 'continents':
             // ['name', 'code', 'm49', 'altnames'];
             let continent = new location.Continent(...data);
-            dataContainer.ContinentsContainer.AddContinent(continent);
+            dataContainer.ContinentsContainer.AddLocation(continent);
             break;
         case 'countries':
             // ['name', 'continent', 'iso2', 'iso3', 'ccn', 'fips', 'cioc', 'continent', 'latitude', 'longitude', 'altnames'];
@@ -85,8 +85,8 @@ function BuildLocationArray(type, ...data) {
 }
 function SaveLocationArray() {
 
-    dataContainer.ContinentsContainer.continents.forEach(continent => {
-        currentCSV.AddRow(continent.row);
+    dataContainer.ContinentsContainer.locations.forEach(location => {
+        currentCSV.AddRow(location.row);
     });
 
     switch (currentCSV.fileName) {
@@ -108,7 +108,7 @@ function ParseCSV(localFileName, type, step) {
 }
 
 function ParseCSVSuccess(results, file, callbackParam = null) {
-    console.log("Parsed CSV Continents file:", file, ', Callback Param:', callbackParam);
+    console.log("Parsed CSV file:", file, ', Callback Param:', callbackParam);
     if (debugDataCreator) {
         console.log("CSV file results:", results);
     }
@@ -210,6 +210,7 @@ class CSVData {
     rows;
 
     constructor(fileName, rowLabels) {
+        console.log("Creating new CSVData, filename:", fileName, "rowLabels:", rowLabels);
         this.fileName = fileName;
         this.rowLabels = rowLabels;
         this.rows = [rowLabels];
@@ -228,6 +229,8 @@ class CSVData {
      */
     AddRow(row) {
         console.log("ADDING ROW " + this.rows.length + ":", row);
+        console.log("filename: ", this.fileName);
+        console.log("rowLabels: ", this.rowLabels);
         console.trace();
         if (row.length != this.rowLabels.length) {
             if (debugDataCreator) {
