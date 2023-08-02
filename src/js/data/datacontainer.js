@@ -1,6 +1,11 @@
 import * as location from './dataclasses';
 
-export class Continents {
+export class LocationsContainer {
+
+    /** Array containing all continents 
+     * @type {Continent[]}
+    */
+    continents;
 
     constructor() {
         this.continents = [];
@@ -16,9 +21,17 @@ export class Continents {
     }
 
     AddContinent(continent, checkForExisting = false) {
+        if (continent === null) { return; }
         if (checkForExisting) {
-            // TODO: check for existing continent 
-            console.log("TODO");
+            let existing = this.GetContinent(
+                existing.name,
+                existing.code,
+                existing.m49,
+                existing.altnames);
+            if (existing !== null) {
+                existing.AddData(continent);
+                return;
+            }
         }
         // new continent, ensure searchname and searchaltnames present 
         if (continent.name !== null &&
@@ -30,15 +43,27 @@ export class Continents {
             continent.altsearchnames = continent.altnames;
         }
         // add to array 
+        console.log("PUSHING TO ARRAY:", continent);
+        console.trace();
         this.continents.push(continent);
     }
 
     // return ['name', 'code', 'm49', 'altnames'];
-    GetContinent(name = null, code = null, m49 = null) {
+    GetContinent(name = null, code = null, m49 = null, altnames = null) {
         if (name !== null) {
             name = name.toLocaleLowerCase();
         }
-        this.GetContinentBySearch({ searchname: name, code: code, m49: m49 });
+        let continent = this.GetContinentBySearch({ searchname: name, code: code, m49: m49 });
+        if (continent !== null) { return continent; }
+        if (altnames !== null && altnames.length > 0) {
+            altnames.forEach(altName => {
+                continent = this.GetContinent(altName);
+                if (continent !== null) {
+                    return continent;
+                }
+            });
+        }
+        return continent;
     }
     GetContinentBySearch(searchDataFields) {
 
@@ -158,3 +183,7 @@ export class Continents {
 //#endregion SUB
 
 //#endregion Cities
+
+
+
+export const ContinentsContainer = new LocationsContainer();

@@ -2,7 +2,9 @@
 
 import { ParseCSVLocal } from "../utils/parse_csv";
 import { WriteCSV } from "../utils/write_csv";
+import * as stringUtils from '../utils/string';
 import * as location from './dataclasses';
+import * as dataContainer from './datacontainer';
 
 let debugDataCreator = true;
 
@@ -30,8 +32,6 @@ export function BuildCities() {
     // return ['name', 'continent', 'country', 'a1code', 'a2code', 'latitude', 'longitude', 'altnames'];
 }
 
-let locationsArray = [];
-
 /**
  * Adds the following data to a list of objects containing relevant 
  * location data. Allows us to combine multiple data sources from different 
@@ -45,7 +45,8 @@ function BuildLocationArray(type, ...data) {
     switch (type) {
         case 'continents':
             // ['name', 'code', 'm49', 'altnames'];
-            let continent = new location.Continent();
+            let continent = new location.Continent(...data);
+            dataContainer.ContinentsContainer.AddContinent(continent);
             break;
         case 'countries':
             // ['name', 'continent', 'iso2', 'iso3', 'ccn', 'fips', 'cioc', 'continent', 'latitude', 'longitude', 'altnames'];
@@ -59,7 +60,21 @@ function BuildLocationArray(type, ...data) {
     }
 }
 function SaveLocationArray() {
-    // currentCSV.AddRow(
+
+    dataContainer.ContinentsContainer.continents.forEach(continent => {
+        currentCSV.AddRow(continent.row);
+    });
+
+    switch (currentCSV.fileName) {
+        case 'continents':
+            break;
+        case 'countries':
+            break;
+        case 'regions':
+            break;
+        case 'cities':
+            break;
+    }
     currentCSV.Save();
 }
 
@@ -134,6 +149,7 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
                         let csvRow = results.data[i];
                         // ['name', 'continent', 'country', 'a1code', 'a2code', 'latitude', 'longitude', 'altnames'];
                         currentCSV.AddRow(
+                            csvRow
                             // csvRow[2], // name 
                         );
                     }
@@ -175,7 +191,20 @@ class CSVData {
         this.rows = [rowLabels];
     }
 
-    AddRow(...row) {
+    /**
+     * Add the given values to the CSV to write out as a row
+     * @param  {...any} row Values, passed in as an ...array
+     */
+    AddRowValues(...row) {
+        this.AddRow(row);
+    }
+    /**
+     * Add the given array to the CSV to write out as values 
+     * @param {*[]} row Array of values to write as a row of the CSV 
+     */
+    AddRow(row) {
+        console.log("ADDING ROW " + this.rows.length + ":", row);
+        console.trace();
         if (row.length != this.rowLabels.length) {
             if (debugDataCreator) {
                 console.warn("Row length", row.length, "does not match rowLabels length",
@@ -184,10 +213,33 @@ class CSVData {
             }
             row.length = this.rowLabels.length;
         }
+
         this.rows.push(row);
     }
 
     Save() {
+        if (this.rows == null) {
+            this.rows = [];
+        }
+        // clear out null end rows 
+        if (this.rows.length > 0) {
+            let length = this.rows.length;
+            for (let i = this.rows.length - 1; i >= 0; i--) {
+                let foundNonNullEntry = false;
+                for (let j = 0; j < this.rows[j].length; j++) {
+                    if (!stringUtils.IsNullOrEmptyOrWhitespace(this.rows[i][j])) {
+                        foundNonNullEntry = true;
+                        break;
+                    }
+                };
+                if (foundNonNullEntry) {
+                    break;
+                }
+                length--;
+            }
+            // update length, remove excessive entries 
+            this.rows.length = length;
+        }
         WriteCSV(this.fileName, this.rows);
     }
 
