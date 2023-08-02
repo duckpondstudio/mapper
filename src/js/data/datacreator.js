@@ -272,7 +272,6 @@ class CSVData {
      * @param {*[]} row Array of values to write as a row of the CSV 
      */
     AddRow(row) {
-        console.trace();
         if (row.length != this.rowLabels.length) {
             if (debugDataCreator) {
                 console.warn("Row length", row.length, "does not match rowLabels length",
