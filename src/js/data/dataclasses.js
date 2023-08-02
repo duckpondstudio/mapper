@@ -1,7 +1,8 @@
 import * as csv from '../utils/write_csv';
 import * as stringUtils from '../utils/string';
 
-const autoAddQuotesAroundDelimEntries = false;
+// note, this is typically auto-added when writing to CSV 
+const addQuotesAroundDelimEntries = false;
 
 export class Location {
     /** All fields (eg columns) for this location type
@@ -39,7 +40,7 @@ export class Location {
                     entry = entry.toString().trim();
                 }
                 entry = entry.trim();
-                if (autoAddQuotesAroundDelimEntries && entry.indexOf(delimiter) >= 0) {
+                if (addQuotesAroundDelimEntries && entry.indexOf(delimiter) >= 0) {
                     entry = stringUtils.SurroundString(entry, csv.delimQuote);
                 }
                 row.push(entry);
@@ -67,7 +68,7 @@ export class Location {
                 value = data[i];
                 if (typeof value === 'string') {
                     value = value.trim();
-                    if (autoAddQuotesAroundDelimEntries) {
+                    if (addQuotesAroundDelimEntries) {
                         if (value.indexOf(csv.defaultDelim >= 0)) {
                             value = stringUtils.SurroundString(
                                 value, csv.delimQuote);
