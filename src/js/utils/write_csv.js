@@ -2,12 +2,12 @@
 const a = document.createElement('a');
 
 /** Default delimiter to use */
-const defaultDelim = ',';
+export const defaultDelim = ',';
+/** Used to signify start/end of a single cell with value containing the delimiter */
+export const delimQuote = '"';
 /** Used to temporarily replace delimiter in individual entries, 
  * so entry count doesn't get broken */
-const delimReplacement = '||**||';
-/** Used to signify start/end of a single cell with value containing the delimiter */
-const delimQuote = '"';
+export const delimReplacement = '||**||';
 
 export function WriteCSV(fileName, rows) {
     WriteCSVWithDelim(fileName, defaultDelim, rows);
