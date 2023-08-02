@@ -53,12 +53,14 @@ export function StartsAndEndsWith(inputString, searchString) {
 }
 
 /**
- * Returns true if input string is null, empty, or whitespace
+ * Returns true if input string is null, undefined, empty, or whitespace
  * @param {string} inputString String to check  
- * @returns {boolean} True if string is null, empty, or whitespace
+ * @returns {boolean} True if string is null, undefined, empty, or whitespace
  */
 export function IsNullOrEmptyOrWhitespace(inputString) {
-    return inputString === null || inputString.match(/^ *$/) !== null;
+    return inputString === null ||
+        inputString === undefined ||
+        inputString.match(/^ *$/) !== null;
 }
 
 /**
