@@ -78,7 +78,6 @@ function BuildLocationArray(type, ...data) {
         case FileNameCountries:
             // ['name', 'continent', 'iso2', 'iso3', 'ccn', 'fips', 'cioc', 'continent', 'latitude', 'longitude', 'altnames'];
             let country = new location.Country(...data);
-            console.log("COUNTRY: ", country);
             dataContainer.CountriesContainer.AddLocation(country);
             break;
         case FileNameRegions:
@@ -149,7 +148,6 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
         case FileNameCountries:
             switch (callbackParam.step) {
                 case 1:
-                    console.log("Results data length: ", results.data.length);
                     for (let i = 1; i < results.data.length; i++) {
                         let csvRow = results.data[i];
                         // ['name', 'continent', 'iso2', 'iso3', 'ccn', 'fips', 'cioc', 'continent', 'latitude', 'longitude', 'altnames'];
