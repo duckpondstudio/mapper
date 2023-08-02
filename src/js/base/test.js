@@ -26,7 +26,8 @@ export function NumericTest(num) {
 
         case 1:
             
-            dc.BuildContinents();
+            // dc.BuildContinents();
+            dc.BuildCountries();
             
             break;
 

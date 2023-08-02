@@ -6,6 +6,11 @@ import * as stringUtils from '../utils/string';
 import * as location from './dataclasses';
 import * as dataContainer from './datacontainer';
 
+const FileNameContinents = "ContinentsData";
+const FileNameCountries = "CountriesData";
+const FileNameRegions = "RegionsData";
+const FileNameCities = "CitiesData";
+
 let debugDataCreator = true;
 
 /** If false, do not add empty rows to location array
@@ -24,22 +29,21 @@ let csvParseCount = 0;
 let csvSuccessCount = 0;
 
 export function BuildContinents() {
-    currentCSV = new CSVData('ContinentsData', location.Continent.prototype.dataFields);
+    currentCSV = new CSVData(FileNameContinents, location.Continent.prototype.dataFields);
     // return ['name', 'code', 'm49', 'altnames'];
-    ParseCSV('continent-codes', 'continents', 1);
+    ParseCSV('continent-codes', FileNameContinents, 1);
 }
 export function BuildCountries() {
-    currentCSV = new CSVData('CountriesData', location.Country.prototype.dataFields);
+    currentCSV = new CSVData(FileNameCountries, location.Country.prototype.dataFields);
     // return ['name', 'continent', 'iso2', 'iso3', 'ccn', 'fips', 'cioc', 'continent', 'latitude', 'longitude', 'altnames'];
-    ParseCSV('countryInfo', 'countries', 1);
+    ParseCSV('countryInfo', FileNameCountries, 1);
 }
 export function BuildRegions() {
-    currentCSV = new CSVData('RegionsData', location.Region.prototype.dataFields);
+    currentCSV = new CSVData(FileNameRegions, location.Region.prototype.dataFields);
     // return ['name', 'continent', 'country', 'a1code', 'a2codes', 'latitude', 'longitude', 'altnames'];
-
 }
 export function BuildCities() {
-    currentCSV = new CSVData('CitiesData', location.City.prototype.dataFields);
+    currentCSV = new CSVData(FileNameCities, location.City.prototype.dataFields);
     // return ['name', 'continent', 'country', 'a1code', 'a2code', 'latitude', 'longitude', 'altnames'];
 }
 
@@ -56,7 +60,6 @@ function BuildLocationArray(type, ...data) {
     if (!addEmptyRows) {
         let emptyRow = true;
         for (let i = 0; i < data.length; i++) {
-            console.log("DATA[i]:", data[i]);
             if (!stringUtils.IsNullOrEmptyOrWhitespace(data[i])) {
                 emptyRow = false;
                 break;
@@ -67,36 +70,50 @@ function BuildLocationArray(type, ...data) {
         }
     }
     switch (type) {
-        case 'continents':
+        case FileNameContinents:
             // ['name', 'code', 'm49', 'altnames'];
             let continent = new location.Continent(...data);
             dataContainer.ContinentsContainer.AddLocation(continent);
             break;
-        case 'countries':
+        case FileNameCountries:
             // ['name', 'continent', 'iso2', 'iso3', 'ccn', 'fips', 'cioc', 'continent', 'latitude', 'longitude', 'altnames'];
+            let country = new location.Country(...data);
+            console.log("COUNTRY: ", country);
+            dataContainer.CountriesContainer.AddLocation(country);
             break;
-        case 'regions':
+        case FileNameRegions:
             // ['name', 'continent', 'country', 'a1code', 'a2codes', 'latitude', 'longitude', 'altnames'];
+            let region = new location.Region(...data);
+            dataContainer.RegionsContainer.AddLocation(region);
             break;
-        case 'cities':
+        case FileNameCities:
             // ['name', 'continent', 'country', 'a1code', 'a2code', 'latitude', 'longitude', 'altnames'];
+            let city = new location.City(...data);
+            dataContainer.CitiesContainer.AddLocation(city);
             break;
     }
 }
 function SaveLocationArray() {
-
-    dataContainer.ContinentsContainer.locations.forEach(location => {
-        currentCSV.AddRow(location.row);
-    });
-
     switch (currentCSV.fileName) {
-        case 'continents':
+        case FileNameContinents:
+            dataContainer.ContinentsContainer.locations.forEach(location => {
+                currentCSV.AddRow(location.row);
+            });
             break;
-        case 'countries':
+        case FileNameCountries:
+            dataContainer.CountriesContainer.locations.forEach(location => {
+                currentCSV.AddRow(location.row);
+            });
             break;
-        case 'regions':
+        case FileNameRegions:
+            dataContainer.RegionsContainer.locations.forEach(location => {
+                currentCSV.AddRow(location.row);
+            });
             break;
-        case 'cities':
+        case FileNameCities:
+            dataContainer.CitiesContainer.locations.forEach(location => {
+                currentCSV.AddRow(location.row);
+            });
             break;
     }
     currentCSV.Save();
@@ -108,12 +125,12 @@ function ParseCSV(localFileName, type, step) {
 }
 
 function ParseCSVSuccess(results, file, callbackParam = null) {
-    console.log("Parsed CSV file:", file, ', Callback Param:', callbackParam);
     if (debugDataCreator) {
+        console.log("Parsed CSV file:", file, ', Callback Param:', callbackParam);
         console.log("CSV file results:", results);
     }
     switch (callbackParam.type) {
-        case 'continents':
+        case FileNameContinents:
             switch (callbackParam.step) {
                 case 1:
                     for (let i = 1; i < results.data.length; i++) {
@@ -129,9 +146,10 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
                     break;
             }
             break;
-        case 'countries':
+        case FileNameCountries:
             switch (callbackParam.step) {
                 case 1:
+                    console.log("Results data length: ", results.data.length);
                     for (let i = 1; i < results.data.length; i++) {
                         let csvRow = results.data[i];
                         // ['name', 'continent', 'iso2', 'iso3', 'ccn', 'fips', 'cioc', 'continent', 'latitude', 'longitude', 'altnames'];
@@ -153,7 +171,7 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
                     break;
             }
             break;
-        case 'regions':
+        case FileNameRegions:
             switch (callbackParam.step) {
                 case 1:
                     for (let i = 1; i < results.data.length; i++) {
@@ -166,7 +184,7 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
                     break;
             }
             break;
-        case 'cities':
+        case FileNameCities:
             switch (callbackParam.step) {
                 case 1:
                     for (let i = 1; i < results.data.length; i++) {
@@ -210,7 +228,6 @@ class CSVData {
     rows;
 
     constructor(fileName, rowLabels) {
-        console.log("Creating new CSVData, filename:", fileName, "rowLabels:", rowLabels);
         this.fileName = fileName;
         this.rowLabels = rowLabels;
         this.rows = [rowLabels];
@@ -228,9 +245,6 @@ class CSVData {
      * @param {*[]} row Array of values to write as a row of the CSV 
      */
     AddRow(row) {
-        console.log("ADDING ROW " + this.rows.length + ":", row);
-        console.log("filename: ", this.fileName);
-        console.log("rowLabels: ", this.rowLabels);
         console.trace();
         if (row.length != this.rowLabels.length) {
             if (debugDataCreator) {
