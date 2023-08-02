@@ -8,6 +8,12 @@ import * as dataContainer from './datacontainer';
 
 let debugDataCreator = true;
 
+/** If false, do not add empty rows to location array
+ * @type {boolean}
+ * @see BuildLocationArray
+ */
+const addEmptyRows = false;
+
 let currentCSV;
 let csvParseCount = 0;
 let csvSuccessCount = 0;
@@ -42,6 +48,19 @@ export function BuildCities() {
  * @param  {...string} data 
  */
 function BuildLocationArray(type, ...data) {
+    if (!addEmptyRows) {
+        let emptyRow = true;
+        for (let i = 0; i < data.length; i++) {
+            console.log("DATA[i]:", data[i]);
+            if (!stringUtils.IsNullOrEmptyOrWhitespace(data[i])) {
+                emptyRow = false;
+                break;
+            }
+        }
+        if (emptyRow) {
+            return;
+        }
+    }
     switch (type) {
         case 'continents':
             // ['name', 'code', 'm49', 'altnames'];
