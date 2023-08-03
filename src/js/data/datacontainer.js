@@ -20,8 +20,6 @@ export class LocationsContainer {
         }
         this.dataFields = fromLocation.dataFields;
         // add searchname / searchaltnames for pre-calc toLocaleLowerCase versions of names 
-        this.dataFields.push('searchname');
-        this.dataFields.push('searchaltnames');
         // create maps for data fields 
         for (const field of this.dataFields) {
             this.maps[field] = new Map();
@@ -34,7 +32,7 @@ export class LocationsContainer {
         // ensure searchname and searchaltnames present 
         if (location.name != null &&
             location.searchname === null) {
-            location.searchname = location.name;
+            location.searchname = location.name.trim().toLocaleLowerCase();
         }
         if (location.altnames != null &&
             location.altsearchnames === null) {

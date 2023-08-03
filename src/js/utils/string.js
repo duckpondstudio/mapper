@@ -156,3 +156,29 @@ function IsStringNumeric(str) {
 function IsStringShiftNumeric(str) {
     return /[!@#$%^&*()]/.test(str);
 }
+
+
+/**
+ * Convert diacritics in the given string to their regular latin equivalent. 
+ * 
+ * Similar to {@link String.toLocaleLowerCase}, without affecting case (or requiring encoding)
+ * @param {string} str String to convert
+ * @param {boolean} [convertLatinAe=true] Use {@link replaceAeWithLatinAE} to convert "Æ" and "æ" 
+ * to "AE" and "ae", respectively?
+ * @see {@link String.toLocaleLowerCase}
+ * @returns 
+ */
+function removeDiacritics(str, convertLatinAe = true) {
+    return convertLatinAe ?
+        replaceAeWithLatinAE(str.normalize("NFD").replace(/[\u0300-\u036f]/g, "")) :
+        str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+/**
+ * Converts "Æ" and "æ" in the input string to "AE" and "ae", respectively
+ * @param {string} str String to convert
+ * @returns {string} String with "Æ" and "æ" converted to "AE" and "ae", respectively
+ */
+function replaceAeWithLatinAE(str) {
+    return str.replace(/Æ/g, 'AE').replace(/æ/g, 'ae');
+}
