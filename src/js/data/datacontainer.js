@@ -1,4 +1,5 @@
 import * as dataClasses from './dataclasses';
+import * as stringUtils from '../utils/string';
 
 export class LocationsContainer {
 
@@ -64,7 +65,7 @@ export class LocationsContainer {
         }
 
         if (searchDataFields.name != null) {
-            searchDataFields.searchname = searchDataFields.name.toLocaleLowerCase();
+            searchDataFields.searchname = stringUtils.Simplify(searchDataFields.name);
             searchDataFields.name = null;
         }
         console.log(searchDataFields.name);

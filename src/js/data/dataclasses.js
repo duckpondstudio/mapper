@@ -4,11 +4,14 @@ import * as stringUtils from '../utils/string';
 // note, this is typically auto-added when writing to CSV 
 const addQuotesAroundDelimEntries = false;
 
+const searchname = 'searchname';
+const searchaltnames = 'searchaltnames';
+
 export class Location {
     /** All fields (eg columns) for this location type
      * @type {string[]} */
     get dataFields() {
-        return ['name', 'altnames'];
+        return ['name', 'altnames', searchname, searchaltnames];
     }
     /** Gets all the values in altnames, if any, in a string[] array 
      * @type {string[]} 
@@ -29,7 +32,7 @@ export class Location {
         } else if (this.altnames != null) {
             let searchAltNames = this.altNamesArray;
             for (let i = 0; i < searchAltNames.length; i++) {
-                searchAltNames[i] = searchAltNames[i].trim().toLocaleLowerCase();
+                searchAltNames[i] = stringUtils.Simplify(searchAltNames[i]);
             }
             this.ApplyArrayToAltNamesString(searchAltNames, true);
             return searchAltNames;
@@ -51,11 +54,9 @@ export class Location {
                 }
             } else {
                 if (Array.isArray(entry)) {
-                    for (let i = 0; i < entry.length; i++) {
-                        entry[i]
-                    }
-                } else if (typeof value !== 'string') {
-                    entry = entry.toString().trim();
+                    entry = entry.join(delimiter);
+                } else if (typeof value != 'string') {
+                    entry = entry.toString();
                 }
                 entry = entry.trim();
                 if (addQuotesAroundDelimEntries && entry.indexOf(delimiter) >= 0) {
@@ -98,9 +99,22 @@ export class Location {
             }
             this[this.dataFields[i]] = value;
         }
+        // check searchname and searchaltnames
+        if ((this[searchname] == null || this[searchname] == '') &&
+            this.name != null) {
+            this[searchname] = stringUtils.Simplify(this.name);
+        }
+        if ((this[searchaltnames] == null ||
+            this[searchaltnames] == '' ||
+            (Array.isArray(this[searchaltnames]) &&
+                this[searchaltnames].length == 0)) &&
+                this.altnames != null) {
+            let searchAltNamesArray = this.AltNamesToArray(this.altnames);
+            this.ApplyArrayToAltNamesString(searchAltNamesArray, true);
+        }
     }
 
-    static AltNamesToArray(altNames) {
+    AltNamesToArray(altNames) {
         if (altNames == null) { return []; }
         if (Array.isArray(altNames)) { return altNames; }
         altNames = altNames.trim();
@@ -116,7 +130,7 @@ export class Location {
         if (altNames.lastIndexOf(']') == altNames.length - 1) {
             altNames = altNames.slice(0, altNames.length - 1);
         }
-        return altNames.split(',');
+        return altNames.split(csv.defaultDelim);
     }
 
     /**
@@ -126,16 +140,22 @@ export class Location {
      */
     ApplyArrayToAltNamesString(altNamesArray, search = false) {
         if (altNamesArray == null) { return; }
+        let updatedAltNamesArray = [];
         if (search) {
             for (let i = 0; i < altNamesArray.length; i++) {
-                altNamesArray[i] = altNamesArray[i].trim().toLocaleLowerCase();
+                let newAltName = stringUtils.Simplify(altNamesArray[i]);
+                if (!updatedAltNamesArray.includes(newAltName)) {
+                    updatedAltNamesArray.push(newAltName);
+                }
             }
         }
         let altNames = addQuotesAroundDelimEntries ?
             csv.delimQuote + altNamesArray.join(',') + csv.delimQuote :
             altNamesArray.join(',');
         if (search) {
-            this['searchaltnames'] = altNames;
+            console.log("ADDING:", updatedAltNamesArray);
+            this[searchaltnames] = updatedAltNamesArray;
+            console.log("value:", this[searchaltnames]);
         } else {
             this['altnames'] = altNames;
         }
@@ -156,7 +176,7 @@ export class Location {
                 if (!writeReady && overwrite) {
                     // enable writeready UNLESS it's for altnames
                     // in that case, let the switch (field) handle it (we still just want to add those fields)
-                    if (field != 'altnames' && field != 'searchaltnames') {
+                    if (field != 'altnames' && field != searchaltnames) {
                         writeReady = true;
                     }
                 }
@@ -170,8 +190,8 @@ export class Location {
                 switch (field) {
                     case 'name':
                         // check for searchname 
-                        if (this['searchname'] == null) {
-                            this['searchname'] = combine[field].trim().toLocaleLowerCase();
+                        if (this[searchname] == null) {
+                            this[searchname] = stringUtils.Simplify(combine[field]);
                         }
                         break;
                     case 'altnames':
@@ -180,12 +200,12 @@ export class Location {
                         let newAltNames = combine.altNamesArray;
                         let searchAltNames = [];
                         // ensure searchaltnames exists 
-                        if (this['searchaltnames'] == null) {
+                        if (this[searchaltnames] == null) {
                             searchAltNames = currentAltNames;
                             for (let i = 0; i < searchAltNames.length; i++) {
-                                searchAltNames[i] = searchAltNames[i].trim().toLocaleLowerCase();
+                                searchAltNames[i] = stringUtils.Simplify(searchAltNames[i]);
                             }
-                            // this['searchaltnames'] = searchAltNames;
+                            // this[searchaltnames] = searchAltNames;
                             this.ApplyArrayToAltNamesString(searchAltNames, true);
                         }
                         // update with new alt names 
@@ -196,20 +216,20 @@ export class Location {
                                 // update current alt names 
                                 currentAltNames.push(newAltName);
                                 // add new altname to searchaltnames 
-                                searchAltNames.push(newAltName.trim().toLocaleLowerCase());
+                                searchAltNames.push(stringUtils.Simplify(newAltName));
                             }
                         });
                         // if any new names were pushed, update the fields 
                         if (anyPushed) {
                             // direct apply
                             // this[field] = currentAltNames;
-                            // this[('searchaltnames')] = searchAltNames;
+                            // this[(searchaltnames)] = searchAltNames;
                             // apply via method 
                             this.ApplyArrayToAltNamesString(currentAltNames, false);
                             this.ApplyArrayToAltNamesString(searchAltNames, true);
                         }
                         break;
-                    case 'searchaltnames':
+                    case searchaltnames:
                         // just add if not already existing 
                         let currentSearchAltNames = this.searchAltNamesArray;
                         let newSearchAltNames = combine.searchAltNamesArray;
@@ -230,7 +250,7 @@ export class Continent extends Location {
      * @type {string[]} */
     get dataFields() {
         return ['name', 'code', 'm49',
-            'altnames', 'searchname', 'searchaltnames'];
+            'altnames', searchname, searchaltnames];
     }
 }
 export class Country extends Location {
@@ -238,7 +258,7 @@ export class Country extends Location {
      * @type {string[]} */
     get dataFields() {
         return ['name', 'continent', 'iso2', 'iso3', 'ccn', 'fips', 'cioc', 'latitude', 'longitude',
-            'altnames', 'searchname', 'searchaltnames'];
+            'altnames', searchname, searchaltnames];
     }
 }
 export class Region extends Location {
@@ -246,7 +266,7 @@ export class Region extends Location {
      * @type {string[]} */
     get dataFields() {
         return ['name', 'continent', 'country', 'a1code', 'a2codes', 'latitude', 'longitude',
-            'altnames', 'searchname', 'searchaltnames'];
+            'altnames', searchname, searchaltnames];
     }
 }
 export class City extends Location {
@@ -254,6 +274,6 @@ export class City extends Location {
      * @type {string[]} */
     get dataFields() {
         return ['name', 'continent', 'country', 'a1code', 'a2code', 'latitude', 'longitude',
-            'altnames', 'searchname', 'searchaltnames'];
+            'altnames', searchname, searchaltnames];
     }
 }
