@@ -19,7 +19,6 @@ export class LocationsContainer {
             return;
         }
         this.dataFields = fromLocation.dataFields;
-        // add searchname / searchaltnames for pre-calc toLocaleLowerCase versions of names 
         // create maps for data fields 
         for (const field of this.dataFields) {
             this.maps[field] = new Map();
@@ -29,15 +28,6 @@ export class LocationsContainer {
     AddLocation(location, checkForExisting = true) {
         if (location === null) { return; }
         this.#LoadDataFields(location);
-        // ensure searchname and searchaltnames present 
-        if (location.name != null &&
-            location.searchname === null) {
-            location.searchname = location.name.trim().toLocaleLowerCase();
-        }
-        if (location.altnames != null &&
-            location.altsearchnames === null) {
-            location.altsearchnames = location.altnames;
-        }
         // check if location is an existing one 
         if (checkForExisting) {
             console.log("CHECK FOR EXISTING, name:", location.name);
