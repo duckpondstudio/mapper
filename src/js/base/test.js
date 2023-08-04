@@ -5,6 +5,7 @@ import * as m from "../data/maps";
 import { ParseCSVLocal } from "../utils/parse_csv";
 import { WriteCSV, WriteTestCSV } from "../utils/write_csv";
 import * as dc from "../data/datacreator";
+import * as stringUtils from "../utils/string";
 
 // Default testkey: t           ----------------- SHIFT + T + Num
 
@@ -72,6 +73,8 @@ export function NumericTest(num) {
             break;
 
         case 4:
+            console.log(
+                stringUtils.Simplify("Quốc Ngữ 1!2@3#"));
             break;
 
         case 5:

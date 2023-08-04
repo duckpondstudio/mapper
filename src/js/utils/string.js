@@ -157,6 +157,21 @@ function IsStringShiftNumeric(str) {
     return /[!@#$%^&*()]/.test(str);
 }
 
+
+
+/**
+ * Vastly simplifies a given input string. Removes all diacritics (eg, ã to a), 
+ * removes all non-alphanumeric characters (including spaces), and converts to lowercase
+ * @param {string} inputString 
+ * @returns Simplified string
+ * @example Simplify("Quốc Ngữ 1!2@3#"); // outputs "quocngu123" 
+ */
+export function Simplify(inputString) {
+    inputString = RemoveDiacritics(inputString);
+    inputString = RemoveAllNonAlphaNumeric(inputString);
+    return inputString.toLocaleLowerCase();
+}
+
 /**
  * Removes all whitespace from the given string 
  * @param {string} inputString String to remove whitespace from 
