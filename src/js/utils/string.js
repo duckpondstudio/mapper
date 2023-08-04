@@ -157,28 +157,49 @@ function IsStringShiftNumeric(str) {
     return /[!@#$%^&*()]/.test(str);
 }
 
+/**
+ * Removes all whitespace from the given string 
+ * @param {string} inputString String to remove whitespace from 
+ * @param {boolean} [literalOnly=false] Only remove literal ' ' whitespace, and not 
+ * implied whitespace (eg line returns)? Default false 
+ * @returns {string} Modified string
+ */
+export function RemoveWhitespace(inputString, literalOnly = false) {
+    return inputString.replace((literalOnly ? '/ /g' : /\s/g), '');
+}
+
+/**
+ * Remove all non-alphanumeric characters, including whitespace and characters with
+ * diacritics, from the given string 
+ * @param {string} inputString String to remove non-alphanumeric characters from 
+ * @returns {string} Modified string
+ */
+export function RemoveAllNonAlphaNumeric(inputString) {
+    return inputString.replace(/[^a-z0-9]/gi, '');
+}
+
 
 /**
  * Convert diacritics in the given string to their regular latin equivalent. 
  * 
  * Similar to {@link String.toLocaleLowerCase}, without affecting case (or requiring encoding)
- * @param {string} str String to convert
- * @param {boolean} [convertLatinAe=true] Use {@link replaceAeWithLatinAE} to convert "Æ" and "æ" 
+ * @param {string} inputString String to convert
+ * @param {boolean} [convertLatinAe=true] Use {@link ReplaceAeWithLatinAE} to convert "Æ" and "æ" 
  * to "AE" and "ae", respectively?
  * @see {@link String.toLocaleLowerCase}
  * @returns 
  */
-function removeDiacritics(str, convertLatinAe = true) {
+export function RemoveDiacritics(inputString, convertLatinAe = true) {
     return convertLatinAe ?
-        replaceAeWithLatinAE(str.normalize("NFD").replace(/[\u0300-\u036f]/g, "")) :
-        str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        ReplaceAeWithLatinAE(inputString.normalize("NFD").replace(/[\u0300-\u036f]/g, "")) :
+        inputString.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
 /**
  * Converts "Æ" and "æ" in the input string to "AE" and "ae", respectively
- * @param {string} str String to convert
+ * @param {string} inputString String to convert
  * @returns {string} String with "Æ" and "æ" converted to "AE" and "ae", respectively
  */
-function replaceAeWithLatinAE(str) {
-    return str.replace(/Æ/g, 'AE').replace(/æ/g, 'ae');
+export function ReplaceAeWithLatinAE(inputString) {
+    return inputString.replace(/Æ/g, 'AE').replace(/æ/g, 'ae');
 }
