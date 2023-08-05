@@ -57,7 +57,7 @@ export function BuildCities() {
  * @param {string} type 
  * @param  {...string} data 
  */
-function BuildLocationArray(type, ...data) {
+function BuildLocationArray(type, name, altnames, ...data) {
     if (!addEmptyRows) {
         let emptyRow = true;
         for (let i = 0; i < data.length; i++) {
@@ -73,22 +73,22 @@ function BuildLocationArray(type, ...data) {
     switch (type) {
         case FileNameContinents:
             // ['name', 'code', 'm49', 'altnames'];
-            let continent = new location.Continent(...data);
+            let continent = new location.Continent(name, altnames, null, null, ...data);
             dataContainer.ContinentsContainer.AddLocation(continent);
             break;
         case FileNameCountries:
             // ['name', 'continent', 'iso2', 'iso3', 'ccn', 'fips', 'cioc', 'continent', 'latitude', 'longitude', 'altnames'];
-            let country = new location.Country(...data);
+            let country = new location.Country(name, altnames, null, null, ...data);
             dataContainer.CountriesContainer.AddLocation(country);
             break;
         case FileNameRegions:
             // ['name', 'continent', 'country', 'a1code', 'a2codes', 'latitude', 'longitude', 'altnames'];
-            let region = new location.Region(...data);
+            let region = new location.Region(name, altnames, null, null, ...data);
             dataContainer.RegionsContainer.AddLocation(region);
             break;
         case FileNameCities:
             // ['name', 'continent', 'country', 'a1code', 'a2code', 'latitude', 'longitude', 'altnames'];
-            let city = new location.City(...data);
+            let city = new location.City(name, altnames, null, null, ...data);
             dataContainer.CitiesContainer.AddLocation(city);
             break;
     }
@@ -137,11 +137,12 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
                     for (let i = 1; i < results.data.length; i++) {
                         let csvRow = results.data[i];
                         // ['name', 'code', 'm49', 'altnames'];
-                        BuildLocationArray(callbackParam.type,
+                        BuildLocationArray(
+                            callbackParam.type,
                             csvRow[i][2], // name
+                            csvRow[i][3], // altnames 
                             csvRow[i][0], // code 
                             csvRow[i][1], // m49
-                            csvRow[i][3], // altnames 
                         );
                     }
                     break;
@@ -158,6 +159,7 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
                         if (fips == null || fips == '') { fips = csvRow[18]; }// "equivalent fips code"
                         BuildLocationArray(callbackParam.type,
                             csvRow[4], // name
+                            null, // altnames 
                             csvRow[8], // continent (code)
                             csvRow[0], // iso2 
                             csvRow[1], // iso3 
@@ -166,7 +168,6 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
                             null, // cioc 
                             null, // latitude 
                             null, // longitude 
-                            null, // altnames 
                         );
                     }
                     break;
@@ -184,6 +185,7 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
                         }
                         BuildLocationArray(callbackParam.type,
                             csvRow[0], // name
+                            csvRow[1], // altnames 
                             null, // continent (code)
                             csvRow[3], // iso2 
                             csvRow[5], // iso3 
@@ -192,7 +194,6 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
                             csvRow[6], // cioc 
                             lat, // latitude 
                             long, // longitude 
-                            csvRow[1], // altnames 
                         );
                     }
                     break;
