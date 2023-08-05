@@ -10,18 +10,21 @@ export class LocationsContainer {
 
     #dataFieldsLoaded = false;
 
-    constructor() {
-        this.locations = [];
-        this.mapsByName = {};
-        this.mapsByValue = {};
-    }
+    constructor(locationType) {
 
-    #LoadDataFields(fromLocation) {
-        if (this.#dataFieldsLoaded) {
+        if (!dataClasses.IsValidLocationType(locationType)) {
+            console.error("Invalid locationType", locationType,
+                'cannot create new LocationsContainer with invalid type.');
             return;
         }
-        this.dataFields = fromLocation.dataFields;
+
+        this.locations = [];
+
+        this.dataFields = dataClasses.GetDataFields(locationType);
+        
         // create maps for data fields 
+        this.mapsByName = {};
+        this.mapsByValue = {};
         for (const field of this.dataFields) {
             this.mapsByName[field] = new Map();
             this.mapsByValue[field] = new Map();
@@ -38,14 +41,16 @@ export class LocationsContainer {
      */
     AddLocation(location, checkForExisting = true) {
 
+        // nullcheck 
         if (location == null) { return; }
+        // ensure name property exists 
         if (location.name == null || location.name == '') {
             console.warn("Can't add Location without a .name property, returning.",
                 "Location:", location, "LocationContainer:", this);
             return;
         }
+        // note (since name exists, we can take for granted that searchname exists)
 
-        this.#LoadDataFields(location);
         // check if location is an existing one 
         if (checkForExisting) {
             console.log("CHECK FOR EXISTING, name:", location.name);
@@ -57,8 +62,26 @@ export class LocationsContainer {
                 return;
             }
         }
+        
         // add to array 
         this.locations.push(location);
+
+        // update data maps with new location 
+        this.UpdateLocationDataMaps(location);
+    }
+
+    /**
+     * Ensure the given location's data is all up-to-date 
+     * in the relevant data maps 
+     * @param {dataClasses.Location} location 
+     */
+    UpdateLocationDataMaps(location) {
+        // add to maps 
+        for (const field of this.dataFields) {
+            // iterate through data fields 
+            this.mapsByName[field] = new Map();
+            this.mapsByValue[field] = new Map();
+        }
     }
 
     GetLocation(...dataFields) {
@@ -126,7 +149,28 @@ export class LocationsContainer {
     }
 }
 
-export const ContinentsContainer = new LocationsContainer();
-export const CountriesContainer = new LocationsContainer();
-export const RegionsContainer = new LocationsContainer();
-export const CitiesContainer = new LocationsContainer();
+/**
+ * Gets the {@link LocationsContainer} for the given {@link dataClasses.Location Location} type
+ * @param {string} locationType Location type input, see {@link dataClasses.type_Continent}, 
+ * {@link dataClasses.type_Country Country}, etc
+ * @returns {LocationsContainer} {@link LocationsContainer} for the relevant location type 
+ */
+export function GetLocationsContainer(locationType) {
+    switch (locationType) {
+        case dataClasses.type_Continent: return ContinentsContainer;
+        case dataClasses.type_Country: return CountriesContainer;
+        case dataClasses.type_Region: return RegionsContainer;
+        case dataClasses.type_City: return CitiesContainer;
+        case dataClasses.type_Default:
+            console.error("Type_Default is an invalid input for GetLocationsContainer, returning null");
+            return null;
+        default:
+            console.error("Invalid unknown input", locationType, "for GetLocationsContainer, returning null");
+            return null;
+    }
+}
+
+export const ContinentsContainer = new LocationsContainer(dataClasses.type_Continent);
+export const CountriesContainer = new LocationsContainer(dataClasses.type_Country);
+export const RegionsContainer = new LocationsContainer(dataClasses.type_Region);
+export const CitiesContainer = new LocationsContainer(dataClasses.type_City);
