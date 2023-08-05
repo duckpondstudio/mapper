@@ -4,7 +4,7 @@ import * as stringUtils from '../utils/string';
 export class LocationsContainer {
 
     /** Array containing all locations 
-     * @type {Location[]}
+     * @type {dataClasses.Location[]}
     */
     locations;
 
@@ -12,7 +12,8 @@ export class LocationsContainer {
 
     constructor() {
         this.locations = [];
-        this.maps = {};
+        this.mapsByName = {};
+        this.mapsByValue = {};
     }
 
     #LoadDataFields(fromLocation) {
@@ -22,12 +23,28 @@ export class LocationsContainer {
         this.dataFields = fromLocation.dataFields;
         // create maps for data fields 
         for (const field of this.dataFields) {
-            this.maps[field] = new Map();
+            this.mapsByName[field] = new Map();
+            this.mapsByValue[field] = new Map();
         }
     }
 
+    /**
+     * Adds a new Location to this container.
+     * 
+     * Note: For adding, Location MUST have a 'name' property
+     * @param {dataClasses.Location} location 
+     * @param {boolean} checkForExisting 
+     * @returns 
+     */
     AddLocation(location, checkForExisting = true) {
-        if (location === null) { return; }
+
+        if (location == null) { return; }
+        if (location.name == null || location.name == '') {
+            console.warn("Can't add Location without a .name property, returning.",
+                "Location:", location, "LocationContainer:", this);
+            return;
+        }
+
         this.#LoadDataFields(location);
         // check if location is an existing one 
         if (checkForExisting) {

@@ -9,11 +9,52 @@ export const altnames = 'altnames';
 export const searchname = 'searchname';
 export const searchaltnames = 'searchaltnames';
 
+export const type_Default = 'default';
+export const type_Continent = 'continent';
+export const type_Country = 'country';
+export const type_Region = 'region';
+export const type_City = 'city';
+
+export const dataFields_Default =
+    [name, altnames, searchname, searchaltnames];
+export const dataFields_Continent = dataFields_Default.concat(
+    ['code', 'm49']);
+export const dataFields_Country = dataFields_Default.concat(
+    ['continent', 'iso2', 'iso3', 'ccn', 'fips', 'cioc', 'latitude', 'longitude']);
+export const dataFields_Region = dataFields_Default.concat(
+    ['continent', 'country', 'a1code', 'a2codes', 'latitude', 'longitude']);
+export const dataFields_City = dataFields_Default.concat(
+    ['continent', 'country', 'a1code', 'a2code', 'latitude', 'longitude']);
+
+/**
+ * Gets the DataFields associated with the given location type 
+ * @param {string} locationType Location type, see {@link type_Default}
+ * @returns {string[]} DataFields for the given Location type, see {@link dataFields_Default}
+ */
+export function GetDataFields(locationType) {
+    switch (locationType) {
+        case type_Continent:
+            return dataFields_Continent;
+        case type_Country:
+            return dataFields_Country;
+        case type_Region:
+            return dataFields_Region;
+        case type_City:
+            return dataFields_City;
+        default:
+            console.warn("Invalid type", locationType, ", cannot get DataFields, returning dataFields_Default");
+        case type_Default:
+            return dataFields_Default;
+    }
+}
+
 export class Location {
+    /** Type of this Location, eg "continent", or "default" @type {string} */
+    get type() { return type_Default; }
     /** All fields (eg columns) for this location type
      * @type {string[]} */
     get dataFields() {
-        return ['name', 'altnames', searchname, searchaltnames];
+        return [name, altnames, searchname, searchaltnames];
     }
     /** Gets all the values in altnames, if any, in a string[] array 
      * @type {string[]} 
@@ -248,34 +289,38 @@ export class Location {
     }
 }
 export class Continent extends Location {
+    /** Type of this Location, eg "continent" @type {string} */
+    get type() { return type_Continent; }
     /** All fields (eg columns) for this location type
      * @type {string[]} */
     get dataFields() {
-        return ['name', 'code', 'm49',
-            'altnames', searchname, searchaltnames];
+        return dataFields_Continent;
     }
 }
 export class Country extends Location {
+    /** Type of this Location, eg "country" @type {string} */
+    get type() { return type_Country; }
     /** All fields (eg columns) for this location type
      * @type {string[]} */
     get dataFields() {
-        return ['name', 'continent', 'iso2', 'iso3', 'ccn', 'fips', 'cioc', 'latitude', 'longitude',
-            'altnames', searchname, searchaltnames];
+        return dataFields_Country;
     }
 }
 export class Region extends Location {
+    /** Type of this Location, eg "region" @type {string} */
+    get type() { return type_Region; }
     /** All fields (eg columns) for this location type
      * @type {string[]} */
     get dataFields() {
-        return ['name', 'continent', 'country', 'a1code', 'a2codes', 'latitude', 'longitude',
-            'altnames', searchname, searchaltnames];
+        return dataFields_Region;
     }
 }
 export class City extends Location {
+    /** Type of this Location, eg "city" @type {string} */
+    get type() { return type_City; }
     /** All fields (eg columns) for this location type
      * @type {string[]} */
     get dataFields() {
-        return ['name', 'continent', 'country', 'a1code', 'a2code', 'latitude', 'longitude',
-            'altnames', searchname, searchaltnames];
+        return dataFields_City;
     }
 }
