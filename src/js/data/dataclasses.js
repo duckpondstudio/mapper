@@ -288,6 +288,34 @@ export class Location {
         });
     }
 }
+
+
+/**
+ * Is the given LocationType a valid location type?
+ * 
+ * See {@link type_Continent}, {@link type_Country}, 
+ * {@link type_Region}, and {@link type_City}.
+ * 
+ * Returns true with a warning if checking {@link type_Default}
+ * @param {string} locationType 
+ * @returns {boolean}
+ */
+export function IsValidLocationType(locationType) {
+    switch (locationType) {
+        case type_Continent:
+        case type_Country:
+        case type_Region:
+        case type_City:
+            return true;
+        case type_Default:
+            console.warn('While type_Default IS a valid location type, ',
+                'it should not generally be used. Returning true with warning.');
+            return true;
+    }
+    return false;
+}
+
+
 export class Continent extends Location {
     /** Type of this Location, eg "continent" @type {string} */
     get type() { return type_Continent; }
