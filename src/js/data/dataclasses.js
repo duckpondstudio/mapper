@@ -4,8 +4,10 @@ import * as stringUtils from '../utils/string';
 // note, this is typically auto-added when writing to CSV 
 const addQuotesAroundDelimEntries = false;
 
-const searchname = 'searchname';
-const searchaltnames = 'searchaltnames';
+export const name = 'name';
+export const altnames = 'altnames';
+export const searchname = 'searchname';
+export const searchaltnames = 'searchaltnames';
 
 export class Location {
     /** All fields (eg columns) for this location type
@@ -108,7 +110,7 @@ export class Location {
             this[searchaltnames] == '' ||
             (Array.isArray(this[searchaltnames]) &&
                 this[searchaltnames].length == 0)) &&
-                this.altnames != null) {
+            this.altnames != null) {
             let searchAltNamesArray = this.AltNamesToArray(this.altnames);
             this.ApplyArrayToAltNamesString(searchAltNamesArray, true);
         }
@@ -157,7 +159,7 @@ export class Location {
             this[searchaltnames] = updatedAltNamesArray;
             console.log("value:", this[searchaltnames]);
         } else {
-            this['altnames'] = altNames;
+            this[altnames] = altNames;
         }
     }
 
@@ -176,7 +178,7 @@ export class Location {
                 if (!writeReady && overwrite) {
                     // enable writeready UNLESS it's for altnames
                     // in that case, let the switch (field) handle it (we still just want to add those fields)
-                    if (field != 'altnames' && field != searchaltnames) {
+                    if (field != altnames && field != searchaltnames) {
                         writeReady = true;
                     }
                 }
@@ -188,13 +190,13 @@ export class Location {
                 }
                 // extra functionality for specific fields 
                 switch (field) {
-                    case 'name':
+                    case name:
                         // check for searchname 
                         if (this[searchname] == null) {
                             this[searchname] = stringUtils.Simplify(combine[field]);
                         }
                         break;
-                    case 'altnames':
+                    case altnames:
                         // check for searchaltnames 
                         let currentAltNames = this.altNamesArray;
                         let newAltNames = combine.altNamesArray;
