@@ -169,6 +169,7 @@ export class Location {
             (Array.isArray(this[searchaltnames]) &&
                 this[searchaltnames].length == 0)) &&
             this.altnames != null) {
+            // apply altnames to searchaltnames 
             let searchAltNamesArray = Location.AltNamesToArray(this.altnames);
             this.ApplyArrayToAltNamesString(searchAltNamesArray, true);
         }
@@ -214,15 +215,16 @@ export class Location {
                 }
             }
         }
-        let altNames = addQuotesAroundDelimEntries ?
-            csv.delimQuote + altNamesArray.join(',') + csv.delimQuote :
-            altNamesArray.join(',');
+        // format arrays, check for quotes 
+        // let altNames = addQuotesAroundDelimEntries ?
+        //     csv.delimQuote + altNamesArray.join(',') + csv.delimQuote :
+        //     altNamesArray.join(',');
         if (search) {
-            console.log("ADDING:", updatedAltNamesArray);
+            updatedAltNamesArray = updatedAltNamesArray.filter(Boolean);
             this[searchaltnames] = updatedAltNamesArray;
-            console.log("value:", this[searchaltnames]);
         } else {
-            this[altnames] = altNames;
+            altNamesArray = altNamesArray.filter(Boolean);
+            this[altnames] = altNamesArray;
         }
     }
 
@@ -268,11 +270,10 @@ export class Location {
                         let searchAltNames = [];
                         // ensure searchaltnames exists 
                         if (this[searchaltnames] == null) {
-                            searchAltNames = currentAltNames;
+                            searchAltNames = currentAltNames.splice(0);
                             for (let i = 0; i < searchAltNames.length; i++) {
                                 searchAltNames[i] = stringUtils.Simplify(searchAltNames[i]);
                             }
-                            // this[searchaltnames] = searchAltNames;
                             this.ApplyArrayToAltNamesString(searchAltNames, true);
                         }
                         // update with new alt names 
