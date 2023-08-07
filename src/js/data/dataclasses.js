@@ -220,10 +220,15 @@ export class Location {
         //     csv.delimQuote + altNamesArray.join(',') + csv.delimQuote :
         //     altNamesArray.join(',');
         if (search) {
-            updatedAltNamesArray = updatedAltNamesArray.filter(Boolean);
+            // remove null values and searchname from altsearchnames 
+            updatedAltNamesArray =
+            updatedAltNamesArray.filter(Boolean)
+            .filter(n => n != this[searchname]);
             this[searchaltnames] = updatedAltNamesArray;
         } else {
-            altNamesArray = altNamesArray.filter(Boolean);
+            // remove null values and name from altnames 
+            altNamesArray = altNamesArray.filter(Boolean)
+                .filter(n => n != this[name]);
             this[altnames] = altNamesArray;
         }
     }
