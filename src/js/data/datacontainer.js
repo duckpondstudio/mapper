@@ -133,19 +133,23 @@ export class LocationsContainer {
 
         // first search by searchname 
         let searchName = dataValues[2];
-        if (this.locationMap_ByName.has(searchName)) {
+        if (!stringUtils.IsNullOrEmptyOrWhitespace(searchName) &&
+            this.locationMap_ByName.has(searchName)) {
             // found matching searchname 
             return GetLocationBySearchName(searchName, true);// don't need to re-check 
         }
 
         // second, search by altnames (datafields)
-        let searchAltNames = dataClasses.Location.AltNamesToArray(dataValues[3]);
-        searchAltNames.forEach(altName => {
-            if (this.locationMap_ByName.has(altName)) {
-                // found matching searchaltname 
-                return GetLocationBySearchName(altName, true);// don't need to re-check 
-            }
-        });
+        if (dataValues[3] != null) {
+            let searchAltNames = dataClasses.Location.AltNamesToArray(dataValues[3]);
+            searchAltNames.forEach(altName => {
+                if (!stringUtils.IsNullOrEmptyOrWhitespace(altName) &&
+                    this.locationMap_ByName.has(altName)) {
+                    // found matching searchaltname 
+                    return GetLocationBySearchName(altName, true);// don't need to re-check 
+                }
+            });
+        }
 
         if (dataValues.length <= 3) {
             // no add'l dataValues, only name/altnames/searchname/searchaltnames return null 
@@ -153,7 +157,6 @@ export class LocationsContainer {
         }
 
         // third, search by values (datafields index 4+)
-        // TODO: search by values 
         for (let i = 4; i < dataValues.length; i++) {
             // bypass null values 
             if (dataValues[i] == null) { continue; }
