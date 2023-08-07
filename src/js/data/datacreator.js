@@ -31,13 +31,13 @@ let csvSuccessCount = 0;
 export function BuildContinents() {
     currentCSV = new CSVData(FileNameContinents, location.Continent.prototype.dataFields);
     // return ['name', 'code', 'm49', 'altnames'];
-    ParseCSV('continent-codes', FileNameContinents, 1);
+    ParseCSV('continent-codes', location.type_Continent, 1);
 }
 export function BuildCountries() {
     currentCSV = new CSVData(FileNameCountries, location.Country.prototype.dataFields);
     // return ['name', 'continent', 'iso2', 'iso3', 'ccn', 'fips', 'cioc', 'continent', 'latitude', 'longitude', 'altnames'];
-    ParseCSV('countryInfo', FileNameCountries, 1);
-    ParseCSV('countries', FileNameCountries, 2);
+    ParseCSV('countryInfo', location.type_Country, 1);
+    ParseCSV('countries', location.type_Country, 2);
 }
 export function BuildRegions() {
     currentCSV = new CSVData(FileNameRegions, location.Region.prototype.dataFields);
@@ -71,22 +71,22 @@ function BuildLocationArray(type, name, altnames, ...data) {
         }
     }
     switch (type) {
-        case FileNameContinents:
+        case location.type_Continent:
             // ['name', 'code', 'm49', 'altnames'];
             let continent = new location.Continent(name, altnames, null, null, ...data);
             dataContainer.ContinentsContainer.AddLocation(continent);
             break;
-        case FileNameCountries:
+        case location.type_Country:
             // ['name', 'continent', 'iso2', 'iso3', 'ccn', 'fips', 'cioc', 'continent', 'latitude', 'longitude', 'altnames'];
             let country = new location.Country(name, altnames, null, null, ...data);
             dataContainer.CountriesContainer.AddLocation(country);
             break;
-        case FileNameRegions:
+        case location.type_Region:
             // ['name', 'continent', 'country', 'a1code', 'a2codes', 'latitude', 'longitude', 'altnames'];
             let region = new location.Region(name, altnames, null, null, ...data);
             dataContainer.RegionsContainer.AddLocation(region);
             break;
-        case FileNameCities:
+        case location.type_City:
             // ['name', 'continent', 'country', 'a1code', 'a2code', 'latitude', 'longitude', 'altnames'];
             let city = new location.City(name, altnames, null, null, ...data);
             dataContainer.CitiesContainer.AddLocation(city);
@@ -96,21 +96,25 @@ function BuildLocationArray(type, name, altnames, ...data) {
 function SaveLocationArray() {
     switch (currentCSV.fileName) {
         case FileNameContinents:
+        case location.type_Continent:
             dataContainer.ContinentsContainer.locations.forEach(location => {
                 currentCSV.AddRow(location.row);
             });
             break;
         case FileNameCountries:
+        case location.type_Country:
             dataContainer.CountriesContainer.locations.forEach(location => {
                 currentCSV.AddRow(location.row);
             });
             break;
         case FileNameRegions:
+        case location.type_Region:
             dataContainer.RegionsContainer.locations.forEach(location => {
                 currentCSV.AddRow(location.row);
             });
             break;
         case FileNameCities:
+        case location.type_City:
             dataContainer.CitiesContainer.locations.forEach(location => {
                 currentCSV.AddRow(location.row);
             });
@@ -130,7 +134,7 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
         console.log("CSV file results:", results);
     }
     switch (callbackParam.type) {
-        case FileNameContinents:
+        case location.type_Continent:
             switch (callbackParam.step) {
                 case 1:
                     // reading from continent-codes.csv 
@@ -148,7 +152,7 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
                     break;
             }
             break;
-        case FileNameCountries:
+        case location.type_Country:
             switch (callbackParam.step) {
                 case 1:
                     // reading from countryInfo.csv 
@@ -199,7 +203,7 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
                     break;
             }
             break;
-        case FileNameRegions:
+        case location.type_Region:
             switch (callbackParam.step) {
                 case 1:
                     for (let i = 1; i < results.data.length; i++) {
@@ -212,7 +216,7 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
                     break;
             }
             break;
-        case FileNameCities:
+        case location.type_City:
             switch (callbackParam.step) {
                 case 1:
                     for (let i = 1; i < results.data.length; i++) {
