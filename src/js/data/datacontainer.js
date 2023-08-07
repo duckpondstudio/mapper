@@ -10,6 +10,23 @@ export class LocationsContainer {
 
     #dataFieldsLoaded = false;
 
+    /** Map containing all locations, using their searchname as a key */
+    locationMap_ByName;
+    /** Array of Maps containing Maps tied to each dataField, 
+     * where each Map KEY is a Location's searchname, and 
+     * VALUE is that Location's value for the given dataField 
+     * 
+     * Used to find a location's [dataField]value from an input searchname */
+    dataFieldMaps_ValueByName;
+    /** Array of Maps containing Maps tied to each dataField, 
+     * where each Map KEY is a Location's value for the given
+     * dataField (string simplified), VALUE is the searchname 
+     * 
+     * Use to find a location's searchname from an input [dataField]value */
+    dataFieldMaps_NameByValue;
+
+    // TODO: altnames by searchname, searchname by altnames
+
     constructor(locationType) {
 
         if (!dataClasses.IsValidLocationType(locationType)) {
@@ -22,12 +39,15 @@ export class LocationsContainer {
 
         this.dataFields = dataClasses.GetDataFields(locationType);
 
-        // create maps for data fields 
-        this.mapsByName = {};
-        this.mapsByValue = {};
+        // create maps for data fields
+
+        this.locationMap_ByName = new Map();
+
+        this.dataFieldMaps_ValueByName = {};
+        this.dataFieldMaps_NameByValue = {};
         for (const field of this.dataFields) {
-            this.mapsByName[field] = new Map();
-            this.mapsByValue[field] = new Map();
+            this.dataFieldMaps_ValueByName[field] = new Map();
+            this.dataFieldMaps_NameByValue[field] = new Map();
         }
     }
 
@@ -41,6 +61,7 @@ export class LocationsContainer {
      */
     AddLocation(location, checkForExisting = true) {
 
+
         // nullcheck 
         if (location == null) { return; }
         // ensure name property exists 
@@ -49,22 +70,27 @@ export class LocationsContainer {
                 "Location:", location, "LocationContainer:", this);
             return;
         }
+        console.log("adding location:", location[dataClasses.searchname]);
         // note (since name exists, we can take for granted that searchname exists)
 
         // check if location is an existing one 
         if (checkForExisting) {
             console.log("CHECK FOR EXISTING, name:", location.name);
-            let existing = this.GetLocation(
-                ...location.dataFields);
+            let existing = this.GetLocation(location.dataValues);
             console.log("existing:", existing);
             if (existing != null) {
                 existing.AddData(location);
                 return;
             }
         }
-        
+
         // add to array 
         this.locations.push(location);
+        this.locationMap_ByName.set(
+            location[dataClasses.searchname],
+            location);
+
+        location.addedToContainer = true;
 
         // update data maps with new location 
         this.UpdateLocationDataMaps(location);
@@ -90,15 +116,45 @@ export class LocationsContainer {
             if (value != null && value != '') {
                 // found value 
                 let valueName = stringUtils.Simplify(value.toString());
-                this.mapsByName[field].set(name, value);
-                this.mapsByValue[field].set(valueName, name);
+                this.dataFieldMaps_ValueByName[field].set(name, value);
+                this.dataFieldMaps_NameByValue[field].set(valueName, name);
             }
         }
     }
 
-    GetLocation(...dataFields) {
-        // TODO NOTE: all we're doing currently is passing in fields, not values =_=; 
-        let location = this.GetLocationBySearch(dataFields);
+    GetLocation(dataValues) {
+
+
+        if (dataValues.length != this.dataFields.length) {
+            console.error('Cannot get location, dataValues / fields array length mismatch.',
+                'They must be the same length, otherwise we\'re implicitly comparing different location types');
+            return null;
+        }
+
+        // first search by searchname 
+        let searchName = dataValues[2];
+        console.log("searchname:", searchName);
+        console.log("locbyname has:", this.locationMap_ByName.has(searchName));
+        if (this.locationMap_ByName.has(searchName)) {
+            // found matching searchname 
+            return this.locationMap_ByName.get(searchName);
+        }
+        console.log("NOT FOUND, locbyname:", this.locationMap_ByName);
+
+        // second, search by altnames (datafields)
+        let searchAltNames = dataClasses.Location.AltNamesToArray(dataValues[3]);
+        searchAltNames.forEach(altName => {
+            if (this.locationMap_ByName.has(altName)) {
+                return this.locationMap_ByName.get(altName);
+            }
+        });
+
+        // third, search by values (datafields index 4+)
+        // TODO: search by values 
+        // console.error("NOT YET IMPLEMENTED search for location by datafield values");
+        return null;
+
+        let location = this.GetLocationBySearch(dataValues);
         if (location != null) { return location; }
         if (this.altnames != null && this.altnames.length > 0) {
             this.altnames.forEach(altName => {

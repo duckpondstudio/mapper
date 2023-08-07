@@ -49,6 +49,14 @@ export function GetDataFields(locationType) {
 }
 
 export class Location {
+
+    /** 
+     * flag set by {@link './dataContainer.js'} 
+     * 
+     * note: just for performance, be careful not to override
+    */
+    addedToContainer = false;
+
     /** Type of this Location, eg "continent", or "default" @type {string} */
     get type() { return type_Default; }
     /** All fields (eg columns) for this location type
@@ -61,9 +69,18 @@ export class Location {
      * @see {@link AltNamesToArray} conveince getter for this.altnames*/
     get altNamesArray() {
         if (this.altnames !== null) {
-            return this.AltNamesToArray(this.altnames);
+            return Location.AltNamesToArray(this.altnames);
         }
         return [];
+    }
+
+    /** Gets the data itself, as matching the {@link dataFields} array. */
+    get dataValues() {
+        let values = [];
+        for (let i = 0; i < this.dataFields.length; i++) {
+            values[i] = this[this.dataFields[i]];
+        }
+        return values;
     }
 
     /** Gets all the values in searchaltnames, if any, in a string[] array 
@@ -71,7 +88,7 @@ export class Location {
      * @see {@link AltNamesToArray} conveince getter for this.searchaltnames*/
     get searchAltNamesArray() {
         if (this.searchaltnames != null) {
-            return this.AltNamesToArray(this.searchaltnames);
+            return Location.AltNamesToArray(this.searchaltnames);
         } else if (this.altnames != null) {
             let searchAltNames = this.altNamesArray;
             for (let i = 0; i < searchAltNames.length; i++) {
@@ -152,12 +169,17 @@ export class Location {
             (Array.isArray(this[searchaltnames]) &&
                 this[searchaltnames].length == 0)) &&
             this.altnames != null) {
-            let searchAltNamesArray = this.AltNamesToArray(this.altnames);
+            let searchAltNamesArray = Location.AltNamesToArray(this.altnames);
             this.ApplyArrayToAltNamesString(searchAltNamesArray, true);
         }
     }
 
-    AltNamesToArray(altNames) {
+    /**
+     * Input altnames either as an array or string, output as array
+     * @param {string|string[]} altNames 
+     * @returns string[]
+     */
+    static AltNamesToArray(altNames) {
         if (altNames == null) { return []; }
         if (Array.isArray(altNames)) { return altNames; }
         altNames = altNames.trim();
@@ -214,8 +236,10 @@ export class Location {
             // check if combine field exists 
             if (combine[field] != null) {
                 // check current field value 
-                let writeReady = this[field] == null ||
-                    typeof (this[field] === 'string') ? this[field].trim() == '' : this[field] == '';
+                let writeReady = this[field] == null;
+                if (!writeReady && typeof this[field] === 'string') {
+                    writeReady = stringUtils.IsNullOrEmptyOrWhitespace(this[field]);
+                }
                 if (!writeReady && overwrite) {
                     // enable writeready UNLESS it's for altnames
                     // in that case, let the switch (field) handle it (we still just want to add those fields)
