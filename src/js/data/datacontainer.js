@@ -17,13 +17,13 @@ export class LocationsContainer {
      * VALUE is that Location's value for the given dataField 
      * 
      * Used to find a location's [dataField]value from an input searchname */
-    dataFieldMaps_ValueByName;
+    dataFieldMaps_ValueByName;// TODO: integrate this value (see GetLocation) 
     /** Array of Maps containing Maps tied to each dataField, 
      * where each Map KEY is a Location's value for the given
      * dataField (string simplified), VALUE is the searchname 
      * 
      * Use to find a location's searchname from an input [dataField]value */
-    dataFieldMaps_NameByValue;
+    dataFieldMaps_NameByValue;// TODO: integrate this value (see GetLocation) 
 
     // TODO: altnames by searchname, searchname by altnames
 
