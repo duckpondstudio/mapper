@@ -133,39 +133,83 @@ export class LocationsContainer {
 
         // first search by searchname 
         let searchName = dataValues[2];
-        console.log("searchname:", searchName);
-        console.log("locbyname has:", this.locationMap_ByName.has(searchName));
         if (this.locationMap_ByName.has(searchName)) {
             // found matching searchname 
-            return this.locationMap_ByName.get(searchName);
+            return GetLocationBySearchName(searchName, true);// don't need to re-check 
         }
-        console.log("NOT FOUND, locbyname:", this.locationMap_ByName);
 
         // second, search by altnames (datafields)
         let searchAltNames = dataClasses.Location.AltNamesToArray(dataValues[3]);
         searchAltNames.forEach(altName => {
             if (this.locationMap_ByName.has(altName)) {
-                return this.locationMap_ByName.get(altName);
+                // found matching searchaltname 
+                return GetLocationBySearchName(altName, true);// don't need to re-check 
             }
         });
 
+        if (dataValues.length <= 3) {
+            // no add'l dataValues, only name/altnames/searchname/searchaltnames return null 
+            return null;
+        }
+
         // third, search by values (datafields index 4+)
         // TODO: search by values 
+        for (let i = 4; i < dataValues.length; i++) {
+            // bypass null values 
+            if (dataValues[i] == null) { continue; }
+            // simply value for search 
+            let simplifiedValue = stringUtils.Simplify(dataValues[i].toString());
+            // search relevant data column for the value 
+            if (this.dataFieldMaps_NameByValue[dataFields[i]].has(simplifiedValue)) {
+                // found it! 
+                // TODO: collect multiple values, compare for accuracy? how? 
+                searchName = this.dataFieldMaps_NameByValue[dataFields[i]].get(simplifiedValue);
+                // found search name, now ensure location map includes it 
+                if (this.locationMap_ByName.has(searchName)) {
+                    // found matching searchname 
+                    return GetLocationBySearchName(searchName, true);// don't need to re-check 
+                } else {
+                    // not found in location map 
+                    console.groupCollapsed("SearchName Error: " + searchName);
+                    console.warn("SearchName:", searchName, "was found in dataFieldsMaps_NameByValue map,",
+                        "but not in locationMap_ByName map.Investigate. Index:", i);
+                    console.warn("dataValues:", dataValues);
+                    console.warn("dataFields:", this.dataFields);
+                    console.warn("this.dataFieldMaps_NameByValue:", this.dataFieldMaps_NameByValue);
+                    console.warn("this.dataFieldMaps_NameByValue[dataFields[i]]:", this.dataFieldMaps_NameByValue[dataFields[i]]);
+                    console.warn("this.locationMap_ByName:", this.locationMap_ByName);
+                    console.groupEnd();
+                    continue;
+                }
+            }
+        }
+
         // console.error("NOT YET IMPLEMENTED search for location by datafield values");
         return null;
 
-        let location = this.GetLocationBySearch(dataValues);
-        if (location != null) { return location; }
-        if (this.altnames != null && this.altnames.length > 0) {
-            this.altnames.forEach(altName => {
-                location = this.GetLocation(altName);
-                if (location != null) {
-                    return location;
-                }
-            });
-        }
-        return location;
+        //                                                          deprecated?
+        // let location = this.GetLocationBySearch(dataValues);
+        // if (location != null) { return location; }
+        // if (this.altnames != null && this.altnames.length > 0) {
+        //     this.altnames.forEach(altName => {
+        //         location = this.GetLocation(altName);
+        //         if (location != null) {
+        //             return location;
+        //         }
+        //     });
+        // }
+        // return location;
     }
+    GetLocationBySearchName(searchName, skipCheck = false) {
+        if (skipCheck || this.locationMap_ByName.has(searchName)) {
+            // found matching searchname 
+            return this.locationMap_ByName.get(searchName);
+        }
+    }
+    /**
+     * obsolete? remove if needed 
+     * @deprecated
+     */
     GetLocationBySearch(searchDataFields) {
 
         if (this.locations.length == 0 || searchDataFields === null) {
