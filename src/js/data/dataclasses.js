@@ -4,6 +4,10 @@ import * as stringUtils from '../utils/string';
 // note, this is typically auto-added when writing to CSV 
 const addQuotesAroundDelimEntries = false;
 
+/** If true, removes [name] and [searchname] 
+ * from [altnames] and [altsearchnames] */
+const removeNameFromAltNamesArray = true;
+
 export const name = 'name';
 export const altnames = 'altnames';
 export const searchname = 'searchname';
@@ -221,14 +225,17 @@ export class Location {
         //     altNamesArray.join(',');
         if (search) {
             // remove null values and searchname from altsearchnames 
-            updatedAltNamesArray =
-            updatedAltNamesArray.filter(Boolean)
-            .filter(n => n != this[searchname]);
+            updatedAltNamesArray = updatedAltNamesArray.filter(Boolean);
+            if (removeNameFromAltNamesArray) {
+                updatedAltNamesArray = updatedAltNamesArray.filter(n => n != this[searchname]);
+            }
             this[searchaltnames] = updatedAltNamesArray;
         } else {
             // remove null values and name from altnames 
-            altNamesArray = altNamesArray.filter(Boolean)
-                .filter(n => n != this[name]);
+            altNamesArray = altNamesArray.filter(Boolean);
+            if (removeNameFromAltNamesArray) {
+                updatedAltNamesArray = updatedAltNamesArray.filter(n => n != this[name]);
+            }
             this[altnames] = altNamesArray;
         }
     }
