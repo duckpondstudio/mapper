@@ -21,7 +21,7 @@ export class LocationsContainer {
         this.locations = [];
 
         this.dataFields = dataClasses.GetDataFields(locationType);
-        
+
         // create maps for data fields 
         this.mapsByName = {};
         this.mapsByValue = {};
@@ -77,10 +77,22 @@ export class LocationsContainer {
      */
     UpdateLocationDataMaps(location) {
         // add to maps 
+        let name = location.name;
+        if (name == null || name == '') {
+            console.warn('Cannot update maps with Location with invalid name,',
+                'location:', location);
+            return;
+        }
+        name = stringUtils.Simplify(name);
         for (const field of this.dataFields) {
             // iterate through data fields 
-            this.mapsByName[field] = new Map();
-            this.mapsByValue[field] = new Map();
+            let value = location[field];
+            if (value != null && value != '') {
+                // found value 
+                let valueName = stringUtils.Simplify(value.toString());
+                this.mapsByName[field].set(name, value);
+                this.mapsByValue[field].set(valueName, name);
+            }
         }
     }
 
