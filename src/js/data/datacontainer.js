@@ -38,6 +38,7 @@ export class LocationsContainer {
         this.locations = [];
 
         this.dataFields = dataClasses.GetDataFields(locationType);
+        this.searchDataFields = dataClasses.GetSearchDataFields(locationType);
 
         // create maps for data fields
 
@@ -68,11 +69,12 @@ export class LocationsContainer {
         if (checkForExisting) {
             let existing = this.GetLocation(location.dataValues);
             if (existing != null) {
+                console.log("existing location:", location);
                 existing.AddData(location);
                 return;
             }
         }
-        
+
         // not pre-existing, ensure name property exists 
         if (location.name == null || location.name == '') {
             console.warn("Can't add Location without a .name property, returning.",
@@ -156,6 +158,9 @@ export class LocationsContainer {
 
         // third, search by values (datafields index 4+)
         for (let i = 4; i < dataValues.length; i++) {
+            // confirm valid searchDataField type 
+            if (!this.searchDataFields.includes(this.dataFields[i])) { continue; }
+            // console.log(this.searchDataFields)
             // bypass null values 
             if (dataValues[i] == null) { continue; }
             // simply value for search 
@@ -168,6 +173,7 @@ export class LocationsContainer {
                 // found search name, now ensure location map includes it 
                 if (this.locationMap_ByName.has(searchName)) {
                     // found matching searchname 
+                    console.log("yuppppppppppp,", searchName);
                     return this.GetLocationBySearchName(searchName, true);// don't need to re-check 
                 } else {
                     // not found in location map 
