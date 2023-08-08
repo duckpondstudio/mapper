@@ -1,7 +1,7 @@
 // internal tool used to create CSV files
 
 import { ParseCSVLocal } from "../utils/parse_csv";
-import { WriteCSV } from "../utils/write_csv";
+import * as csv from "../utils/write_csv";
 import * as stringUtils from '../utils/string';
 import * as location from './dataclasses';
 import * as dataContainer from './datacontainer';
@@ -51,6 +51,7 @@ export function BuildCities() {
     currentCSV = new CSVData(FileNameCities, location.City.prototype.dataFields);
     // return [n,an,sn,san, continent, country, a1code, a2code, latitude, longitude]
     ParseCSV('worldcities', location.type_City, 1);
+    ParseCSV('geonames-all-cities-with-a-population-500', location.type_City, 2);
 }
 
 /**
@@ -236,7 +237,7 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
             break;
         case location.type_Region:
             switch (callbackParam.step) {
-                case 1:
+                case 1: // admin-1-codes 
                     for (let i = callbackParam.headerRows; i < results.data.length; i++) {
                         let csvRow = results.data[i];
                         let iso2a1array = csvRow[0].split('.');
@@ -256,7 +257,7 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
                         );
                     }
                     break;
-                case 2:
+                case 2: // admin-2-codes 
                     for (let i = callbackParam.headerRows; i < results.data.length; i++) {
                         let csvRow = results.data[i];
                         let iso2a1a2array = csvRow[0].split('.');
@@ -313,6 +314,29 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
                             null, // a2code
                             csvRow[2], // latitude
                             csvRow[3], // longitude
+                        );
+                    }
+                    break;
+                case 2: // cities500 (aka cities-workbook, aka geonames-all-cities-with-a-population-500.csv) 
+                    for (let i = callbackParam.headerRows; i < results.data.length; i++) {
+                        let csvRow = results.data[i];
+                        // return [n,an,sn,san, continent, country, a1code, a2code, latitude, longitude]
+                        let name = csvRow[2];
+                        if (stringUtils.IsNullOrEmptyOrWhitespace(name)) {
+                            name = csvRow[1];
+                        }
+                        let altNames = csvRow[1] == csvRow[2] ? csvRow[3] :
+                            csvRow[1] + csv.defaultDelim + csvRow[3];
+                        if (name == "Cairo") { console.log("CAIRO:",csvRow); }
+                        BuildLocationArray(callbackParam.type,
+                            name, // name
+                            altNames, // altnames
+                            null, // continent
+                            csvRow[8], // country
+                            csvRow[10], // a1code
+                            csvRow[11], // a2code
+                            csvRow[4], // latitude
+                            csvRow[5], // longitude
                         );
                     }
                     break;
@@ -418,7 +442,7 @@ class CSVData {
                 this.rows.length = length;
             }
         }
-        WriteCSV(this.fileName, this.rows);
+        csv.WriteCSV(this.fileName, this.rows);
     }
 
 }
