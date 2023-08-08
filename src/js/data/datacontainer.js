@@ -189,21 +189,7 @@ export class LocationsContainer {
             }
         }
 
-        // console.error("NOT YET IMPLEMENTED search for location by datafield values");
         return null;
-
-        //                                                          deprecated?
-        // let location = this.GetLocationBySearch(dataValues);
-        // if (location != null) { return location; }
-        // if (this.altnames != null && this.altnames.length > 0) {
-        //     this.altnames.forEach(altName => {
-        //         location = this.GetLocation(altName);
-        //         if (location != null) {
-        //             return location;
-        //         }
-        //     });
-        // }
-        // return location;
     }
     GetLocationBySearchName(searchName, skipCheck = false) {
         if (skipCheck || this.locationMap_ByName.has(searchName)) {
