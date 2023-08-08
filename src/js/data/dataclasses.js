@@ -19,14 +19,19 @@ export const type_Country = 'country';
 export const type_Region = 'region';
 export const type_City = 'city';
 
+// return [n,an,sn,san] 
 export const dataFields_Default =
     [name, altnames, searchname, searchaltnames];
+// return [n,an,sn,san, code, m49]
 export const dataFields_Continent = dataFields_Default.concat(
     ['code', 'm49']);
+// return [n,an,sn,san, continent, iso2, iso3, ccn, fips, cioc, latitude, longitude]
 export const dataFields_Country = dataFields_Default.concat(
     ['continent', 'iso2', 'iso3', 'ccn', 'fips', 'cioc', 'latitude', 'longitude']);
+// return [n,an,sn,san, continent, country, a1code, a2codes, latitude, longitude]
 export const dataFields_Region = dataFields_Default.concat(
     ['continent', 'country', 'a1code', 'a2codes', 'latitude', 'longitude']);
+// return [n,an,sn,san, continent, country, a1code, a2code, latitude, longitude]
 export const dataFields_City = dataFields_Default.concat(
     ['continent', 'country', 'a1code', 'a2code', 'latitude', 'longitude']);
 
@@ -310,7 +315,7 @@ export class Location {
                 } else {
                     // current field exists, ignore 
                 }
-                
+
                 // extra functionality for specific fields 
                 switch (field) {
                     case name:
@@ -319,7 +324,7 @@ export class Location {
                             this[searchname] = stringUtils.Simplify(combine[field]);
                         }
                         break;
-                    
+
                     case altnames:
                         // check for searchaltnames 
                         let currentAltNames = this.altNamesArray;
@@ -357,7 +362,7 @@ export class Location {
                             this.ApplyArrayToAltNamesString(currentAltNames, true);
                         }
                         break;
-                    
+
                     case searchaltnames:
                         // just add if not already existing 
                         let currentSearchAltNames = this.searchAltNamesArray;
