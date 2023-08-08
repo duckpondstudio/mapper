@@ -1,6 +1,9 @@
 import * as dataClasses from './dataclasses';
 import * as stringUtils from '../utils/string';
 
+/** Flag for WIP feature, searching by data field combos (eg longitude AND latitude) */
+let searchByDataCombos = false;
+
 export class LocationsContainer {
 
     /** Array containing all locations 
@@ -184,6 +187,42 @@ export class LocationsContainer {
                     console.warn("this.dataFieldMaps_NameByValue[dataFields[i]]:", this.dataFieldMaps_NameByValue[dataFields[i]]);
                     console.warn("this.locationMap_ByName:", this.locationMap_ByName);
                     console.groupEnd();
+                    continue;
+                }
+            }
+        }
+
+        // fourth, search by data field combos 
+        if (searchByDataCombos) {
+            for (let i = 0; i < this.searchDataCombos.length; i++) {
+                let combo = this.searchDataCombos[i];
+                let found = true;
+                combo.forEach(field => {
+                    if (found) {
+                        let dataFieldIndex = this.dataFields.indexOf(field);
+                        if (dataFieldIndex == -1) {
+                            found = false;
+                        } else {
+                            // found index, ensure value exists 
+                            if (dataValues[dataFieldIndex] != null && dataValues[dataFieldIndex] != '') {
+                                let simplifiedValue = stringUtils.Simplify(dataValues[dataFieldIndex].toString());
+                                // search relevant data column for the value 
+                                if (this.dataFieldMaps_NameByValue[this.dataFields[dataFieldIndex]].has(simplifiedValue)) {
+                                    // found target value, 
+                                    searchName = this.dataFieldMaps_NameByValue[this.dataFields[i]].get(simplifiedValue);
+                                    if (this.locationMap_ByName.has(searchName)) {
+                                    }
+                                } else {
+                                    found = false;
+                                }
+                            } else {
+                                // dataValue is null/empty 
+                                found = false;
+                            }
+                        }
+                    }
+                });
+                if (!found) {
                     continue;
                 }
             }
