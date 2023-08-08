@@ -43,7 +43,7 @@ export function BuildCountries() {
 }
 export function BuildRegions() {
     currentCSV = new CSVData(FileNameRegions, location.Region.prototype.dataFields);
-    // return [n,an,sn,san, continent, country, a1code, a2codes, latitude, longitude]
+    // return [n,an,sn,san, continent, country, iso2a1, a1code, a2codes, latitude, longitude]
     ParseCSV('admin-1-codes', location.type_Region, 1, 0);
     // ParseCSV('admin-2-codes', location.type_Region, 2, 0);
 }
@@ -87,7 +87,7 @@ function BuildLocationArray(type, name, altnames, ...data) {
             dataContainer.CountriesContainer.AddLocation(country);
             break;
         case location.type_Region:
-            // return [n,an,sn,san, continent, country, a1code, a2codes, latitude, longitude]
+            // return [n,an,sn,san, continent, country, iso2a1, a1code, a2codes, latitude, longitude]
             let region = new location.Region(name, altnames, null, null, ...data);
             dataContainer.RegionsContainer.AddLocation(region);
             break;
@@ -238,17 +238,16 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
                 case 1:
                     for (let i = callbackParam.headerRows; i < results.data.length; i++) {
                         let csvRow = results.data[i];
-                        let parseCode = csvRow[0].split('.');
-                        let iso2 = parseCode[0];
-                        let admin1Code = parseCode[1];
-                        console.log("REGION ROW:", csvRow);
-                        console.log(csvRow[0]);
-                        // return [n,an,sn,san, continent, country, a1code, a2codes, latitude, longitude]
+                        let iso2a1array = csvRow[0].split('.');
+                        let iso2 = iso2a1array[0];
+                        let admin1Code = iso2a1array[1];
+                        // return [n,an,sn,san, continent, country, iso2a1, a1code, a2codes, latitude, longitude]
                         BuildLocationArray(callbackParam.type,
                             csvRow[2], // name
                             csvRow[1], // altnames
                             null, // continent
                             iso2, // country
+                            csvRow[0], // iso2a1
                             admin1Code, // a1code
                             null, // a2codes
                             null, // latitude
@@ -261,12 +260,13 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
                 case 0: // template
                     for (let i = callbackParam.headerRows; i < results.data.length; i++) {
                         let csvRow = results.data[i];
-                        // return [n,an,sn,san, continent, country, a1code, a2codes, latitude, longitude]
+                        // return [n,an,sn,san, continent, country, iso2a1, a1code, a2codes, latitude, longitude]
                         BuildLocationArray(callbackParam.type,
                             null, // name
                             null, // altnames
                             null, // continent
                             null, // country
+                            null, // iso2a1
                             null, // a1code
                             null, // a2codes
                             null, // latitude

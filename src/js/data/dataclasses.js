@@ -28,9 +28,9 @@ export const dataFields_Continent = dataFields_Default.concat(
 // return [n,an,sn,san, continent, iso2, iso3, ccn, fips, cioc, latitude, longitude]
 export const dataFields_Country = dataFields_Default.concat(
     ['continent', 'iso2', 'iso3', 'ccn', 'fips', 'cioc', 'latitude', 'longitude']);
-// return [n,an,sn,san, continent, country, a1code, a2codes, latitude, longitude]
+// return [n,an,sn,san, continent, country, iso2a1, a1code, a2codes, latitude, longitude]
 export const dataFields_Region = dataFields_Default.concat(
-    ['continent', 'country', 'a1code', 'a2codes', 'latitude', 'longitude']);
+    ['continent', 'country', 'iso2a1', 'a1code', 'a2codes', 'latitude', 'longitude']);
 // return [n,an,sn,san, continent, country, a1code, a2code, latitude, longitude]
 export const dataFields_City = dataFields_Default.concat(
     ['continent', 'country', 'a1code', 'a2code', 'latitude', 'longitude']);
@@ -45,7 +45,7 @@ export const searchDataFields_Continent = dataFields_Default.concat(
 export const searchDataFields_Country = dataFields_Default.concat(
     ['iso2', 'iso3', 'ccn', 'fips', 'cioc']);
 export const searchDataFields_Region = dataFields_Default.concat(
-    []);
+    ['iso2a1']);
 export const searchDataFields_City = dataFields_Default.concat(
     []);
 
