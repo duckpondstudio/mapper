@@ -54,14 +54,26 @@ export const searchDataFields_City = dataFields_Default.concat(
  * longitude AND latitude will return the correct result) */
 export const searchDataCombos_Default =
     [];
-export const searchDataCombos_Continent = 
+export const searchDataCombos_Continent =
     [];
 export const searchDataCombos_Country =
-    [['longitude','latitude']];
-export const searchDataCombos_Region = 
-    [['longitude','latitude'], ['a1code', 'country']];
-export const searchDataCombos_City = 
-    [['longitude','latitude']];
+    [['longitude', 'latitude']];
+export const searchDataCombos_Region =
+    [['longitude', 'latitude'], ['a1code', 'country']];
+export const searchDataCombos_City =
+    [['longitude', 'latitude']];
+
+/** fields that contain arrays of data, rather than single entries */
+export const dataArrays_Default =
+    [altnames, searchaltnames];
+export const dataArrays_Continent = dataFields_Default.concat(
+    []);
+export const dataArrays_Country = dataFields_Default.concat(
+    []);
+export const dataArrays_Region = dataFields_Default.concat(
+    ['a2codes']);
+export const dataArrays_City = dataFields_Default.concat(
+    []);
 
 /**
  * Gets the DataFields associated with the given location type 

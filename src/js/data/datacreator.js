@@ -45,7 +45,7 @@ export function BuildRegions() {
     currentCSV = new CSVData(FileNameRegions, location.Region.prototype.dataFields);
     // return [n,an,sn,san, continent, country, iso2a1, a1code, a2codes, latitude, longitude]
     ParseCSV('admin-1-codes', location.type_Region, 1, 0);
-    // ParseCSV('admin-2-codes', location.type_Region, 2, 0);
+    ParseCSV('admin-2-codes', location.type_Region, 2, 0);
 }
 export function BuildCities() {
     currentCSV = new CSVData(FileNameCities, location.City.prototype.dataFields);
@@ -197,6 +197,7 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
                             lat = latLong[0];
                             long = latLong[1];
                         }
+                        // TODO: a2 codes are not being converted to an array, but as a single value 
                         BuildLocationArray(callbackParam.type,
                             csvRow[0], // name
                             csvRow[1], // altnames 
@@ -256,6 +257,26 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
                     }
                     break;
                 case 2:
+                    for (let i = callbackParam.headerRows; i < results.data.length; i++) {
+                        let csvRow = results.data[i];
+                        let iso2a1a2array = csvRow[0].split('.');
+                        let iso2a1 = csvRow[0].substring(0, csvRow[0].lastIndexOf('.'));
+                        let iso2 = iso2a1a2array[0];
+                        let admin1Code = iso2a1a2array[1];
+                        let admin2Code = iso2a1a2array[2];
+                        // return [n,an,sn,san, continent, country, iso2a1, a1code, a2codes, latitude, longitude]
+                        BuildLocationArray(callbackParam.type,
+                            csvRow[2], // name
+                            csvRow[1], // altnames
+                            null, // continent
+                            iso2, // country
+                            iso2a1, // iso2a1
+                            admin1Code, // a1code
+                            admin2Code, // a2codes
+                            null, // latitude
+                            null, // longitude
+                        );
+                    }
                     break;
                 case 0: // template
                     for (let i = callbackParam.headerRows; i < results.data.length; i++) {
