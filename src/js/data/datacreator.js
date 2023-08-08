@@ -125,9 +125,10 @@ function SaveLocationArray() {
     currentCSV.Save();
 }
 
-function ParseCSV(localFileName, type, step) {
+function ParseCSV(localFileName, type, step, headerRows = 1) {
     csvParseCount++;
-    ParseCSVLocal(localFileName, ParseCSVSuccess, ParseCSVError, { type: type, step: step });
+    ParseCSVLocal(localFileName, ParseCSVSuccess, ParseCSVError,
+        { type: type, step: step, headerRows: headerRows });
 }
 
 function ParseCSVSuccess(results, file, callbackParam = null) {
@@ -140,7 +141,7 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
             switch (callbackParam.step) {
                 case 1:
                     // reading from continent-codes.csv 
-                    for (let i = 1; i < results.data.length; i++) {
+                    for (let i = callbackParam.headerRows; i < results.data.length; i++) {
                         let csvRow = results.data[i];
                         // ['name', 'code', 'm49', 'altnames'];
                         BuildLocationArray(
@@ -158,7 +159,7 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
             switch (callbackParam.step) {
                 case 1:
                     // reading from countryInfo.csv 
-                    for (let i = 1; i < results.data.length; i++) {
+                    for (let i = callbackParam.headerRows; i < results.data.length; i++) {
                         let csvRow = results.data[i];
                         // ['name', 'continent', 'iso2', 'iso3', 'ccn', 'fips', 'cioc', 'continent', 'latitude', 'longitude', 'altnames'];
                         let iso2 = csvRow[0]; iso2 = iso2 != null && typeof iso2 === 'string' && iso2.trim().length == 2 ? iso2 : null;
@@ -182,7 +183,7 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
                 case 2:
                     // reading from countries.csv 
                     // ['name', 'continent', 'iso2', 'iso3', 'ccn', 'fips', 'cioc', 'continent', 'latitude', 'longitude', 'altnames'];
-                    for (let i = 1; i < results.data.length; i++) {
+                    for (let i = callbackParam.headerRows; i < results.data.length; i++) {
                         let csvRow = results.data[i];
                         let lat = '';
                         let long = '';
@@ -210,7 +211,7 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
                 case 3:
                 case 4:
                     // reading from countryaliases.csv (3 formatted, 4 unformatted)
-                    for (let i = 1; i < results.data.length; i++) {
+                    for (let i = callbackParam.headerRows; i < results.data.length; i++) {
                         let csvRow = results.data[i];
                         // ['name', 'continent', 'iso2', 'iso3', 'ccn', 'fips', 'cioc', 'continent', 'latitude', 'longitude', 'altnames'];
                         let iso3 = csvRow[0]; iso3 = iso3 != null && typeof iso3 === 'string' && iso3.trim().length == 3 ? iso3 : null;
@@ -232,7 +233,7 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
         case location.type_Region:
             switch (callbackParam.step) {
                 case 1:
-                    for (let i = 1; i < results.data.length; i++) {
+                    for (let i = callbackParam.headerRows; i < results.data.length; i++) {
                         let csvRow = results.data[i];
                         // ['name', 'continent', 'country', 'a1code', 'a2codes', 'latitude', 'longitude', 'altnames'];
                         currentCSV.AddRow(
@@ -245,7 +246,7 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
         case location.type_City:
             switch (callbackParam.step) {
                 case 1:
-                    for (let i = 1; i < results.data.length; i++) {
+                    for (let i = callbackParam.headerRows; i < results.data.length; i++) {
                         let csvRow = results.data[i];
                         // ['name', 'continent', 'country', 'a1code', 'a2code', 'latitude', 'longitude', 'altnames'];
                         currentCSV.AddRow(
