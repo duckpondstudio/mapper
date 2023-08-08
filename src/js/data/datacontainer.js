@@ -39,6 +39,7 @@ export class LocationsContainer {
 
         this.dataFields = dataClasses.GetDataFields(locationType);
         this.searchDataFields = dataClasses.GetSearchDataFields(locationType);
+        this.searchDataCombos = dataClasses.GetSearchDataCombos(locationType);
 
         // create maps for data fields
 

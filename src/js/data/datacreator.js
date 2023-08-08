@@ -44,8 +44,8 @@ export function BuildCountries() {
 export function BuildRegions() {
     currentCSV = new CSVData(FileNameRegions, location.Region.prototype.dataFields);
     // return [n,an,sn,san, continent, country, a1code, a2codes, latitude, longitude]
-    ParseCSV('admin-1-codes', location.type_Region, 1);
-    ParseCSV('admin-2-codes', location.type_Region, 2);
+    ParseCSV('admin-1-codes', location.type_Region, 1, 0);
+    // ParseCSV('admin-2-codes', location.type_Region, 2, 0);
 }
 export function BuildCities() {
     currentCSV = new CSVData(FileNameCities, location.City.prototype.dataFields);
@@ -236,22 +236,27 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
         case location.type_Region:
             switch (callbackParam.step) {
                 case 1:
-                case 2:
-                    console.warn("NOT YET IMPLEMENTED");
                     for (let i = callbackParam.headerRows; i < results.data.length; i++) {
                         let csvRow = results.data[i];
+                        let parseCode = csvRow[0].split('.');
+                        let iso2 = parseCode[0];
+                        let admin1Code = parseCode[1];
+                        console.log("REGION ROW:", csvRow);
+                        console.log(csvRow[0]);
                         // return [n,an,sn,san, continent, country, a1code, a2codes, latitude, longitude]
                         BuildLocationArray(callbackParam.type,
-                            null, // name
-                            null, // altnames
+                            csvRow[2], // name
+                            csvRow[1], // altnames
                             null, // continent
-                            null, // country
-                            null, // a1code
+                            iso2, // country
+                            admin1Code, // a1code
                             null, // a2codes
                             null, // latitude
                             null, // longitude
                         );
                     }
+                    break;
+                case 2:
                     break;
                 case 0: // template
                     for (let i = callbackParam.headerRows; i < results.data.length; i++) {

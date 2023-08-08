@@ -49,6 +49,20 @@ export const searchDataFields_Region = dataFields_Default.concat(
 export const searchDataFields_City = dataFields_Default.concat(
     ['a2code']);
 
+/** combined fields used for searching within these location types
+ * (eg, searching for just longitude may return many results, but
+ * longitude AND latitude will return the correct result) */
+export const searchDataCombos_Default =
+    [];
+export const searchDataCombos_Continent = 
+    [];
+export const searchDataCombos_Country =
+    [['longitude','latitude']];
+export const searchDataCombos_Region = 
+    [['longitude','latitude'], ['a1code', 'country']];
+export const searchDataCombos_City = 
+    [['longitude','latitude']];
+
 /**
  * Gets the DataFields associated with the given location type 
  * @param {string} locationType Location type, see {@link type_Default}
@@ -94,6 +108,29 @@ export function GetSearchDataFields(locationType) {
     }
 }
 
+/**
+ * Gets the SearchDataCombos for this location type, used for GetLocation searching  
+ * @param {string} locationType Location type, see {@link type_Default}
+ * @returns {string[]} DataFields for the given Location type, see {@link dataFields_Default}
+ */
+export function GetSearchDataCombos(locationType) {
+    switch (locationType) {
+        case type_Continent:
+            return searchDataCombos_Continent;
+        case type_Country:
+            return searchDataCombos_Country;
+        case type_Region:
+            return searchDataCombos_Region;
+        case type_City:
+            return searchDataCombos_City;
+        default:
+            console.warn("Invalid type", locationType, ", cannot get SearchDataCombos,",
+                "returning searchDataCombos_Default");
+        case type_Default:
+            return searchDataCombos_Default;
+    }
+}
+
 export class Location {
 
     /** 
@@ -114,6 +151,11 @@ export class Location {
      * @type {string[]} */
     get searchDataFields() {
         return searchDataFields_Default;
+    }
+    /** All fields (eg column) that can be used for searching for this location type
+     * @type {string[]} */
+    get searchDataCombos() {
+        return searchDataCombos_Default;
     }
     /** Gets all the values in altnames, if any, in a string[] array 
      * @type {string[]} 
@@ -418,6 +460,11 @@ export class Continent extends Location {
     get searchDataFields() {
         return searchDataFields_Continent;
     }
+    /** All field combos (eg columns) that can be used for searching for this location type
+     * @type {string[]} */
+    get searchDataCombos() {
+        return searchDataCombos_Continent;
+    }
 }
 export class Country extends Location {
     /** Type of this Location, eg "country" @type {string} */
@@ -431,6 +478,11 @@ export class Country extends Location {
      * @type {string[]} */
     get searchDataFields() {
         return searchDataFields_Country;
+    }
+    /** All field combos (eg columns) that can be used for searching for this location type
+     * @type {string[]} */
+    get searchDataCombos() {
+        return searchDataCombos_Country;
     }
 }
 export class Region extends Location {
@@ -446,6 +498,11 @@ export class Region extends Location {
     get searchDataFields() {
         return searchDataFields_Region;
     }
+    /** All field combos (eg columns) that can be used for searching for this location type
+     * @type {string[]} */
+    get searchDataCombos() {
+        return searchDataCombos_Region;
+    }
 }
 export class City extends Location {
     /** Type of this Location, eg "city" @type {string} */
@@ -459,5 +516,10 @@ export class City extends Location {
      * @type {string[]} */
     get searchDataFields() {
         return searchDataFields_City;
+    }
+    /** All field combos (eg columns) that can be used for searching for this location type
+     * @type {string[]} */
+    get searchDataCombos() {
+        return searchDataCombos_City;
     }
 }
