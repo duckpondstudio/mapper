@@ -26,19 +26,28 @@ export function NumericTest(num) {
     switch (num) {
 
         case 1:
-            
-            // dc.BuildContinents();
-            dc.BuildCountries();
-            
+            dc.BuildContinents();
             break;
 
         case 2:
-
-            WriteTestCSV();
-            
+            dc.BuildCountries();
             break;
 
         case 3:
+            dc.BuildRegions();
+            break;
+
+        case 4:
+            dc.BuildCities();
+            break;
+
+        case 5:
+            break;
+
+        case 6:
+            break;
+
+        case 7:
             // check datanames.GetTerms against a bunch of potential inputs 
             const terms = [
                 '',
@@ -70,20 +79,6 @@ export function NumericTest(num) {
             for (let i = 0; i < terms.length; i++) {
                 console.log("Term:", terms[i], "result:", GetTerm(terms[i]));
             }
-            break;
-
-        case 4:
-            console.log(
-                stringUtils.Simplify("Quốc Ngữ 1!2@3#"));
-            break;
-
-        case 5:
-            break;
-
-        case 6:
-            break;
-
-        case 7:
             break;
 
         case 8:
