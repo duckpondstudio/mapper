@@ -6,7 +6,7 @@ const addQuotesAroundDelimEntries = false;
 
 /** If true, removes [name] and [searchname] 
  * from [altnames] and [altsearchnames] */
-const removeNameFromAltNamesArray = true;
+const removeNameFromAltNamesArray = false;
 
 export const name = 'name';
 export const altnames = 'altnames';
@@ -288,6 +288,7 @@ export class Location {
      * @param {boolean} [overwrite=false] Overwrite existing values? Default false 
      */
     AddData(combine, overwrite = false) {
+        //TODO: major issue, altnames seem to be being replaced wholesale, not added  
         this.dataFields.forEach(field => {
             // check if combine field exists 
             if (combine[field] != null) {
@@ -309,6 +310,7 @@ export class Location {
                 } else {
                     // current field exists, ignore 
                 }
+                
                 // extra functionality for specific fields 
                 switch (field) {
                     case name:
@@ -322,6 +324,8 @@ export class Location {
                         // check for searchaltnames 
                         let currentAltNames = this.altNamesArray;
                         let newAltNames = combine.altNamesArray;
+                        console.log("Current:", currentAltNames);
+                        console.log("New:", newAltNames);
                         let searchAltNames = [];
                         // ensure searchaltnames exists 
                         if (this[searchaltnames] == null) {
@@ -339,7 +343,7 @@ export class Location {
                                 // update current alt names 
                                 currentAltNames.push(newAltName);
                                 // add new altname to searchaltnames 
-                                searchAltNames.push(stringUtils.Simplify(newAltName));
+                                // searchAltNames.push(stringUtils.Simplify(newAltName));
                             }
                         });
                         // if any new names were pushed, update the fields 
@@ -348,8 +352,9 @@ export class Location {
                             // this[field] = currentAltNames;
                             // this[(searchaltnames)] = searchAltNames;
                             // apply via method 
+                            // TODO: this is a hacky fix to incorrect values being applied to searchaltnames 
                             this.ApplyArrayToAltNamesString(currentAltNames, false);
-                            this.ApplyArrayToAltNamesString(searchAltNames, true);
+                            this.ApplyArrayToAltNamesString(currentAltNames, true);
                         }
                         break;
                     

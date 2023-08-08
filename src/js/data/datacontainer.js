@@ -69,7 +69,6 @@ export class LocationsContainer {
         if (checkForExisting) {
             let existing = this.GetLocation(location.dataValues);
             if (existing != null) {
-                console.log("existing location:", location);
                 existing.AddData(location);
                 return;
             }
@@ -160,7 +159,6 @@ export class LocationsContainer {
         for (let i = 4; i < dataValues.length; i++) {
             // confirm valid searchDataField type 
             if (!this.searchDataFields.includes(this.dataFields[i])) { continue; }
-            // console.log(this.searchDataFields)
             // bypass null values 
             if (dataValues[i] == null) { continue; }
             // simply value for search 
@@ -173,7 +171,6 @@ export class LocationsContainer {
                 // found search name, now ensure location map includes it 
                 if (this.locationMap_ByName.has(searchName)) {
                     // found matching searchname 
-                    console.log("yuppppppppppp,", searchName);
                     return this.GetLocationBySearchName(searchName, true);// don't need to re-check 
                 } else {
                     // not found in location map 
@@ -227,16 +224,12 @@ export class LocationsContainer {
             searchDataFields.searchname = stringUtils.Simplify(searchDataFields.name);
             searchDataFields.name = null;
         }
-        console.log(searchDataFields.name);
-        console.log("SDF: ", searchDataFields);
         for (const field of this.dataFields) {
             // skip non-search name/altnames 
             if (field == 'name' || field == 'altnames' || field == 'searchaltnames') {
                 continue;
             }
-            // check if search data fields 
-            // console.log("searching field:", field);
-
+            
             this.locations.forEach(searchLocation => {
                 if (searchLocation[field] != null) {
                     if (searchLocation[field] === searchDataFields[field]) {
