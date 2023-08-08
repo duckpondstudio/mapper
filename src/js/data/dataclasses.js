@@ -40,38 +40,48 @@ export const dataFields_City = dataFields_Default.concat(
  * every country under continent ex EU will return validly) */
 export const searchDataFields_Default =
     [searchname, searchaltnames];
-export const searchDataFields_Continent = dataFields_Default.concat(
-    ['code', 'm49']);
-export const searchDataFields_Country = dataFields_Default.concat(
-    ['iso2', 'iso3', 'ccn', 'fips', 'cioc']);
-export const searchDataFields_Region = dataFields_Default.concat(
-    ['iso2a1']);
-export const searchDataFields_City = dataFields_Default.concat(
-    []);
+export const searchDataFields_Continent =
+    [searchname, searchaltnames, 'code', 'm49'];
+export const searchDataFields_Country =
+    [searchname, searchaltnames, 'iso2', 'iso3', 'ccn', 'fips', 'cioc'];
+export const searchDataFields_Region =
+    ['iso2a1'];
+export const searchDataFields_City =
+    [];
 
 /** combined fields used for searching within these location types
  * (eg, searching for just longitude may return many results, but
  * longitude AND latitude will return the correct result) */
-export const searchDataCombos_Default =
-    [];
-export const searchDataCombos_Continent =
-    [];
-export const searchDataCombos_Country =
-    [['longitude', 'latitude']];
-export const searchDataCombos_Region =
-    [['longitude', 'latitude'], ['a1code', 'country']];
-export const searchDataCombos_City =
-    [['longitude', 'latitude']];
+// return [n,an,sn,san] 
+export const searchDataCombos_Default = [];
+// return [n,an,sn,san, code, m49]
+export const searchDataCombos_Continent = [];
+// return [n,an,sn,san, continent, iso2, iso3, ccn, fips, cioc, latitude, longitude]
+export const searchDataCombos_Country = [
+    ['longitude', 'latitude']];
+// return [n,an,sn,san, continent, country, iso2a1, a1code, a2codes, latitude, longitude]
+export const searchDataCombos_Region = [
+    [searchname, 'country'], [searchname, 'a1code'],
+    ['a1code', 'country'], ['longitude', 'latitude']];
+// return [n,an,sn,san, continent, country, a1code, a2code, latitude, longitude]
+export const searchDataCombos_City = [
+    [searchname, 'country'], [searchname, 'a1code'],
+    [searchname, 'a2code'], ['a1code', 'a2code'],
+    ['longitude', 'latitude']];
 
 /** fields that contain arrays of data, rather than single entries */
 export const dataArrays_Default =
     [altnames, searchaltnames];
+// return [n,an,sn,san, continent, iso2, iso3, ccn, fips, cioc, latitude, longitude]
 export const dataArrays_Continent = dataFields_Default.concat(
     []);
+// return [n,an,sn,san, continent, country, iso2a1, a1code, a2codes, latitude, longitude]
 export const dataArrays_Country = dataFields_Default.concat(
     []);
+// return [n,an,sn,san, continent, country, iso2a1, a1code, a2codes, latitude, longitude]
 export const dataArrays_Region = dataFields_Default.concat(
     ['a2codes']);
+// return [n,an,sn,san, continent, country, a1code, a2code, latitude, longitude]
 export const dataArrays_City = dataFields_Default.concat(
     []);
 
