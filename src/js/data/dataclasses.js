@@ -30,6 +30,20 @@ export const dataFields_Region = dataFields_Default.concat(
 export const dataFields_City = dataFields_Default.concat(
     ['continent', 'country', 'a1code', 'a2code', 'latitude', 'longitude']);
 
+/** fields used for searching within these location types
+ * (eg, you can't use continent to search for country, otherwise
+ * every country under continent ex EU will return validly) */
+export const searchDataFields_Default =
+    [searchname, searchaltnames];
+export const searchDataFields_Continent = dataFields_Default.concat(
+    ['code', 'm49']);
+export const searchDataFields_Country = dataFields_Default.concat(
+    ['iso2', 'iso3', 'ccn', 'fips', 'cioc', 'latitude', 'longitude']);
+export const searchDataFields_Region = dataFields_Default.concat(
+    ['a1code', 'a2codes', 'latitude', 'longitude']);
+export const searchDataFields_City = dataFields_Default.concat(
+    ['a1code', 'a2code', 'latitude', 'longitude']);
+
 /**
  * Gets the DataFields associated with the given location type 
  * @param {string} locationType Location type, see {@link type_Default}
@@ -52,6 +66,29 @@ export function GetDataFields(locationType) {
     }
 }
 
+/**
+ * Gets the SearchDataFields for this location type, used for GetLocation searching  
+ * @param {string} locationType Location type, see {@link type_Default}
+ * @returns {string[]} DataFields for the given Location type, see {@link dataFields_Default}
+ */
+export function GetSearchDataFields(locationType) {
+    switch (locationType) {
+        case type_Continent:
+            return searchDataFields_Continent;
+        case type_Country:
+            return searchDataFields_Country;
+        case type_Region:
+            return searchDataFields_Region;
+        case type_City:
+            return searchDataFields_City;
+        default:
+            console.warn("Invalid type", locationType, ", cannot get SearchDataFields,",
+                "returning searchDataFields_Default");
+        case type_Default:
+            return searchDataFields_Default;
+    }
+}
+
 export class Location {
 
     /** 
@@ -67,6 +104,11 @@ export class Location {
      * @type {string[]} */
     get dataFields() {
         return [name, altnames, searchname, searchaltnames];
+    }
+    /** All fields (eg column) that can be used for searching for this location type
+     * @type {string[]} */
+    get searchDataFields() {
+        return searchDataFields_Default;
     }
     /** Gets all the values in altnames, if any, in a string[] array 
      * @type {string[]} 
@@ -361,6 +403,11 @@ export class Continent extends Location {
     get dataFields() {
         return dataFields_Continent;
     }
+    /** All fields (eg column) that can be used for searching for this location type
+     * @type {string[]} */
+    get searchDataFields() {
+        return searchDataFields_Continent;
+    }
 }
 export class Country extends Location {
     /** Type of this Location, eg "country" @type {string} */
@@ -369,6 +416,11 @@ export class Country extends Location {
      * @type {string[]} */
     get dataFields() {
         return dataFields_Country;
+    }
+    /** All fields (eg column) that can be used for searching for this location type
+     * @type {string[]} */
+    get searchDataFields() {
+        return searchDataFields_Country;
     }
 }
 export class Region extends Location {
@@ -379,6 +431,11 @@ export class Region extends Location {
     get dataFields() {
         return dataFields_Region;
     }
+    /** All fields (eg column) that can be used for searching for this location type
+     * @type {string[]} */
+    get searchDataFields() {
+        return searchDataFields_Region;
+    }
 }
 export class City extends Location {
     /** Type of this Location, eg "city" @type {string} */
@@ -387,5 +444,10 @@ export class City extends Location {
      * @type {string[]} */
     get dataFields() {
         return dataFields_City;
+    }
+    /** All fields (eg column) that can be used for searching for this location type
+     * @type {string[]} */
+    get searchDataFields() {
+        return searchDataFields_City;
     }
 }
