@@ -149,10 +149,10 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
                         // return [n,an,sn,san, code, m49]
                         BuildLocationArray(
                             callbackParam.type,
-                            csvRow[i][2], // name
-                            csvRow[i][3], // altnames 
-                            csvRow[i][0], // code 
-                            csvRow[i][1], // m49
+                            csvRow[2], // name
+                            csvRow[3], // altnames 
+                            csvRow[0], // code 
+                            csvRow[1], // m49
                         );
                     }
                     break;
