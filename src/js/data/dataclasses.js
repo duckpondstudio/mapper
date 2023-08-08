@@ -45,9 +45,9 @@ export const searchDataFields_Continent = dataFields_Default.concat(
 export const searchDataFields_Country = dataFields_Default.concat(
     ['iso2', 'iso3', 'ccn', 'fips', 'cioc']);
 export const searchDataFields_Region = dataFields_Default.concat(
-    ['a1code', 'a2codes']);
+    []);
 export const searchDataFields_City = dataFields_Default.concat(
-    ['a2code']);
+    []);
 
 /** combined fields used for searching within these location types
  * (eg, searching for just longitude may return many results, but
