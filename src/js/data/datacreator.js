@@ -37,7 +37,9 @@ export function BuildCountries() {
     currentCSV = new CSVData(FileNameCountries, location.Country.prototype.dataFields);
     // return ['name', 'continent', 'iso2', 'iso3', 'ccn', 'fips', 'cioc', 'continent', 'latitude', 'longitude', 'altnames'];
     ParseCSV('countryInfo', location.type_Country, 1);
-    ParseCSV('countries', location.type_Country, 2);
+    // ParseCSV('countries', location.type_Country, 2);
+    // ParseCSV('countryaliases', location.type_Country, 3);
+    // ParseCSV('countryaliases', location.type_Country, 4);
 }
 export function BuildRegions() {
     currentCSV = new CSVData(FileNameRegions, location.Region.prototype.dataFields);
@@ -159,14 +161,16 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
                     for (let i = 1; i < results.data.length; i++) {
                         let csvRow = results.data[i];
                         // ['name', 'continent', 'iso2', 'iso3', 'ccn', 'fips', 'cioc', 'continent', 'latitude', 'longitude', 'altnames'];
+                        let iso2 = csvRow[0]; iso2 = iso2 != null && typeof iso2 === 'string' && iso2.trim().length == 2 ? iso2 : null;
+                        let iso3 = csvRow[1]; iso3 = iso3 != null && typeof iso3 === 'string' && iso3.trim().length == 3 ? iso3 : null;
                         let fips = csvRow[3];
                         if (fips == null || fips == '') { fips = csvRow[18]; }// "equivalent fips code"
                         BuildLocationArray(callbackParam.type,
                             csvRow[4], // name
                             null, // altnames 
                             csvRow[8], // continent (code)
-                            csvRow[0], // iso2 
-                            csvRow[1], // iso3 
+                            iso2, // iso2 
+                            iso3, // iso3 
                             csvRow[2], // ccn 
                             fips, // fips 
                             null, // cioc 
@@ -182,6 +186,8 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
                         let csvRow = results.data[i];
                         let lat = '';
                         let long = '';
+                        let iso2 = csvRow[3]; iso2 = iso2 != null && typeof iso2 === 'string' && iso2.trim().length == 2 ? iso2 : null;
+                        let iso3 = csvRow[5]; iso3 = iso3 != null && typeof iso3 === 'string' && iso3.trim().length == 3 ? iso3 : null;
                         if (!stringUtils.IsNullOrEmptyOrWhitespace(csvRow[18])) {
                             let latLong = csvRow[18].split(',');
                             lat = latLong[0];
@@ -191,8 +197,8 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
                             csvRow[0], // name
                             csvRow[1], // altnames 
                             null, // continent (code)
-                            csvRow[3], // iso2 
-                            csvRow[5], // iso3 
+                            iso2, // iso2 
+                            iso3, // iso3 
                             csvRow[4], // ccn 
                             null, // fips 
                             csvRow[6], // cioc 
@@ -201,6 +207,26 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
                         );
                     }
                     break;
+                case 3:
+                case 4:
+                    // reading from countryaliases.csv (3 formatted, 4 unformatted)
+                    for (let i = 1; i < results.data.length; i++) {
+                        let csvRow = results.data[i];
+                        // ['name', 'continent', 'iso2', 'iso3', 'ccn', 'fips', 'cioc', 'continent', 'latitude', 'longitude', 'altnames'];
+                        let iso3 = csvRow[0]; iso3 = iso3 != null && typeof iso3 === 'string' && iso3.trim().length == 3 ? iso3 : null;
+                        BuildLocationArray(callbackParam.type,
+                            null, // name
+                            callbackParam.step == 3 ? csvRow[1] : csvRow[2], // altnames 
+                            null, // continent (code)
+                            null, // iso2 
+                            iso3, // iso3 
+                            null, // ccn 
+                            null, // fips 
+                            null, // cioc 
+                            null, // latitude 
+                            null, // longitude 
+                        );
+                    }
             }
             break;
         case location.type_Region:

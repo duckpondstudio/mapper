@@ -64,25 +64,23 @@ export class LocationsContainer {
 
         // nullcheck 
         if (location == null) { return; }
-        // ensure name property exists 
-        if (location.name == null || location.name == '') {
-            console.warn("Can't add Location without a .name property, returning.",
-                "Location:", location, "LocationContainer:", this);
-            return;
-        }
-        console.log("adding location:", location[dataClasses.searchname]);
-        // note (since name exists, we can take for granted that searchname exists)
-
         // check if location is an existing one 
         if (checkForExisting) {
-            console.log("CHECK FOR EXISTING, name:", location.name);
             let existing = this.GetLocation(location.dataValues);
-            console.log("existing:", existing);
             if (existing != null) {
                 existing.AddData(location);
                 return;
             }
         }
+        
+        // not pre-existing, ensure name property exists 
+        if (location.name == null || location.name == '') {
+            console.warn("Can't add Location without a .name property, returning.",
+                "Location:", location, "LocationContainer:", this);
+            return;
+        }
+        // note (since name exists, we can take for granted that searchname exists)
+
 
         // add to array 
         this.locations.push(location);
@@ -136,7 +134,7 @@ export class LocationsContainer {
         if (!stringUtils.IsNullOrEmptyOrWhitespace(searchName) &&
             this.locationMap_ByName.has(searchName)) {
             // found matching searchname 
-            return GetLocationBySearchName(searchName, true);// don't need to re-check 
+            return this.GetLocationBySearchName(searchName, true);// don't need to re-check 
         }
 
         // second, search by altnames (datafields)
@@ -146,7 +144,7 @@ export class LocationsContainer {
                 if (!stringUtils.IsNullOrEmptyOrWhitespace(altName) &&
                     this.locationMap_ByName.has(altName)) {
                     // found matching searchaltname 
-                    return GetLocationBySearchName(altName, true);// don't need to re-check 
+                    return this.GetLocationBySearchName(altName, true);// don't need to re-check 
                 }
             });
         }
@@ -163,14 +161,14 @@ export class LocationsContainer {
             // simply value for search 
             let simplifiedValue = stringUtils.Simplify(dataValues[i].toString());
             // search relevant data column for the value 
-            if (this.dataFieldMaps_NameByValue[dataFields[i]].has(simplifiedValue)) {
+            if (this.dataFieldMaps_NameByValue[this.dataFields[i]].has(simplifiedValue)) {
                 // found it! 
                 // TODO: collect multiple values, compare for accuracy? how? 
-                searchName = this.dataFieldMaps_NameByValue[dataFields[i]].get(simplifiedValue);
+                searchName = this.dataFieldMaps_NameByValue[this.dataFields[i]].get(simplifiedValue);
                 // found search name, now ensure location map includes it 
                 if (this.locationMap_ByName.has(searchName)) {
                     // found matching searchname 
-                    return GetLocationBySearchName(searchName, true);// don't need to re-check 
+                    return this.GetLocationBySearchName(searchName, true);// don't need to re-check 
                 } else {
                     // not found in location map 
                     console.groupCollapsed("SearchName Error: " + searchName);
