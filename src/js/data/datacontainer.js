@@ -211,55 +211,6 @@ export class LocationsContainer {
             return this.locationMap_ByName.get(searchName);
         }
     }
-    /**
-     * obsolete? remove if needed 
-     * @deprecated
-     */
-    GetLocationBySearch(searchDataFields) {
-
-        if (this.locations.length == 0 || searchDataFields === null) {
-            return null;
-        }
-
-        if (searchDataFields.name != null) {
-            searchDataFields.searchname = stringUtils.Simplify(searchDataFields.name);
-            searchDataFields.name = null;
-        }
-        for (const field of this.dataFields) {
-            // skip non-search name/altnames 
-            if (field == 'name' || field == 'altnames' || field == 'searchaltnames') {
-                continue;
-            }
-            
-            this.locations.forEach(searchLocation => {
-                if (searchLocation[field] != null) {
-                    if (searchLocation[field] === searchDataFields[field]) {
-                        return searchLocation;
-                    }
-                }
-            });
-
-            // if (searchDataFields[field] != null) {
-            //     const locationByField = this.locations[field].get(searchDataFields[field]);
-            //     if (locationByField !== undefined) {
-            //         return locationByField;
-            //     }
-            // }
-        }
-
-        // If no exact match found, try searching alternate names
-        if (searchDataFields.searchname != null) {
-            for (const location of this.locations) {
-                if (location.altsearchnames) {
-                    for (const altName of location.altsearchnames) {
-                        if (altName === searchDataFields.searchname) {
-                            return location;
-                        }
-                    }
-                }
-            }
-        }
-    }
 }
 
 /**
