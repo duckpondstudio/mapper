@@ -274,18 +274,19 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
         case location.type_City:
             switch (callbackParam.step) {
                 case 1:
+                    // worldcities.csv 
                     for (let i = callbackParam.headerRows; i < results.data.length; i++) {
                         let csvRow = results.data[i];
                         // return [n,an,sn,san, continent, country, a1code, a2code, latitude, longitude]
                         BuildLocationArray(callbackParam.type,
-                            null, // name
-                            null, // altnames
+                            csvRow[1], // name
+                            csvRow[0], // altnames
                             null, // continent
-                            null, // country
+                            csvRow[4], // country
                             null, // a1code
                             null, // a2code
-                            null, // latitude
-                            null, // longitude
+                            csvRow[2], // latitude
+                            csvRow[3], // longitude
                         );
                     }
                     break;
