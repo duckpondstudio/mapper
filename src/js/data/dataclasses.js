@@ -43,11 +43,11 @@ export const searchDataFields_Default =
 export const searchDataFields_Continent = dataFields_Default.concat(
     ['code', 'm49']);
 export const searchDataFields_Country = dataFields_Default.concat(
-    ['iso2', 'iso3', 'ccn', 'fips', 'cioc', 'latitude', 'longitude']);
+    ['iso2', 'iso3', 'ccn', 'fips', 'cioc']);
 export const searchDataFields_Region = dataFields_Default.concat(
-    ['a1code', 'a2codes', 'latitude', 'longitude']);
+    ['a1code', 'a2codes']);
 export const searchDataFields_City = dataFields_Default.concat(
-    ['a1code', 'a2code', 'latitude', 'longitude']);
+    ['a2code']);
 
 /**
  * Gets the DataFields associated with the given location type 
@@ -329,8 +329,6 @@ export class Location {
                         // check for searchaltnames 
                         let currentAltNames = this.altNamesArray;
                         let newAltNames = combine.altNamesArray;
-                        console.log("Current:", currentAltNames);
-                        console.log("New:", newAltNames);
                         let searchAltNames = [];
                         // ensure searchaltnames exists 
                         if (this[searchaltnames] == null) {
