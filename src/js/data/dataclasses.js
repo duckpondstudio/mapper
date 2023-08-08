@@ -317,6 +317,7 @@ export class Location {
                             this[searchname] = stringUtils.Simplify(combine[field]);
                         }
                         break;
+                    
                     case altnames:
                         // check for searchaltnames 
                         let currentAltNames = this.altNamesArray;
@@ -351,6 +352,7 @@ export class Location {
                             this.ApplyArrayToAltNamesString(searchAltNames, true);
                         }
                         break;
+                    
                     case searchaltnames:
                         // just add if not already existing 
                         let currentSearchAltNames = this.searchAltNamesArray;

@@ -37,9 +37,9 @@ export function BuildCountries() {
     currentCSV = new CSVData(FileNameCountries, location.Country.prototype.dataFields);
     // return ['name', 'continent', 'iso2', 'iso3', 'ccn', 'fips', 'cioc', 'continent', 'latitude', 'longitude', 'altnames'];
     ParseCSV('countryInfo', location.type_Country, 1);
-    // ParseCSV('countries', location.type_Country, 2);
-    // ParseCSV('countryaliases', location.type_Country, 3);
-    // ParseCSV('countryaliases', location.type_Country, 4);
+    ParseCSV('countries', location.type_Country, 2);
+    ParseCSV('countryaliases', location.type_Country, 3);
+    ParseCSV('countryaliases', location.type_Country, 4);
 }
 export function BuildRegions() {
     currentCSV = new CSVData(FileNameRegions, location.Region.prototype.dataFields);
