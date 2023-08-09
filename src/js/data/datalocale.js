@@ -1,3 +1,5 @@
+import * as dataClasses from "./dataclasses";
+
 /** 
  * Max number of iterations {@link DataLocale.ParseLocaleData ParseLocaleData} 
  * can self-loop before returning
@@ -6,6 +8,9 @@ const localeIterationMax = 10;
 
 let debugInvalidLocaleData = false;
 
+/** 
+ * @deprecated this is replaced by {@link dataClasses.Location Location}
+ */
 export class DataLocale {
 
     /** failsafe to ensure ParseLocaleData doesn't eternally loop
@@ -248,6 +253,9 @@ export class DataLocale {
             return false;
         }
         return longitude >= -180 && longitude <= 180;
+    }
+    static IsValidLatitudeLongitude(latitude, longitude) {
+        return this.IsValidLatitude(latitude) && this.IsValidLongitude(longitude);
     }
     static IsValidGeoPoint(geoPoint) {
         if (geoPoint == null || !Array.isArray(geoPoint) || geoPoint.length != 2) {
