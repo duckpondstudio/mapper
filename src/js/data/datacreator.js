@@ -30,7 +30,7 @@ let csvSuccessCount = 0;
 
 export function BuildContinents() {
     currentCSV = new CSVData(FileNameContinents, location.Continent.prototype.dataFields);
-    // return [n,an,sn,san, code, m49]
+    // return [n,an,sn,san, ccode, m49]
     ParseCSV('continent-codes', location.type_Continent, 1);
 }
 export function BuildCountries() {
@@ -78,7 +78,7 @@ function BuildLocationArray(type, name, altnames, ...data) {
     }
     switch (type) {
         case location.type_Continent:
-            // return [n,an,sn,san, code, m49]
+            // return [n,an,sn,san, ccode, m49]
             let continent = new location.Continent(name, altnames, null, null, ...data);
             dataContainer.ContinentsContainer.AddLocation(continent);
             break;
@@ -147,12 +147,12 @@ function ParseCSVSuccess(results, file, callbackParam = null) {
                     // reading from continent-codes.csv 
                     for (let i = callbackParam.headerRows; i < results.data.length; i++) {
                         let csvRow = results.data[i];
-                        // return [n,an,sn,san, code, m49]
+                        // return [n,an,sn,san, ccode, m49]
                         BuildLocationArray(
                             callbackParam.type,
                             csvRow[2], // name
                             csvRow[3], // altnames 
-                            csvRow[0], // code 
+                            csvRow[0], // ccode 
                             csvRow[1], // m49
                         );
                     }
