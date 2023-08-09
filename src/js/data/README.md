@@ -18,6 +18,9 @@ takes parsed input data and displays it onto web-rendered map, prepping it for D
 ### DataDot
 obsolete? represents one dot (or whatever shape) rendered to the map by DataDisplay 
 
+### DataGetter 
+all Location-centric GetXWithY getters, eg GetCityWithGeoPoint, GetAllRegionsInContinent, etc
+
 ### DataInterpreter
 sets up the editing of specific CSV files for DataCreator, eg "MyData.csv has CountryName in column 3", etc 
 
