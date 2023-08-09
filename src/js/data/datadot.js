@@ -1,5 +1,5 @@
+import * as dataClasses from "./dataclasses";
 import { DataLocale } from "./datalocale";
-
 
 /** 
  * A DataDot is one unit of data, containing at least a 
@@ -8,18 +8,61 @@ import { DataLocale } from "./datalocale";
 export class DataDot {
 
 
-    /** Local reference for {@link locale this.locale} @type {DataLocale} */
-    #_locale;
-    /** Local reference for {@link value this.value} @type {Number} */
+    /** 
+     * Local reference for {@link DataDot.location location} 
+     * @type {dataClasses.Location} */
+    #_location;
+    /** Local reference for value {@link DataDot.value} @type {Number} */
     #_value;
 
-    constructor(value, ...localeData) {
+    #_latitude;
+    #_longitude;
+    #_latLongBypass;
+
+    constructor(value, ...locationData) {
         if (value != null && value != undefined) {
             this.value = value;
         }
-        if (localeData != null && localeData != undefined
-            && localeData.length > 0) {
-            this.locale = new DataLocale(localeData);
+        if (locationData != null && locationData != undefined
+            && locationData.length > 0) {
+            switch (locationData.length) {
+                case 0:
+                    break;
+                case 1:
+                    // check first value for location and geopoint
+                    if (locationData[0] instanceof dataClasses.Location) {
+                        this.location = locationData[0];
+                    } else if (DataLocale.IsValidGeoPoint(locationData[0])) {
+                        this.SetGeoPoint(locationData[0]);
+                    }
+                    break;
+                case 2:
+                    // check first value for location and geopoint
+                    if (locationData[0] instanceof dataClasses.Location) {
+                        this.location = locationData[0];
+                        break;
+                    } else if (DataLocale.IsValidGeoPoint(locationData[0])) {
+                        this.SetGeoPoint(locationData[0]);
+                        break;
+                    }
+                    // check latitude / longitude 
+                    if (DataLocale.IsValidLatitudeLongitude(locationData[0], locationData[1])) {
+                        this.SetGeoPoint(locationData);
+                    }
+                    break;
+                default:
+                    // check first value for location and geopoint
+                    if (locationData[0] instanceof dataClasses.Location) {
+                        this.location = locationData[0];
+                        break;
+                    } else if (DataLocale.IsValidGeoPoint(locationData[0])) {
+                        this.SetGeoPoint(locationData[0]);
+                        break;
+                    }
+                    console.warn("Invalid params for DataDot constructor,", locationData);
+                    break;
+            }
+
         }
     }
 
@@ -40,26 +83,27 @@ export class DataDot {
     }
 
     /**
-     * @type {DataLocale}
+     * @type {dataClasses.Location}
      */
-    get locale() {
-        if (this.#_locale == null) {
-            this.locale = new DataLocale();
+    get location() {
+        if (this.#_location == null) {
+            this.location = new DataLocale();
         }
-        return this.#_locale;
+        return this.#_location;
     }
     /**
-     * @type {DataLocale}
+     * @type {dataClasses.Location}
      */
-    set locale(locale) {
-        this.#_locale = locale;
+    set location(location) {
+        this.#_location = location;
     }
 
     SetLatitudeLongitude(latitude, longitude) {
-        this.SetGeoPoint([latitude, longitude]);
+        this.#_latitude = latitude;
+        this.#_longitude = longitude;
     }
     SetGeoPoint(geoPoint) {
-        this.locale.geoPoint = geoPoint;
+        this.SetLatitudeLongitude(geoPoint[0], geoPoint[1]);
     }
 
 

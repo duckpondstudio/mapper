@@ -25,7 +25,7 @@ all Location-centric GetXWithY getters, eg GetCityWithGeoPoint, GetAllRegionsInC
 sets up the editing of specific CSV files for DataCreator, eg "MyData.csv has CountryName in column 3", etc 
 
 ### DataLocale
-obsolete? info used by DataDot to contain positional information. Should prolly be replaced with a reference to Location
+info used by DataDot to contain positional information. Should prolly be replaced with a reference to Location
 
 ### DataNames
 names of all text for common column descriptors, used to auto-detect data columns for reading CSVs 
