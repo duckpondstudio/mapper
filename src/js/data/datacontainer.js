@@ -11,8 +11,6 @@ export class LocationsContainer {
     */
     locations;
 
-    #dataFieldsLoaded = false;
-
     /** Map containing all locations, using their searchname as a key */
     locationMap_ByName;
     /** Array of Maps containing Maps tied to each dataField, 

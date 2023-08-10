@@ -156,7 +156,7 @@ function IsContainerType(type) {
  * @param {string} type Type of target, see {@link targetType} 
  * @returns {string}
  */
-function ConvertToContainerType(type) {
+function ConvertSubTypeToContainerType(type) {
     switch (type) {
         case targetType.continent:
         case targetType.country:
@@ -182,6 +182,21 @@ function ConvertToContainerType(type) {
         case targetType.searchName:
         default:
             return type;
+    }
+}
+
+function ConvertSubTypeValueToContainerTypeValue(type, value) {
+    let containerType = ConvertSubTypeToContainerType(type);
+    if (containerType == type) { return value; } // identical, just return value 
+    switch (value) {
+        case targetType.continent:
+            break;
+        case targetType.country:
+            break;
+        case targetType.region:
+            break;
+        case targetType.city:
+            break;
     }
 }
 
@@ -436,8 +451,8 @@ function DoesGetWithReturnArray(getType, withType) {
     if (!IsTargetTypeValid(getType) || !IsTargetTypeValid(withType)) {
         return false;
     }
-    getType = ConvertToContainerType(getType);
-    withType = ConvertToContainerType(withType);
+    getType = ConvertSubTypeToContainerType(getType);
+    withType = ConvertSubTypeToContainerType(withType);
     switch (getType) {
         case targetType.continent:
             return false;
