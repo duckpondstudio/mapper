@@ -107,9 +107,9 @@ export class Module {
     titleBar;
     #titleText;
 
-    setupSubModule;
-    mapSubModule;
-    infoSubModule;
+    /** @type {HTMLDivElement} */ setupSubModule;
+    /** @type {HTMLDivElement} */ mapSubModule;
+    /** @type {HTMLDivElement} */ infoSubModule;
 
     /** Paragraph used for basic MapData data output @type {HTMLParagraphElement} @memberof MapData*/
     #infoOutput;
@@ -157,7 +157,9 @@ export class Module {
         this.CreateInfoSubmodule();
 
         // assign loaded map
-        this.AssignMap(map);
+        if (map != null) {
+            this.AssignMap(map);
+        }
 
         // add module to document body 
         document.body.appendChild(this.container);
@@ -172,12 +174,23 @@ export class Module {
 
     AssignMap(map) {
 
+
         if (this.isLoading) {
             console.warn("Cannot assign a new map while module is still loading,",
                 'module:', this, ', new map:', map);
             return;
         }
         this.isLoading = true;
+
+        // remove any current children 
+        if (this.mapSubModule == null) {
+            console.warn("Must initialize MapSubModule before AssigningMap", map,
+                'to Module:', this);
+            return;
+        }
+        while (this.mapSubModule.firstChild) {
+            this.mapSubModule.removeChild(this.mapSubModule.firstChild);
+        }
 
         this.map = m.ParseMap(map);
         this.SetTitle(m.GetMapFullName(this.map));

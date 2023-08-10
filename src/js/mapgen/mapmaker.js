@@ -36,6 +36,10 @@ export function CreateMaps(module) {
     // so we now load multiple single maps, 1 projection each, and put them beside
     // each other as we otherwise would in a map with multiple projections.
     // it's complicated and silly but here we are ¯\_(ツ)_/¯ 
+    
+    // remove current maps 
+    
+    // create new maps
     let map = module.map;
     let maps = m.GetMapProjectionsArray(map);
     let mapDatas = [];
@@ -67,6 +71,7 @@ function CreateMap(map, parentModule, mapIndex) {
         console.error('map projection specified is invalid type, not string, cannot create. value: ' + map);
         return;
     }
+
 
     let totalMapsCount = m.GetMapProjectionsArray(parentModule.map).length;
     let projections = m.GetMapProjectionsArray(map);
