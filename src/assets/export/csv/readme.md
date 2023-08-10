@@ -26,6 +26,9 @@ GeoNames.org, countryInfo.txt, [data library](http://download.geonames.org/expor
 #### geonames-all-cities-with-a-population-500.csv 
 GeoNames.org, cities500.zip, [data library](http://download.geonames.org/export/dump/), [direct download](http://download.geonames.org/export/dump/cities500.zip)
 
+#### region-codes.csv 
+IP2Location.com, ISO 3166-2 list from their database, [link](https://www.ip2location.com/free/iso3166-2)
+
 #### sample_city_data.csv 
 Stripped-down version of worldcities.csv, manually edited for simplification as a sample set to read data from (eg, population info)
 
