@@ -48,118 +48,127 @@ export function GetWith(getType, withType, withValue) {
         return withValue;
     }
     if (getType == withType) { return withValue; }
-}
 
-/**
- * Checks if it's possible to get the given target type {@link getType}
- * with the given target type {@link withType}
- * @param {string} getType Type that you want to GET 
- * @param {string} withType Type WITH WHICH you want to get from 
- * @param {boolean} [arrayOnlyIsTrue=true] Return true if returned value is array?
- * @see {@link targetType} for list of all possible types 
- * @returns {boolean} True if possible to get the getType with the withType 
- */
-function IsGetWithValid(getType, withType, arrayOnlyIsTrue = true) {
-    if (!IsTargetTypeValid(getType) || !IsTargetTypeValid(withType)) {
-        return false; // invalid, return false 
-    } else if (getType == withType) {
-        return true; // can get self with self, just wasted computation *shrug* 
+    // convert withValue to its container type 
+    if (IsContainerType(withType)) {
+        // no need 
+    } else {
+        if (IsSubTypeOfContinent(withType)) {
+
+        } else if (IsSubTypeOfCountry(withType)) {
+
+        } else if (IsSubTypeOfRegion(withType)) {
+
+        } else if (IsSubTypeOfCity(withType)) {
+
+        } else {
+            console.warn('Type', withType, 'recognized as subtype, but not of',
+                'continent/country/region/city, investigate check methods, returning withValue');
+            return withValue;
+        }
     }
+
     switch (getType) {
 
         case targetType.geoPoint:
-            switch (withType) {
-                case targetType.stringName:
-                case targetType.searchName:
-                    return false;// can't get geopoint by name 
-            }
-            return true;// can get geopoint from all other types 
-
         case targetType.stringName:
-            // can get names from anything except geopoint
-            return getType != targetType.geoPoint;
-
         case targetType.searchName:
-            return true; // can get search names from anything including geopoint 
-
         case targetType.continent:
         case targetType.m49:
         case targetType.ccode:
-            return true; // can get continent from anything 
-
         case targetType.country:
         case targetType.iso2:
         case targetType.iso3:
         case targetType.ccn:
         case targetType.fips:
         case targetType.cioc:
-            if (IsSubTypeOfContinent(withType))
-                return arrayOnlyIsTrue;
-            return true;
-
         case targetType.region:
         case targetType.admin1:
         case targetType.iso2a1:
-            if (IsSubTypeOfContinent(withType) ||
-                IsSubTypeOfCountry(withType))
-                return arrayOnlyIsTrue;
-            return true;
-
         case targetType.city:
         case targetType.admin2:
-            if (IsSubTypeOfContinent(withType) ||
-                IsSubTypeOfCountry(withType) ||
-                IsSubTypeOfRegion(withType))
-                return arrayOnlyIsTrue;
-            return true;
 
         default:
-            return false;
+            console.error('invalid gettype', getType, ', should be impossible to get here');
+            return withValue;
     }
 }
 
+
+//#region Container Type Checks and Conversion 
 
 /**
- * Does getting the given type with the given type return an array?
+ * Is the given type a container for other types 
  * 
- * (eg, getting 'city' with 'country' returns an array of all cities in that country)
+ * (eg, 'continent' returns true, because it's a container for 'm49' and 'ccode')
  * @param {string} type Type of target, see {@link targetType} 
- * @returns {boolean}
+ * @returns {string}
  */
-function DoesGetWithReturnArray(getType, withType) {
-    if (!IsTargetTypeValid(getType) || !IsTargetTypeValid(withType)) {
-        return false;
-    }
-    getType = ConvertToContainerType(getType);
-    withType = ConvertToContainerType(withType);
-    switch (getType) {
+function IsContainerType(type) {
+    switch (type) {
         case targetType.continent:
-            return false;
         case targetType.country:
-            switch (withType) {
-                case targetType.continent:
-                    return true;
-            }
-            return false;
         case targetType.region:
-            switch (withType) {
-                case targetType.continent:
-                case targetType.country:
-                    return true;
-            }
-            return false;
         case targetType.city:
-            switch (withType) {
-                case targetType.continent:
-                case targetType.country:
-                case targetType.region:
-                    return true;
-            }
-            return false;
+            return true; // container type 
         default:
-            return false;
+            return false; // all other types 
     }
 }
+
+/**
+ * Returns the relevant type that contains the given type, eg "m49" returns "continent"
+ * @param {string} type Type of target, see {@link targetType} 
+ * @returns {string}
+ */
+function ConvertToContainerType(type) {
+    switch (type) {
+        case targetType.continent:
+        case targetType.country:
+        case targetType.region:
+        case targetType.city:
+            return type;
+        case targetType.m49:
+        case targetType.ccode:
+            return targetType.continent;
+        case targetType.iso2:
+        case targetType.iso3:
+        case targetType.ccn:
+        case targetType.fips:
+        case targetType.cioc:
+            return targetType.country;
+        case targetType.admin1:
+        case targetType.iso2a1:
+            return targetType.region;
+        case targetType.admin2:
+            return targetType.city;
+        case targetType.geoPoint:
+        case targetType.stringName:
+        case targetType.searchName:
+        default:
+            return type;
+    }
+}
+
+/**
+ * Checks if given type is NOT a container or subtype, eg "geopoint" or "searchname"
+ * @param {string} type Type of target, see {@link targetType} 
+ * @returns False if container type or subtype, true otherwise 
+ */
+function IsNonContainerOrSubType(type) {
+    switch (type) {
+        case type.geoPoint:
+        case type.stringName:
+        case type.searchName:
+            return true;
+    }
+    return false;
+}
+
+//#endregion Container Type Checks and Conversion 
+
+
+//#region Subtype Checks
 
 /**
  * Is the given type a subtype of another type
@@ -275,63 +284,83 @@ function IsSubTypeOfCity(type, containerTypeIsTrue = true) {
     }
 }
 
-/**
- * Is the given type a container for other types 
- * 
- * (eg, 'continent' returns true, because it's a container for 'm49' and 'ccode')
- * @param {string} type Type of target, see {@link targetType} 
- * @returns {string}
- */
-function IsContainerType(type) {
-    switch (type) {
-        case targetType.continent:
-        case targetType.country:
-        case targetType.region:
-        case targetType.city:
-            return true; // container type 
-        default:
-            return false; // all other types 
-    }
-}
+//#endregion Subtype Checks
+
+//#region Validity and Parameter Checks
 
 /**
- * Returns the relevant type that contains the given type, eg "m49" returns "continent"
- * @param {string} type Type of target, see {@link targetType} 
- * @returns {string}
+ * Checks if it's possible to get the given target type {@link getType}
+ * with the given target type {@link withType}
+ * @param {string} getType Type that you want to GET 
+ * @param {string} withType Type WITH WHICH you want to get from 
+ * @param {boolean} [arrayOnlyIsTrue=true] Return true if returned value is array?
+ * @see {@link targetType} for list of all possible types 
+ * @returns {boolean} True if possible to get the getType with the withType 
  */
-function ConvertToContainerType(type) {
-    switch (type) {
+function IsGetWithValid(getType, withType, arrayOnlyIsTrue = true) {
+    if (!IsTargetTypeValid(getType) || !IsTargetTypeValid(withType)) {
+        return false; // invalid, return false 
+    } else if (getType == withType) {
+        return true; // can get self with self, just wasted computation *shrug* 
+    }
+    switch (getType) {
+
+        case targetType.geoPoint:
+            switch (withType) {
+                case targetType.stringName:
+                case targetType.searchName:
+                    return false;// can't get geopoint by name 
+            }
+            return true;// can get geopoint from all other types 
+
+        case targetType.stringName:
+            // can get names from anything except geopoint
+            return getType != targetType.geoPoint;
+
+        case targetType.searchName:
+            return true; // can get search names from anything including geopoint 
+
         case targetType.continent:
-        case targetType.country:
-        case targetType.region:
-        case targetType.city:
-            return type;
         case targetType.m49:
         case targetType.ccode:
-            return targetType.continent;
+            return true; // can get continent from anything 
+
+        case targetType.country:
         case targetType.iso2:
         case targetType.iso3:
         case targetType.ccn:
         case targetType.fips:
         case targetType.cioc:
-            return targetType.country;
+            if (IsSubTypeOfContinent(withType))
+                return arrayOnlyIsTrue;
+            return true;
+
+        case targetType.region:
         case targetType.admin1:
         case targetType.iso2a1:
-            return targetType.region;
+            if (IsSubTypeOfContinent(withType) ||
+                IsSubTypeOfCountry(withType))
+                return arrayOnlyIsTrue;
+            return true;
+
+        case targetType.city:
         case targetType.admin2:
-            return targetType.city;
-        case targetType.geoPoint:
-        case targetType.stringName:
-        case targetType.searchName:
+            if (IsSubTypeOfContinent(withType) ||
+                IsSubTypeOfCountry(withType) ||
+                IsSubTypeOfRegion(withType))
+                return arrayOnlyIsTrue;
+            return true;
+
         default:
-            return type;
+            return false;
     }
 }
+
 
 /**
  * Is the given target type valid? 
  * @param {string} type Type of target, see {@link targetType} 
- * @see {@link targetType}
+ * @see {@link targetType} for all valid types 
  * @returns {boolean}
  */
 function IsTargetTypeValid(type) {
@@ -360,3 +389,47 @@ function IsTargetTypeValid(type) {
             return false;
     }
 }
+
+/**
+ * Does getting the given type with the given type return an array?
+ * 
+ * (eg, getting 'city' with 'country' returns an array of all cities in that country)
+ * @param {string} type Type of target, see {@link targetType} 
+ * @returns {boolean}
+ */
+function DoesGetWithReturnArray(getType, withType) {
+    if (!IsTargetTypeValid(getType) || !IsTargetTypeValid(withType)) {
+        return false;
+    }
+    getType = ConvertToContainerType(getType);
+    withType = ConvertToContainerType(withType);
+    switch (getType) {
+        case targetType.continent:
+            return false;
+        case targetType.country:
+            switch (withType) {
+                case targetType.continent:
+                    return true;
+            }
+            return false;
+        case targetType.region:
+            switch (withType) {
+                case targetType.continent:
+                case targetType.country:
+                    return true;
+            }
+            return false;
+        case targetType.city:
+            switch (withType) {
+                case targetType.continent:
+                case targetType.country:
+                case targetType.region:
+                    return true;
+            }
+            return false;
+        default:
+            return false;
+    }
+}
+
+//#endregion Validity Checks 
