@@ -107,6 +107,7 @@ export class Module {
     titleBar;
     #titleText;
 
+    setupSubModule;
     mapSubModule;
     infoSubModule;
 
@@ -115,10 +116,11 @@ export class Module {
 
     #mapsToLoad = 0;
 
+    isLoading = false;
+
     constructor(map) {
 
         // metadata setup 
-        this.map = m.ParseMap(map);
         this.moduleId = Module.moduleCount;
 
         // create container 
@@ -147,21 +149,63 @@ export class Module {
         this.#titleText.id = this.ID("titleBar_Text");
         this.#titleText.setAttribute('class', 'contents text');
         this.titleBar.appendChild(this.#titleText);
-        this.SetTitle(m.GetMapFullName(map));
+        this.SetTitle("New Module");
 
-        // add map submodule 
-        let mapsCount = m.GetMapProjectionsArray(map).length;
-        let mapSubModuleWidthHeight = m.GetMapContainerWidthHeight(map, mapSize, mapsCount);
-        this.mapSubModule = document.createElement('div');
-        this.mapSubModule.setAttribute('class', 'submodule map');
+        // create submodules 
+        this.CreateSetupSubmodule();
+        this.CreateMapSubmodule();
+        this.CreateInfoSubmodule();
+
+        // assign loaded map
+        this.AssignMap(map);
+
+        // add module to document body 
+        document.body.appendChild(this.container);
+        this.AddedToDocumentBody();
+
+        // increment static module counter, ensure all unique
+        Module.moduleCount++;
+
+        // if lastModule is null, assign it to the first generated one 
+        if (_currentModule == null) { this.Select(); }
+    }
+
+    AssignMap(map) {
+
+        if (this.isLoading) {
+            console.warn("Cannot assign a new map while module is still loading,",
+                'module:', this, ', new map:', map);
+            return;
+        }
+        this.isLoading = true;
+
+        this.map = m.ParseMap(map);
+        this.SetTitle(m.GetMapFullName(this.map));
+
+        let mapsCount = m.GetMapProjectionsArray(this.map).length;
+        let mapSubModuleWidthHeight = m.GetMapContainerWidthHeight(this.map, mapSize, mapsCount);
         this.mapSubModule.style.width = mapSubModuleWidthHeight[0] + 'px';
         this.mapSubModule.style.height = mapSubModuleWidthHeight[1] + 'px';
-        this.mapSubModule.id = this.ID('mapSub');
-        this.container.appendChild(this.mapSubModule);
 
         // generate maps 
         this.mapDatas = CreateMaps(this);
         this.#mapsToLoad = this.mapDatas.length;
+    }
+
+    CreateSetupSubmodule() {
+
+    }
+
+    CreateMapSubmodule() {
+        // add map submodule
+        this.mapSubModule = document.createElement('div');
+        this.mapSubModule.setAttribute('class', 'submodule map');
+        this.mapSubModule.id = this.ID('mapSub');
+        this.container.appendChild(this.mapSubModule);
+    }
+
+
+    CreateInfoSubmodule() {
 
         // add info container
         this.infoSubModule = document.createElement('div');
@@ -176,20 +220,12 @@ export class Module {
         if (_spawnInfo) {
             this.container.appendChild(this.infoSubModule);
         }
-
-        // add module to document body 
-        document.body.appendChild(this.container);
-        this.AddedToDocumentBody();
-
-        // increment static module counter, ensure all unique
-        Module.moduleCount++;
-
-        // if lastModule is null, assign it to the first generated one 
-        if (_currentModule == null) { this.Select(); }
     }
 
     SetTitle(titleText) {
-        this.#titleText.innerHTML = titleText;
+        if (this.#titleText != null) {
+            this.#titleText.innerHTML = titleText;
+        }
     }
 
     ID(...suffixes) {
@@ -233,6 +269,9 @@ export class Module {
         this.dataOverlay = new DataOverlay(this);
         this.mapSubModule.prepend(this.dataOverlay.div);
         this.dataOverlay.AddedToDocumentBody();
+
+        // completed loading 
+        this.isLoading = false;
     }
 
     /** This {@link Module} has been added to {@link document.body} */

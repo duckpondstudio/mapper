@@ -42,6 +42,7 @@ export function NumericTest(num) {
             break;
 
         case 5:
+            current.module.AssignMap(m.peirce);
             break;
 
         case 6:
