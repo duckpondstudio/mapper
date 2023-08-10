@@ -2,41 +2,76 @@ import * as dataClasses from "./dataclasses";
 
 export const targetType = {
 
+    /** two-index Number array representing [latitude,longitude] 
+     * @type {string} */
     geoPoint: 'geopoint',
 
+    /** string name of a location formatted for (typically, ASCII) display, eg San Francisco 
+     * @see {@link dataClasses.name DataClasses.name}
+     * @type {string} */
     stringName: dataClasses.name,
+    /** string name of a location formatted for searching (typically via stringUtils.Simplify), eg sanfrancisco 
+     * @see {@link dataClasses.searchname DataClasses.searchname}
+     * @type {string} */
     searchName: dataClasses.searchname,
 
+    /** 
+     * {@link dataClasses.Location Location} reference, 
+     * specifically {@link dataClasses.Continent Continent}
+     * @see {@link dataClasses.type_Continent DataClasses.type_Continent}
+     * @type {string} */
     continent: dataClasses.type_Continent,
+    /** 
+     * {@link dataClasses.Location Location} reference, 
+     * specifically {@link dataClasses.Country Country}
+     * @see {@link dataClasses.type_Country DataClasses.type_Country}
+     * @type {string} */
     country: dataClasses.type_Country,
+    /** 
+     * {@link dataClasses.Location Location} reference, 
+     * specifically {@link dataClasses.Region Region}
+     * @see {@link dataClasses.type_Region DataClasses.type_Region}
+     * @type {string} */
     region: dataClasses.type_Region,
+    /** 
+     * {@link dataClasses.Location Location} reference, 
+     * specifically {@link dataClasses.City City}
+     * @see {@link dataClasses.type_City DataClasses.type_City}
+     * @type {string} */
     city: dataClasses.type_City,
 
-    /** Continent subtype,  */
+    /** Continent subtype, UN M49 code, three-digit number (saved as string)
+     * @type {string} */
     m49: 'm49',
-    /** Continent subtype, continent code, two-letter (AF - Africa, etc) */
+    /** Continent subtype, continent code, two-letter (AF - Africa, etc) 
+     * @type {string} */
     ccode: 'ccode',
-    /** Country subtype, two-letter country code, ISO 3166-1 alpha-2 */
+    /** Country subtype, two-letter country code, ISO 3166-1 alpha-2 
+     * @type {string} */
     iso2: 'iso2',
     /** Country subtype, three-letter country code, ISO 3166-1 alpha-3 */
     iso3: 'iso3',
-    /** Country subtype, "country code numeric", 3-digit number, ISO 3166-1 numeric 
+    /** Country subtype, "country code numeric", 3-digit number, ISO 3166-1 numeric (saved as string)
      * 
-     * Technically distinct from per-country M49 code, tho in practice they are identical (as of Aug 2023)
-    */
+     * Technically distinct from per-country UN M49 code, tho in practice they are identical (as of Aug 2023)
+     * @type {string} */
     ccn: 'ccn',
-    /** Country subtype, Federal Information Processing Standard 10-4, two-letter */
+    /** Country subtype, Federal Information Processing Standard 10-4, two-letter 
+     * @type {string} */
     fips: 'fips',
-    /** Country subtype, IOC: International Olympic Committe, three-letter */
+    /** Country subtype, IOC: International Olympic Committe, three-letter 
+     * @type {string} */
     cioc: 'cioc',
-    /** Region subtype, Admin-1 level codes, typically eg states/provinces */
+    /** Region subtype, Admin-1 level codes, two-digit number (string), typically eg states/provinces 
+     * @type {string} */
     admin1: 'admin1',
-    /** Formatted ISO2 + Admin-1 code joined with a period, eg CA.01 */
+    /** Formatted ISO2 + Admin-1 code joined with a period, eg CA.01 
+     * @type {string} */
     iso2a1: 'iso2a1',
     /** City subtype, Admin-2 level codes, typically eg counties/ridings.
      * 
-     * Despite being a city subtype, multiple cities can share the same admin2 code.
-     */
+     * Note: Despite being a city subtype, multiple cities can share the same admin2 code.
+     * @type {string} */
     admin2: 'admin2',
     //TODO: add regional ISO-3166-2 codes (check for regional M49 codes too)
 }
