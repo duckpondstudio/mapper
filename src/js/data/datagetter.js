@@ -42,31 +42,77 @@ export const targetType = {
 }
 
 export function GetWith(getType, withType, withValue) {
-
+    if (!IsGetWithValid(getType, withType)) {
+        console.error("Cannot get type", getType, 'with type', withType,
+            'refer to datagetter.js to see valid types. Returning the input withValue', withValue);
+        return withValue;
+    }
+    if (getType == withType) { return withValue; }
 }
 
-function IsGetWithValid(getType, withType) {
+/**
+ * Checks if it's possible to get the given target type {@link getType}
+ * with the given target type {@link withType}
+ * @param {string} getType Type that you want to GET 
+ * @param {string} withType Type WITH WHICH you want to get from 
+ * @param {boolean} [arrayOnlyIsTrue=true] Return true if returned value is array?
+ * @see {@link targetType} for list of all possible types 
+ * @returns {boolean} True if possible to get the getType with the withType 
+ */
+function IsGetWithValid(getType, withType, arrayOnlyIsTrue = true) {
     if (!IsTargetTypeValid(getType) || !IsTargetTypeValid(withType)) {
-        return false;
+        return false; // invalid, return false 
+    } else if (getType == withType) {
+        return true; // can get self with self, just wasted computation *shrug* 
     }
     switch (getType) {
+
         case targetType.geoPoint:
+            switch (withType) {
+                case targetType.stringName:
+                case targetType.searchName:
+                    return false;// can't get geopoint by name 
+            }
+            return true;// can get geopoint from all other types 
+
         case targetType.stringName:
+            // can get names from anything except geopoint
+            return getType != targetType.geoPoint;
+
         case targetType.searchName:
+            return true; // can get search names from anything including geopoint 
+
         case targetType.continent:
-        case targetType.country:
-        case targetType.region:
-        case targetType.city:
         case targetType.m49:
         case targetType.ccode:
+            return true; // can get continent from anything 
+
+        case targetType.country:
         case targetType.iso2:
         case targetType.iso3:
         case targetType.ccn:
         case targetType.fips:
         case targetType.cioc:
+            if (IsSubTypeOfContinent(withType))
+                return arrayOnlyIsTrue;
+            return true;
+
+        case targetType.region:
         case targetType.admin1:
         case targetType.iso2a1:
+            if (IsSubTypeOfContinent(withType) ||
+                IsSubTypeOfCountry(withType))
+                return arrayOnlyIsTrue;
+            return true;
+
+        case targetType.city:
         case targetType.admin2:
+            if (IsSubTypeOfContinent(withType) ||
+                IsSubTypeOfCountry(withType) ||
+                IsSubTypeOfRegion(withType))
+                return arrayOnlyIsTrue;
+            return true;
+
         default:
             return false;
     }
