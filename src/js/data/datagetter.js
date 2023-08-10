@@ -31,13 +31,14 @@ export const targetType = {
     cioc: 'cioc',
     /** Region subtype, Admin-1 level codes, typically eg states/provinces */
     admin1: 'admin1',
-    /** Formatted ISO2 + Admin-1 code, eg  */
+    /** Formatted ISO2 + Admin-1 code joined with a period, eg CA.01 */
     iso2a1: 'iso2a1',
     /** City subtype, Admin-2 level codes, typically eg counties/ridings.
      * 
      * Despite being a city subtype, multiple cities can share the same admin2 code.
      */
     admin2: 'admin2',
+    //TODO: add regional ISO-3166-2 codes (check for regional M49 codes too)
 }
 
 export function GetWith(getType, withType, withValue) {
@@ -77,7 +78,7 @@ function IsGetWithValid(getType, withType) {
  * 
  * (eg, getting 'city' with 'country' returns an array of all cities in that country)
  * @param {string} type Type of target, see {@link targetType} 
- * @returns {string}
+ * @returns {boolean}
  */
 function DoesGetWithReturnArray(getType, withType) {
     if (!IsTargetTypeValid(getType) || !IsTargetTypeValid(withType)) {
@@ -119,7 +120,7 @@ function DoesGetWithReturnArray(getType, withType) {
  * 
  * (eg, 'm49' returns true, because it's a subtype of 'continent')
  * @param {string} type Type of target, see {@link targetType} 
- * @returns {string}
+ * @returns {boolean}
  */
 function IsSubType(type) {
     switch (type) {
@@ -147,6 +148,84 @@ function IsSubType(type) {
         case targetType.searchName:
         default:
             return false; // n/a 
+    }
+}
+
+/**
+ * Is the given type a subtype of continent 
+ * @param {string} type Type of target, see {@link targetType} 
+ * @param {boolean} [containerTypeIsTrue=true] Should the container type itself return true?
+ * @see IsSubType
+ * @returns {boolean}
+ */
+function IsSubTypeOfContinent(type, containerTypeIsTrue = true) {
+    switch (type) {
+        case targetType.continent:
+            return containerTypeIsTrue;
+        case targetType.m49:
+        case targetType.ccode:
+            return true; // continent subtype 
+        default:
+            return false; // n/a 
+    }
+}
+
+/**
+ * Is the given type a subtype of country  
+ * @param {string} type Type of target, see {@link targetType} 
+ * @param {boolean} [containerTypeIsTrue=true] Should the container type itself return true?
+ * @see IsSubType
+ * @returns {boolean}
+ */
+function IsSubTypeOfCountry(type, containerTypeIsTrue = true) {
+    switch (type) {
+        case targetType.country:
+            return containerTypeIsTrue;
+        case targetType.iso2:
+        case targetType.iso3:
+        case targetType.ccn:
+        case targetType.fips:
+        case targetType.cioc:
+            return true; // country subtype 
+        default:
+            return false; // n/a 
+    }
+}
+
+/**
+ * Is the given type a subtype of region 
+ * @param {string} type Type of target, see {@link targetType} 
+ * @param {boolean} [containerTypeIsTrue=true] Should the container type itself return true?
+ * @see IsSubType
+ * @returns {boolean}
+ */
+function IsSubTypeOfRegion(type, containerTypeIsTrue = true) {
+    switch (type) {
+        case targetType.region:
+            return containerTypeIsTrue;
+        case targetType.admin1:
+        case targetType.iso2a1:
+            return true; // region subtype 
+        default:
+            return false; // n/a 
+    }
+}
+
+/**
+ * Is the given type a subtype of city 
+ * @param {string} type Type of target, see {@link targetType} 
+ * @param {boolean} [containerTypeIsTrue=true] Should the container type itself return true?
+ * @see IsSubType
+ * @returns {boolean}
+ */
+function IsSubTypeOfCity(type, containerTypeIsTrue = true) {
+    switch (type) {
+        case targetType.city:
+            return containerTypeIsTrue;
+        case targetType.admin2:
+            return true; // city subtype 
+        default:
+            return false;
     }
 }
 
@@ -207,7 +286,7 @@ function ConvertToContainerType(type) {
  * Is the given target type valid? 
  * @param {string} type Type of target, see {@link targetType} 
  * @see {@link targetType}
- * @returns {string}
+ * @returns {boolean}
  */
 function IsTargetTypeValid(type) {
     switch (type) {
