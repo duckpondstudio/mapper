@@ -4,6 +4,7 @@ import { ClickedModule } from "../base/input";
 import { DataOverlay } from '../data/dataoverlay';
 import * as m from '../data/maps';
 import { GetBoundingGlobalRect } from "../utils/element";
+import { InfoSubModule } from './submodule';
 const feather = require('feather-icons');
 
 const _spawnInfo = true;
@@ -111,9 +112,6 @@ export class Module {
     /** @type {HTMLDivElement} */ mapSubModule;
     /** @type {HTMLDivElement} */ infoSubModule;
 
-    /** Paragraph used for basic MapData data output @type {HTMLParagraphElement} @memberof MapData*/
-    #infoOutput;
-
     #mapsToLoad = 0;
 
     isLoading = false;
@@ -154,7 +152,7 @@ export class Module {
         // create submodules 
         this.CreateSetupSubmodule();
         this.CreateMapSubmodule();
-        this.CreateInfoSubmodule();
+        this.infoSubModule = new InfoSubModule(this, 'info');
 
         // assign loaded map
         if (map != null) {
@@ -206,7 +204,10 @@ export class Module {
     }
 
     CreateSetupSubmodule() {
-
+        this.setupSubModule = document.createElement('div');
+        this.setupSubModule.setAttribute('class', 'submodule setup');
+        this.setupSubModule.id = this.ID('setupSub');
+        this.container.appendChild(this.setupSubModule);
     }
 
     CreateMapSubmodule() {
@@ -217,23 +218,6 @@ export class Module {
         this.container.appendChild(this.mapSubModule);
     }
 
-
-    CreateInfoSubmodule() {
-
-        // add info container
-        this.infoSubModule = document.createElement('div');
-        this.infoSubModule.setAttribute('class', 'submodule info');
-        this.infoSubModule.setAttribute('id', this.ID('infoSub'));
-        // info output text 
-        this.#infoOutput = document.createElement('p');
-        this.#infoOutput.setAttribute('id', this.ID('infoSub', 'output'));
-        this.infoSubModule.appendChild(this.#infoOutput);
-        this.OutputText("Output goes here");
-        // generate it to avoid errors but check if actually adding to document 
-        if (_spawnInfo) {
-            this.container.appendChild(this.infoSubModule);
-        }
-    }
 
     SetTitle(titleText) {
         if (this.#titleText != null) {
@@ -312,24 +296,13 @@ export class Module {
      * @memberof MapData
      */
     OutputText(...text) {
-        if (!text || text.length == 0) {
-            this.#infoOutput.innerHTML = "";
-            return;
-        }
-        if (text.length == 1) {
-            this.#infoOutput.innerHTML = text[0];
-        } else {
-            this.#infoOutput.innerHTML = "";
-            for (let i = 0; i < text.length; i++) {
-                this.#infoOutput.innerHTML += text[i] + "<br>";
-            }
-        }
+        this.infoSubModule.OutputText(...text);
     }
     /** Clears output text data
      * @memberof MapData
      */
     ClearOutput() {
-        this.OutputText();
+        this.infoSubModule.ClearOutput();
     }
 
     /** @static Singleton counter for all instantiated modules
