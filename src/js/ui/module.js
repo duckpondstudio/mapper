@@ -141,7 +141,7 @@ export class Module {
 
         // add icon to titlebar 
         let icon = document.createElement('div');
-        icon.innerHTML = feather.icons.globe.toSvg();
+        icon.innerHTML = this.GetModuleIcon(type);
         icon.setAttribute('class', 'contents icon');
         this.titleBar.appendChild(icon);
 
@@ -150,7 +150,7 @@ export class Module {
         this.#titleText.id = this.ID("titleBar_Text");
         this.#titleText.setAttribute('class', 'contents text');
         this.titleBar.appendChild(this.#titleText);
-        this.SetTitle("New Module");
+        this.SetTitle(stringUtils.CapitalizeFirstLetter(type) + " Module");
 
 
         switch (type) {
@@ -189,8 +189,22 @@ export class Module {
         if (_currentModule == null) { this.Select(); }
     }
 
-    AssignMap(map) {
+    /**
+     * 
+     * @param {*} moduleType 
+     * @returns {feather.FeatherIcon}
+     */
+    GetModuleIcon(moduleType) {
+        switch (moduleType) {
+            case 'map':
+                return feather.icons.globe.toSvg();
+            case 'data':
+                return feather.icons.database.toSvg();
+        }
+    }
 
+    AssignMap(map) {
+        // todo: move map-centric methods into a separate script for map module, similar to submodules 
 
         if (this.isLoading) {
             console.warn("Cannot assign a new map while module is still loading,",
@@ -209,7 +223,7 @@ export class Module {
         this.mapSubModule.ClearMaps();
 
         this.map = m.ParseMap(map);
-        this.SetTitle(m.GetMapFullName(this.map));
+        // this.SetTitle(m.GetMapFullName(this.map));
 
         this.mapSubModule.AssignMap(map);
 
