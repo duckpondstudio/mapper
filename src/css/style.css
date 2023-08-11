@@ -63,6 +63,10 @@ h1 {
     min-height: var(--submodule-height-min);
 }
 
+.submodule.setup {
+    min-height: var(--submodule-info-height-min);
+}
+
 .mapContainer {
     display: inline-block;
     background-color: var(--color-window-background-alpha);

@@ -4,7 +4,7 @@ import { ClickedModule } from "../base/input";
 import { DataOverlay } from '../data/dataoverlay';
 import * as m from '../data/maps';
 import { GetBoundingGlobalRect } from "../utils/element";
-import { InfoSubModule } from './submodule';
+import { InfoSubModule, SetupSubModule } from './submodule';
 const feather = require('feather-icons');
 
 const _spawnInfo = true;
@@ -149,8 +149,8 @@ export class Module {
         this.titleBar.appendChild(this.#titleText);
         this.SetTitle("New Module");
 
-        // create submodules 
-        this.CreateSetupSubmodule();
+        // create submodules
+        this.setupSubModule = new SetupSubModule(this, 'setup');
         this.CreateMapSubmodule();
         this.infoSubModule = new InfoSubModule(this, 'info');
 
@@ -201,13 +201,6 @@ export class Module {
         // generate maps 
         this.mapDatas = CreateMaps(this);
         this.#mapsToLoad = this.mapDatas.length;
-    }
-
-    CreateSetupSubmodule() {
-        this.setupSubModule = document.createElement('div');
-        this.setupSubModule.setAttribute('class', 'submodule setup');
-        this.setupSubModule.id = this.ID('setupSub');
-        this.container.appendChild(this.setupSubModule);
     }
 
     CreateMapSubmodule() {

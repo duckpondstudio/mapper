@@ -28,6 +28,10 @@ class SubModule {
     }
 }
 
+export class SetupSubModule extends SubModule { 
+    
+}
+
 export class InfoSubModule extends SubModule {
 
     /** Paragraph used for basic MapData data output @type {HTMLParagraphElement} @memberof MapData*/
