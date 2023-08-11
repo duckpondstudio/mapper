@@ -218,3 +218,33 @@ export function RemoveDiacritics(inputString, convertLatinAe = true) {
 export function ReplaceAeWithLatinAE(inputString) {
     return inputString.replace(/Æ/g, 'AE').replace(/æ/g, 'ae');
 }
+
+/**
+ * First letter uppercase, all others lowercase
+ * @param {string} inputString 
+ * @returns 
+ */
+export function CapitalizeFirstLetter(inputString, capitalizeAfterEverySpace = true) {
+    if (capitalizeAfterEverySpace && inputString.indexOf(' ') >= 0) {
+        // remove double spaces
+        let failsafe = inputString.length + 1;
+        while (inputString.indexOf('  ') > 0 && failsafe > 0) {
+            inputString = inputString.replace('  ', ' ');
+            failsafe--;
+            if (failsafe == 0) {
+                console.warn("HIT WHILE LOOP FAILSAFE, investigate, input:", inputString);
+            }
+        }
+        // split along spaces 
+        let words = inputString.split(' ');
+        if (words.length == 1) {
+            return CapitalizeFirstLetter(words[0], false);
+        }
+        for (let i = 0; i < words.length; i++) {
+            words[i] = CapitalizeFirstLetter(words[i], false);
+        }
+        return words.join(' ');
+    }
+    return inputString.charAt(0).toUpperCase() +
+        inputString.slice(1).toLowerCase();
+}
