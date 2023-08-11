@@ -347,7 +347,7 @@ export class MapData {
         }
         // determine default projection index 
         // by default, use the middle projection (least likelihood of a point being out-of-container)
-        let defaultProjectionID = PPP;
+            case 0:
         let projection = this.projections[defaultProjectionID];// [2]
         let xy = [0, 0];
         if (useAvgXY) {
