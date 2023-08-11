@@ -5,7 +5,7 @@ body {
     background-repeat: no-repeat;
     background-attachment: fixed;
     font-family: 'Rockford Sans', 'Helvetica Neue', Helvetica, sans-serif;
-    font-size: 14px;
+    font-size: 10.5pt;
     color: var(--color-text-body);
     background-color: var(--color-bg-solid);
     background-image: linear-gradient(var(--color-bg-gradient-1), var(--color-bg-gradient-2));
@@ -15,6 +15,7 @@ h1 {
     font-family: 'Isidora Soft', 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     margin-block-start: 0.32em;
     margin-block-end: 0.4em;
+    font-size: 16pt;
 }
 
 .module {
@@ -71,6 +72,15 @@ h1 {
     display: inline-block;
     padding: 4px;
 }
+.setupDropdown.hoverText {
+    /* display: inline-block; */
+    padding: 0px;
+    padding-left: 2px;
+    font-size: 8pt;
+}
+.setupDropdown.hoverText a {
+    text-decoration: none;
+}
 
 .mapContainer {
     display: inline-block;
@@ -83,17 +93,17 @@ h1 {
     white-space: nowrap;
     /* border-radius: 0px; */
     filter: drop-shadow(var(--appearance-shadow-x) var(--appearance-shadow-y) var(--appearance-shadow-blur) var(--color-shadow));
-    
-   -webkit-user-drag: none;
-   -khtml-user-drag: none;
-   -moz-user-drag: none;
-   -o-user-drag: none;
-   /* "user-drag" seems to be an unknown property is VSCode - comment out unless needed later */
+
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    /* "user-drag" seems to be an unknown property is VSCode - comment out unless needed later */
     /* user-drag: none; */
 }
 
 .mapContainer.first {
-    border-radius: var(--appearance-map-border-radius-first); 
+    border-radius: var(--appearance-map-border-radius-first);
 }
 .mapContainer.last {
     border-radius: var(--appearance-map-border-radius-last);
@@ -107,7 +117,7 @@ h1 {
     fill: var(--color-map-default-fill);
     stroke: var(--color-map-default-stroke);
 }
-/* note that GetProjectionAtXY in mapcont.js is dependent on the classname "map" */ 
+/* note that GetProjectionAtXY in mapcont.js is dependent on the classname "map" */
 
 .mapContainer .map .land {
     fill: var(--color-map-land-fill);

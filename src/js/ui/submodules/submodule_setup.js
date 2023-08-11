@@ -8,8 +8,9 @@ class Dropdown {
     dropdown;
     label;
     container;
+    link;
     constructor(name, setupSubmodule, callback, ...options) {
-        
+
         let simpleName = stringUtils.Simplify(name);
 
         this.dropdown = CreateDropdown(simpleName, setupSubmodule.ID(simpleName),
@@ -26,6 +27,17 @@ class Dropdown {
 
         setupSubmodule.submoduleDiv.appendChild(this.container);
     }
+
+    AssignLink(linkUrl, hoverText) {
+        this.link = document.createElement('div');
+        this.link.innerHTML += " &nbsp;<sup><a href=" +
+            linkUrl + " target=_blank>(?)</a></sup>";
+        if (!stringUtils.IsNullOrEmptyOrWhitespace(hoverText)) {
+            this.link.setAttribute('class', 'setupDropdown hoverText');
+            this.link.setAttribute('title', hoverText);
+        }
+        this.label.appendChild(this.link);
+    }
 }
 
 export class SetupSubModule extends SubModule {
@@ -40,6 +52,9 @@ export class SetupSubModule extends SubModule {
         this.mapDropdown = new Dropdown('Projection', this, this.MapSelected, ...m.GetAllMaps());
         this.mapColor = new Dropdown('Map Colours', this, this.MapColorSelected, ...m.GetAllMaps());
         this.dataColor = new Dropdown('Data Colour', this, this.DataColorSelected, ...AllGradients(true));
+
+        this.dataColor.AssignLink("https://github.com/bpostlethwaite/colormap/blob/master/colormaps.png",
+            "Colour Previews");
 
     }
 
