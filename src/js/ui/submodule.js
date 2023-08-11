@@ -50,12 +50,18 @@ export class SetupSubModule extends SubModule {
     constructor(parentModule, submoduleName) {
         super(parentModule, submoduleName);
 
-        this.mapDropdown = CreateDropdown('test', 'test',
-            ...m.GetAllMaps());
-
+        this.mapDropdown = CreateDropdown('mapDropdown', this.ID('mapDropdown'),
+            this, this.MapSelected, ...m.GetAllMaps());
+        
         this.submoduleDiv.appendChild(this.mapDropdown);
-        
-        
+    }
+
+    MapSelected() {
+        let currentValue = this[this.selectedIndex].value;
+        if (this.parent.parentModule.map != currentValue) {
+            this.parent.parentModule.AssignMap(currentValue);
+        }
+
     }
 
 }

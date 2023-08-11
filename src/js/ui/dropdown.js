@@ -1,13 +1,21 @@
 let capitalizeFirstLetter = true;
 
-export function CreateDropdown(name, id, ...values) {
- 
+/**
+ * 
+ * @param {string} name 
+ * @param {string} id 
+ * @param {function} onChangeCallback 
+ * @param  {...any} values 
+ * @returns {HTMLSelectElement}
+ */
+export function CreateDropdown(name, id, parent, onChangeCallback, ...values) {
+
     let dropdown = document.createElement("select");
+    dropdown.parent = parent;
     dropdown.name = name;
-    dropdown.id = values;
- 
-    for (const val of values)
-    {
+    dropdown.id = id;
+
+    for (const val of values) {
         var option = document.createElement("option");
         option.value = val;
         if (capitalizeFirstLetter) {
@@ -16,7 +24,9 @@ export function CreateDropdown(name, id, ...values) {
         dropdown.appendChild(option);
     }
 
+    if (onChangeCallback != null) {
+        dropdown.onchange = onChangeCallback;
+    }
+
     return dropdown;
- 
-    // document.getElementById("container").appendChild(label).appendChild(dropdown);
 }
