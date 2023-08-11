@@ -123,8 +123,6 @@ export function GetProjectionScale(map) {
         case adams1:
         case adams2:
             return math.sqrt2;
-            // return math.sqrt2rec;
-            return 1;
     }
     return 1;
 }
