@@ -17,7 +17,8 @@ const devicePixelRatio = window.devicePixelRatio;
 
 const debugXYLatLong = true;
 
-const sizeRatioLimit = 0;
+/** nominal divisor so that we don't hit any 179.99 < 180 tomfoolery for SVG recalc */
+const sizeRatioLimit = 0.98;
 
 let PPP = 0;
 
@@ -92,8 +93,22 @@ export class MapData {
         if (minWidth < mapSize * sizeRatioLimit || minHeight < mapSize * sizeRatioLimit) {
             let x = minWidth / mapSize;
             let y = minHeight / mapSize;
-            console.log(x, '/', y);
+            if (x == 0 || y == 0) {
+                console.warn("WARNING: width and/or height is 0, investigate, X:", x, "/Y:", y);
+            } else {
+
+                // TODO: finish updating scale for non-square projections, eg equirectangular 
+
+                let scaleX = 1 / Math.min(x, 1);
+                let scaleY = 1 / Math.min(y, 1);
+                let scaleBy = 1 / Math.min(x, y, 1);
+
+                for (let i = 0; i < this.projections.length; i++) {
+                }
+
+            }
         }
+
         this.module.MapLoaded(this);
     }
 
