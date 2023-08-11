@@ -1,5 +1,13 @@
 let capitalizeFirstLetter = true;
 
+export class OptionDisplay {
+    // TODO: replace .text with this, and render img/color/gradients inline with dropdown options 
+    text;
+    img;
+    color;
+    gradientName;
+}
+
 /**
  * 
  * @param {string} name 
@@ -31,9 +39,13 @@ export function CreateDropdown(name, id, parent, onChangeCallback, ...options) {
         }
         option.disabled = disabled;
         option.value = val;
+        let text = val;
         if (capitalizeFirstLetter) {
-            option.text = val.charAt(0).toUpperCase() + val.slice(1);
+            text = val.charAt(0).toUpperCase() + val.slice(1);
         }
+
+        let optionLabel = document.createTextNode(text);
+        option.appendChild(optionLabel);
         dropdown.appendChild(option);
     }
 
