@@ -36,9 +36,7 @@ export function CreateMaps(module) {
     // so we now load multiple single maps, 1 projection each, and put them beside
     // each other as we otherwise would in a map with multiple projections.
     // it's complicated and silly but here we are ¯\_(ツ)_/¯ 
-    
-    // remove current maps 
-    
+
     // create new maps
     let map = module.map;
     let maps = m.GetMapProjectionsArray(map);
@@ -222,7 +220,11 @@ function CreateMap(map, parentModule, mapIndex) {
 
             // apply data
             let g = svg.append('g')
-                .attr('class', 'mapGroup')
+                .attr('class', function () {
+                    // collect full size of projection (unless it's CSS rotated)
+                    mapData.svgContainers.push(this);
+                    return 'mapGroup';
+                })
                 .attr("transform", hasTransform ? transform : null)
                 .selectAll('path')
                 .data(geojson.features)

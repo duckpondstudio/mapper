@@ -17,6 +17,8 @@ const devicePixelRatio = window.devicePixelRatio;
 
 const debugXYLatLong = true;
 
+const sizeRatioLimit = 0;
+
 let PPP = 0;
 
 /** Container for all data related to displaying a map */
@@ -29,6 +31,8 @@ export class MapData {
     index = -1;
     /** Div that contains all {@link projections} @type {HTMLDivElement} @memberof MapData*/
     mapContainer;
+    /** DOM elements for the actual map SVGs, used for sizing */
+    svgContainers = [];
     /** Array of projections loaded in this MapData @type {ProjectionData[]} @memberof MapData*/
     projections = [];
     /** Rect for the size of this MapData, auto-updated on adding {@link projections}.
@@ -76,7 +80,22 @@ export class MapData {
     /**
      * Called when all projections in the module are successfully loaded 
      */
-    AllProjectionsLoaded() { this.module.MapLoaded(this); }
+    AllProjectionsLoaded() {
+        // readjust size if needed 
+        let minWidth = 0;
+        let minHeight = 0;
+        for (let i = 0; i < this.svgContainers.length; i++) {
+            let rect = this.svgContainers[i].getBoundingClientRect();
+            minWidth = Math.max(rect.width, minWidth);
+            minHeight = Math.max(rect.height, minHeight);
+        }
+        if (minWidth < mapSize * sizeRatioLimit || minHeight < mapSize * sizeRatioLimit) {
+            let x = minWidth / mapSize;
+            let y = minHeight / mapSize;
+            console.log(x, '/', y);
+        }
+        this.module.MapLoaded(this);
+    }
 
     /** 
      * This {@link MapData} has been added to {@link document.body},

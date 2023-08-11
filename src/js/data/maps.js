@@ -161,15 +161,17 @@ export function GetMapCSSRightOffset(map, mapSize, projectionsCount, projectionI
     }
     return 0;
 }
-export function GetProjectionCSSRotation(map) {
+export function GetProjectionCSSRotation(map, bypassWarning = false) {
     // return 0;
     if (!useCSSTransformations) { return 0; }
     switch (ParseMap(map)) {
         case grieger:
         case grieger_alt:
         case grieger_full:
-            console.warn("Warning: this is meant for Projections, whereas", map,
-                "is a map made of multiple individual projections");
+            if (!bypassWarning) {
+                console.warn("Warning: this is meant for Projections, whereas", map,
+                    "is a map made of multiple individual projections");
+            }
             break;
         case adams1:
             return -45;
@@ -249,7 +251,6 @@ export function GetProjectionFullRotation(map) {
     }
     return [lambda, phi, gamma];
 }
-let v = 0;
 
 /**
  * Get the {@link d3.GeoProjection.center d3 center} for this map (lat, long)
