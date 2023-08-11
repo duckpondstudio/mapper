@@ -3,7 +3,9 @@ import { CreateMaps } from "../mapgen/mapmaker";
 import { ClickedModule } from "../base/input";
 import { DataOverlay } from '../data/dataoverlay';
 import * as m from '../data/maps';
-import { MapSubModule, InfoSubModule, SetupSubModule } from './submodule';
+import { InfoSubModule } from "./submodules/submodule_info";
+import { MapSubModule } from "./submodules/submodule_map";
+import { SetupSubModule } from "./submodules/submodule_setup";
 const feather = require('feather-icons');
 
 const _spawnInfo = true;

@@ -1,11 +1,7 @@
 import * as module from './module';
 import * as stringUtils from '../utils/string';
-import * as m from '../data/maps';
-import { GetBoundingGlobalRect } from "../utils/element";
-import { mapSize } from '../mapgen/mapmaker';
-import { CreateDropdown } from './dropdown';
 
-class SubModule {
+export class SubModule {
 
     /**
      * @type {module.Module}
@@ -40,103 +36,5 @@ class SubModule {
     /** Convenience, calls ID method on parent module */
     ID(...suffixes) {
         return this.parentModule.ID(...suffixes);
-    }
-}
-
-export class SetupSubModule extends SubModule {
-
-    mapDropdown;
-
-    constructor(parentModule, submoduleName) {
-        super(parentModule, submoduleName);
-
-        this.mapDropdown = CreateDropdown('mapDropdown', this.ID('mapDropdown'),
-            this, this.MapSelected, ...m.GetAllMaps());
-        
-        this.submoduleDiv.appendChild(this.mapDropdown);
-    }
-
-    MapSelected() {
-        let currentValue = this[this.selectedIndex].value;
-        if (this.parent.parentModule.map != currentValue) {
-            this.parent.parentModule.AssignMap(currentValue);
-        }
-
-    }
-
-}
-
-export class MapSubModule extends SubModule {
-
-    #map;
-
-    ClearMaps() {
-        while (this.submoduleDiv.firstChild) {
-            this.submoduleDiv.removeChild(this.submoduleDiv.firstChild);
-        }
-    }
-
-    AssignMap(map) {
-
-        this.#map = map;
-        let mapsCount = m.GetMapProjectionsArray(this.#map).length;
-        let mapSubModuleWidthHeight = m.GetMapContainerWidthHeight(
-            this.#map, mapSize, mapsCount);
-        this.submoduleDiv.style.width = mapSubModuleWidthHeight[0] + 'px';
-        this.submoduleDiv.style.height = mapSubModuleWidthHeight[1] + 'px';
-    }
-
-    /**
-     * Quick reference getter to the global rect for the map submodule 
-     * @see {@link GetBoundingGlobalRect}
-     * @returns {DOMRect}
-     */
-    GetMapRect() {
-        return GetBoundingGlobalRect(this.submoduleDiv);
-    }
-
-}
-
-export class InfoSubModule extends SubModule {
-
-    /** Paragraph used for basic MapData data output @type {HTMLParagraphElement} @memberof MapData*/
-    #infoOutput;
-
-    constructor(parentModule, submoduleName) {
-
-        super(parentModule, submoduleName);
-
-        // info output text 
-        this.#infoOutput = document.createElement('p');
-        this.#infoOutput.setAttribute('id', this.parentModule.ID('infoSub', 'output'));
-        this.submoduleDiv.appendChild(this.#infoOutput);
-
-        this.OutputText("Output goes here");
-    }
-
-    /**
-     * Write the given values (single var or array) as text in this map's output field
-     * @param {...string} string Line or lines of text to display. Leave empty to clear text
-     * @memberof MapData
-     */
-    OutputText(...text) {
-        if (!text || text.length == 0) {
-            this.#infoOutput.innerHTML = "";
-            return;
-        }
-        if (text.length == 1) {
-            this.#infoOutput.innerHTML = text[0];
-        } else {
-            this.#infoOutput.innerHTML = "";
-            for (let i = 0; i < text.length; i++) {
-                this.#infoOutput.innerHTML += text[i] + "<br>";
-            }
-        }
-    }
-    /** Clears output text data
-     * @memberof MapData
-     */
-    ClearOutput() {
-        this.OutputText();
     }
 }
