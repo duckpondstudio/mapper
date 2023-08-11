@@ -1,6 +1,31 @@
 import { SubModule } from '../submodule';
 import * as m from '../../data/maps';
 import { CreateDropdown } from '../dropdown';
+import * as stringUtils from '../../utils/string';
+
+class Dropdown {
+    dropdown;
+    label;
+    container;
+    constructor(name, setupSubmodule, callback, ...options) {
+        
+        let simpleName = stringUtils.Simplify(name);
+
+        this.dropdown = CreateDropdown(simpleName, setupSubmodule.ID(simpleName),
+            setupSubmodule, callback, ...options);
+
+        this.label = document.createElement('div');
+        this.label.innerHTML = name;
+
+        this.container = document.createElement('div');
+        this.container.setAttribute('class', 'setupDropdown');
+
+        this.container.appendChild(this.label);
+        this.container.appendChild(this.dropdown);
+
+        setupSubmodule.submoduleDiv.appendChild(this.container);
+    }
+}
 
 export class SetupSubModule extends SubModule {
 
@@ -9,10 +34,8 @@ export class SetupSubModule extends SubModule {
     constructor(parentModule, submoduleName) {
         super(parentModule, submoduleName);
 
-        this.mapDropdown = CreateDropdown('mapDropdown', this.ID('mapDropdown'),
-            this, this.MapSelected, ...m.GetAllMaps());
+        this.mapDropdown = new Dropdown('Projection', this, this.MapSelected, ...m.GetAllMaps());
 
-        this.submoduleDiv.appendChild(this.mapDropdown);
     }
 
     MapSelected() {

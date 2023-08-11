@@ -67,6 +67,11 @@ h1 {
     min-height: var(--submodule-info-height-min);
 }
 
+.setupDropdown {
+    display: inline-block;
+    padding: 4px;
+}
+
 .mapContainer {
     display: inline-block;
     background-color: var(--color-window-background-alpha);
