@@ -2,6 +2,7 @@ import { SubModule } from '../submodule';
 import * as m from '../../data/maps';
 import { CreateDropdown } from '../dropdown';
 import * as stringUtils from '../../utils/string';
+import { AllGradients } from '../../utils/color';
 
 class Dropdown {
     dropdown;
@@ -30,11 +31,15 @@ class Dropdown {
 export class SetupSubModule extends SubModule {
 
     mapDropdown;
+    mapColor;
+    dataColor;
 
     constructor(parentModule, submoduleName) {
         super(parentModule, submoduleName);
 
         this.mapDropdown = new Dropdown('Projection', this, this.MapSelected, ...m.GetAllMaps());
+        this.mapColor = new Dropdown('Map Colours', this, this.MapColorSelected, ...m.GetAllMaps());
+        this.dataColor = new Dropdown('Data Colour', this, this.DataColorSelected, ...AllGradients(true));
 
     }
 
@@ -43,7 +48,11 @@ export class SetupSubModule extends SubModule {
         if (this.parent.parentModule.map != currentValue) {
             this.parent.parentModule.AssignMap(currentValue);
         }
+    }
+    MapColorSelected() {
 
     }
+    DataColorSelected() {
 
+    }
 }

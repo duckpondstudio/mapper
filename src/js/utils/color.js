@@ -94,7 +94,7 @@ export function Gradient(gradientName, reverse = false, shades = shadesDefault) 
     gradient_recent = gradientName;
 
     let gradient = GetColorMap(gradientName, shades);
-    
+
     return reverse ? gradient.reverse() : gradient;
 }
 
@@ -123,7 +123,7 @@ export function GradientCSS(gradientName,
     return css;
 }
 
-/** store local ref to loaded {@link colormap colormaps} */ 
+/** store local ref to loaded {@link colormap colormaps} */
 let loadedColorMaps = {};
 
 function GetColorMap(gradientName, shades) {
