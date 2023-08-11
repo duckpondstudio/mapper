@@ -54,6 +54,22 @@ const maps = [
     // Remember to update GetMapD3GeoProjection below as well!!!
 ];
 
+/** Exclude these maps from the GetAllMaps function return */
+const excludeMaps = [adams1_alt, adams2_alt];
+
+/** Get an array of all usable maps 
+ * @type {string[]}
+*/
+export function GetAllMaps(ignoreExclusions = false) {
+    let getMaps = [];
+    for (let i = 0; i < maps.length; i++) {
+        if (ignoreExclusions || !excludeMaps.includes(maps[i][1])) {
+            getMaps.push(maps[i][1]);
+        }
+    }
+    return getMaps;
+}
+
 import * as d3 from 'd3';
 import * as d3gp from 'd3-geo-projection';
 
@@ -360,19 +376,19 @@ function GetMapID(map) {
     return -1;
 }
 
-// sampling of mostly random, dubiously-accurate lat/long coordinates for testing 
-//                            LOCATION    APPROX LAT,LONG 
-export const EXAMPLE_LAT_LONG_VANCOUVER = [49.26, -123.11];
-export const EXAMPLE_LAT_LONG_AUSTRALIA = [-23.69, 135.1];
-export const EXAMPLE_LAT_LONG_MADAGASCAR = [-19.62, 47.17];
-export const EXAMPLE_LAT_LONG_RIO_BRAZIL = [-22.7, -42.9];
-export const EXAMPLE_LAT_LONG_FALKLAND_ISLES = [-51.79, -59.59];
-export const EXAMPLE_LAT_LONG_MCMURDO_STN = [-77.85, 166.666];
-export const EXAMPLE_LAT_LONG_GREENLAND = [73.45, -43.29];
-export const EXAMPLE_LAT_LONG_GULF_OF_MEXICO = [22.8, -93];
-export const EXAMPLE_LAT_LONG_GALAPAGOS = [-0.45, -91.12];
-export const EXAMPLE_LAT_LONG_VIETNAM = [14.06, 108.28];
-export const EXAMPLE_LAT_LONG_JAPAN = [36.21, 138.25];
-export const EXAMPLE_LAT_LONG_INDIA = [19.13, 78.54];
-export const EXAMPLE_LAT_LONG_ITALY = [42.33, 12.84];
-export const EXAMPLE_LAT_LONG_HAWAII = [21, -155.75];
+// sampling of mostly random, dubiously-accurate lat/long coordinates for testing
+//                            LOCATION    APPROX LAT,LONG
+// export const EXAMPLE_LAT_LONG_VANCOUVER = [49.26, -123.11];
+// export const EXAMPLE_LAT_LONG_AUSTRALIA = [-23.69, 135.1];
+// export const EXAMPLE_LAT_LONG_MADAGASCAR = [-19.62, 47.17];
+// export const EXAMPLE_LAT_LONG_RIO_BRAZIL = [-22.7, -42.9];
+// export const EXAMPLE_LAT_LONG_FALKLAND_ISLES = [-51.79, -59.59];
+// export const EXAMPLE_LAT_LONG_MCMURDO_STN = [-77.85, 166.666];
+// export const EXAMPLE_LAT_LONG_GREENLAND = [73.45, -43.29];
+// export const EXAMPLE_LAT_LONG_GULF_OF_MEXICO = [22.8, -93];
+// export const EXAMPLE_LAT_LONG_GALAPAGOS = [-0.45, -91.12];
+// export const EXAMPLE_LAT_LONG_VIETNAM = [14.06, 108.28];
+// export const EXAMPLE_LAT_LONG_JAPAN = [36.21, 138.25];
+// export const EXAMPLE_LAT_LONG_INDIA = [19.13, 78.54];
+// export const EXAMPLE_LAT_LONG_ITALY = [42.33, 12.84];
+// export const EXAMPLE_LAT_LONG_HAWAII = [21, -155.75];
