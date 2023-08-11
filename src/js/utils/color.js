@@ -60,6 +60,27 @@ export const gradients_aesthetic = {
     rainbow_soft: 'rainbow-soft',
 }
 
+export function AllGradients(includeTypeNames = false) {
+    let gradients = [];
+    if (includeTypeNames) { gradients.push('--Single Axis'); }
+    for (let g in gradients_singleaxis) {
+        gradients.push(g);
+    };
+    if (includeTypeNames) { gradients.push('--Two Axis'); }
+    for (let g in gradients_twoaxis) {
+        gradients.push(g);
+    };
+    if (includeTypeNames) { gradients.push('--Utility'); }
+    for (let g in gradients_utility) {
+        gradients.push(g);
+    };
+    if (includeTypeNames) { gradients.push('--Aesthetic'); }
+    for (let g in gradients_aesthetic) {
+        gradients.push(g);
+    };
+    return gradients;
+}
+
 const gradient_default = gradients_singleaxis.spring;
 let gradient_recent;
 
