@@ -5,17 +5,17 @@ let capitalizeFirstLetter = true;
  * @param {string} name 
  * @param {string} id 
  * @param {function} onChangeCallback 
- * @param  {...any} values 
+ * @param  {...any} options 
  * @returns {HTMLSelectElement}
  */
-export function CreateDropdown(name, id, parent, onChangeCallback, ...values) {
+export function CreateDropdown(name, id, parent, onChangeCallback, ...options) {
 
     let dropdown = document.createElement("select");
     dropdown.parent = parent;
     dropdown.name = name;
     dropdown.id = id;
 
-    for (const val of values) {
+    for (const val of options) {
         var option = document.createElement("option");
         option.value = val;
         if (capitalizeFirstLetter) {
