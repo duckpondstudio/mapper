@@ -1,10 +1,9 @@
 import { MapData } from "../mapgen/mapdata";
-import { CreateMaps, mapSize } from "../mapgen/mapmaker";
+import { CreateMaps } from "../mapgen/mapmaker";
 import { ClickedModule } from "../base/input";
 import { DataOverlay } from '../data/dataoverlay';
 import * as m from '../data/maps';
-import { GetBoundingGlobalRect } from "../utils/element";
-import { InfoSubModule, SetupSubModule } from './submodule';
+import { MapSubModule, InfoSubModule, SetupSubModule } from './submodule';
 const feather = require('feather-icons');
 
 const _spawnInfo = true;
@@ -108,9 +107,9 @@ export class Module {
     titleBar;
     #titleText;
 
-    /** @type {HTMLDivElement} */ setupSubModule;
-    /** @type {HTMLDivElement} */ mapSubModule;
-    /** @type {HTMLDivElement} */ infoSubModule;
+    /** @type {SetupSubModule} */ setupSubModule;
+    /** @type {MapSubModule} */ mapSubModule;
+    /** @type {InfoSubModule} */ infoSubModule;
 
     #mapsToLoad = 0;
 
@@ -151,7 +150,8 @@ export class Module {
 
         // create submodules
         this.setupSubModule = new SetupSubModule(this, 'setup');
-        this.CreateMapSubmodule();
+        // this.CreateMapSubmodule();
+        this.mapSubModule = new MapSubModule(this, 'map');
         this.infoSubModule = new InfoSubModule(this, 'info');
 
         // assign loaded map
@@ -186,29 +186,17 @@ export class Module {
                 'to Module:', this);
             return;
         }
-        while (this.mapSubModule.firstChild) {
-            this.mapSubModule.removeChild(this.mapSubModule.firstChild);
-        }
+        
+        this.mapSubModule.ClearMaps();
 
         this.map = m.ParseMap(map);
         this.SetTitle(m.GetMapFullName(this.map));
 
-        let mapsCount = m.GetMapProjectionsArray(this.map).length;
-        let mapSubModuleWidthHeight = m.GetMapContainerWidthHeight(this.map, mapSize, mapsCount);
-        this.mapSubModule.style.width = mapSubModuleWidthHeight[0] + 'px';
-        this.mapSubModule.style.height = mapSubModuleWidthHeight[1] + 'px';
+        this.mapSubModule.AssignMap(map);
 
         // generate maps 
         this.mapDatas = CreateMaps(this);
         this.#mapsToLoad = this.mapDatas.length;
-    }
-
-    CreateMapSubmodule() {
-        // add map submodule
-        this.mapSubModule = document.createElement('div');
-        this.mapSubModule.setAttribute('class', 'submodule map');
-        this.mapSubModule.id = this.ID('mapSub');
-        this.container.appendChild(this.mapSubModule);
     }
 
 
@@ -257,7 +245,7 @@ export class Module {
     #AllMapsLoaded() {
         // generate data overlay
         this.dataOverlay = new DataOverlay(this);
-        this.mapSubModule.prepend(this.dataOverlay.div);
+        this.mapSubModule.submoduleDiv.prepend(this.dataOverlay.div);
         this.dataOverlay.AddedToDocumentBody();
 
         // completed loading 
@@ -278,7 +266,7 @@ export class Module {
      * @returns {DOMRect}
      */
     GetMapRect() {
-        return GetBoundingGlobalRect(this.mapSubModule);
+        return this.mapSubModule.GetMapRect();
     }
 
 

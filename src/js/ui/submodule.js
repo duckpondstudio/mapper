@@ -1,9 +1,18 @@
 import * as module from './module';
 import * as stringUtils from '../utils/string';
+import * as m from '../data/maps';
+import { GetBoundingGlobalRect } from "../utils/element";
+import { mapSize } from '../mapgen/mapmaker';
 
 class SubModule {
 
+    /**
+     * @type {module.Module}
+     */
     parentModule;
+    /** 
+     * @type {HTMLDivElement}
+     */
     submoduleDiv;
 
     /**
@@ -30,6 +39,37 @@ class SubModule {
 
 export class SetupSubModule extends SubModule { 
     
+}
+
+export class MapSubModule extends SubModule { 
+
+    #map;
+
+    ClearMaps() {
+        while (this.submoduleDiv.firstChild) {
+            this.submoduleDiv.removeChild(this.submoduleDiv.firstChild);
+        }
+    }
+
+    AssignMap(map) {
+
+        this.#map = map;
+        let mapsCount = m.GetMapProjectionsArray(this.#map).length;
+        let mapSubModuleWidthHeight = m.GetMapContainerWidthHeight(
+            this.#map, mapSize, mapsCount);
+        this.submoduleDiv.style.width = mapSubModuleWidthHeight[0] + 'px';
+        this.submoduleDiv.style.height = mapSubModuleWidthHeight[1] + 'px';
+    }
+
+    /**
+     * Quick reference getter to the global rect for the map submodule 
+     * @see {@link GetBoundingGlobalRect}
+     * @returns {DOMRect}
+     */
+    GetMapRect() {
+        return GetBoundingGlobalRect(this.submoduleDiv);
+    }
+
 }
 
 export class InfoSubModule extends SubModule {

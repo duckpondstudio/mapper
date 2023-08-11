@@ -61,7 +61,7 @@ export class MapData {
             this.mapContainer.setAttribute('class', 'mapContainer');
         }
         // append module child to container 
-        this.module.mapSubModule.appendChild(this.mapContainer);
+        this.module.mapSubModule.submoduleDiv.appendChild(this.mapContainer);
         // add click event to container 
         this.mapContainer.addEventListener('click', mouseEvent => {
             this.Select(); ClickedMap(mouseEvent, this);
