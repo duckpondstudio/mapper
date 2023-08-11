@@ -6,9 +6,11 @@ import * as m from '../data/maps';
 import { InfoSubModule } from "./submodules/submodule_info";
 import { MapSubModule } from "./submodules/submodule_map";
 import { SetupSubModule } from "./submodules/submodule_setup";
+import * as stringUtils from "../utils/string";
 const feather = require('feather-icons');
 
-const _spawnInfo = true;
+const moduleTypes =
+    ['map', 'data'];
 
 /** {@link Module} most recently interacted with (can be null) */
 let _currentModule = null;
@@ -117,7 +119,7 @@ export class Module {
 
     isLoading = false;
 
-    constructor(map) {
+    constructor(type, data) {
 
         // metadata setup 
         this.moduleId = Module.moduleCount;
@@ -150,16 +152,31 @@ export class Module {
         this.titleBar.appendChild(this.#titleText);
         this.SetTitle("New Module");
 
-        // create submodules
-        this.setupSubModule = new SetupSubModule(this, 'setup');
-        // this.CreateMapSubmodule();
-        this.mapSubModule = new MapSubModule(this, 'map');
-        this.infoSubModule = new InfoSubModule(this, 'info');
 
-        // assign loaded map
-        if (map != null) {
-            this.AssignMap(map);
+        switch (type) {
+            case 'map':
+
+                let map = this.data;
+                if (stringUtils.IsNullOrEmptyOrWhitespace(map)) {
+                    map = m.grieger;
+                }
+
+                // create submodules
+                this.setupSubModule = new SetupSubModule(this, 'setup');
+                // this.CreateMapSubmodule();
+                this.mapSubModule = new MapSubModule(this, 'map');
+                this.infoSubModule = new InfoSubModule(this, 'info');
+
+                // assign loaded map
+                if (map != null) {
+                    this.AssignMap(map);
+                }
+                break;
+
+            case 'data':
+                break;
         }
+
 
         // add module to document body 
         document.body.appendChild(this.container);
@@ -188,7 +205,7 @@ export class Module {
                 'to Module:', this);
             return;
         }
-        
+
         this.mapSubModule.ClearMaps();
 
         this.map = m.ParseMap(map);

@@ -14,7 +14,7 @@ window.addEventListener('load', function () {
     ));
     // import setup data 
     InputSetup();
-    CreateModule(m.grieger);
+    CreateModule('map', m.grieger);
     // TODO: very buggy rendering with non-square projections
     // CreateModule(m.equirectangular);
     // DemoUIObject('gradient');

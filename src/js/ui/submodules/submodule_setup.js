@@ -50,8 +50,8 @@ export class SetupSubModule extends SubModule {
         super(parentModule, submoduleName);
 
         this.mapDropdown = new Dropdown('Projection', this, this.MapSelected, ...m.GetAllMaps());
-        this.mapColor = new Dropdown('Map Colours', this, this.MapColorSelected, ...m.GetAllMaps());
-        this.dataColor = new Dropdown('Data Colour', this, this.DataColorSelected, ...AllGradients(true));
+        this.mapColor = new Dropdown('Map Colours', this, this.MapColorSelected, '---');
+        this.dataColor = new Dropdown('Data Colours', this, this.DataColorSelected, ...AllGradients(true));
 
         this.dataColor.AssignLink("https://github.com/bpostlethwaite/colormap/blob/master/colormaps.png",
             "Colour Previews");
