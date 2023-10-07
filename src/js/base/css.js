@@ -4,9 +4,8 @@
  */
 export let css;
 
-/** Initialize CSS references, should only run once */
-export function InitializeCSS() {
-    if (css != null) { return; }
+/** Load CSS style reference, run once at start and again whenever CSS style changes */
+export function LoadCSS() {
     // load css reference 
     css = getComputedStyle(document.documentElement);
 }
@@ -18,6 +17,7 @@ export function InitializeCSS() {
  */
 export function SetCSSRule(name, rule) {
     cssClassBuilder.addRule(name, rule);
+    LoadCSS();
 }
 
 // credit to:

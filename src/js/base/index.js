@@ -5,11 +5,11 @@ import { CreateModule } from "../ui/module";
 import { DemoUIObject } from '../ui/uidemo';
 import { InputSetup } from './input';
 import * as m from '../data/maps';
-import { InitializeCSS } from "./css";
+import { LoadCSS } from "./css";
 
 window.addEventListener('load', function () {
     // window is loaded
-    InitializeCSS();
+    LoadCSS();
     // import CSV files 
     ImportAllFiles(require.context('./../../assets/export', true,
         /\.(csv|txt|xlsx?|xls)$/
