@@ -1,10 +1,11 @@
-import * as module from './module';
+import { Module } from './module';
 import * as stringUtils from '../utils/string';
 
 export class SubModule {
 
     /**
-     * @type {module.Module}
+     * Parent Module of this submodule
+     * @type {Module}
      */
     parentModule;
     /** 

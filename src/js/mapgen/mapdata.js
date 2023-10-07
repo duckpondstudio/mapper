@@ -78,9 +78,6 @@ export class MapData {
         for (let i = 0; i < projections.length; i++) {
             this.AddProjection(projections[i]);
         }
-
-        // set default color values 
-        this.SetMapLandWaterColor();
     }
 
     /**
@@ -557,23 +554,6 @@ export class MapData {
         let iX = math.InvertNormalizedValue(x, this.GetContainerOriginX(), this.GetContainerExtentX(), false);
         let iY = math.InvertNormalizedValue(y, this.GetContainerOriginY(), this.GetContainerExtentY(), false);
         return this.GetProjectionAtXY(iX, iY);
-    }
-
-    ResetMapColor() {
-        this.SetMapLandWaterColor('land', 'water');
-    }
-    SetMapColorPair(colorPair) {
-        // TODO: make this work with color pairs 
-    }
-    SetMapLandWaterColor(landColor = 'land', waterColor = 'water') {
-    }
-    SetMapLandColor(landColor) {
-        SetCSSRule(".mapContainer .map .land.m" + this.module.moduleId,
-            "fill:" + GetColor(landColor));
-    }
-    SetMapWaterColor(waterColor) {
-        SetCSSRule(".mapContainer .map .water.m" + this.module.moduleId,
-            "fill:" + GetColor(waterColor));
     }
 
 
