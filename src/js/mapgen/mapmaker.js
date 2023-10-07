@@ -234,7 +234,7 @@ function CreateMap(map, parentModule, mapIndex) {
             g.append('path')
                 .attr('class', function (d) {
                     let isWater = d.properties && d.properties.water === true;
-                    return 'map' + (isWater ? ' water' : ' land');
+                    return 'map' + (isWater ? ' water' : ' land') + ' m' + mapData.module.moduleId;
                 })
                 .attr('d', geoGenerator);
 
