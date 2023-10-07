@@ -63,6 +63,13 @@ class ColorPicker {
         
         setupSubmodule.submoduleDiv.appendChild(this.container);
     }
+
+    get color() {
+        return this.colorPicker.color;
+    }
+    set color(color) {
+        this.colorPicker.color = color;
+    }
 }
 
 export class SetupSubModule extends SubModule {
