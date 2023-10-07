@@ -39,6 +39,7 @@
     },
     "dependencies": {
         "colormap": "^2.3.2",
-        "papaparse": "^5.4.1"
+        "papaparse": "^5.4.1",
+        "toolcool-color-picker": "^1.0.15"
     }
 }
