@@ -68,17 +68,17 @@ h1 {
     min-height: var(--submodule-info-height-min);
 }
 
-.setupDropdown {
+.uiLabeledAsset {
     display: inline-block;
     padding: 4px;
 }
-.setupDropdown.hoverText {
+.uiLabeledAsset.hoverText {
     /* display: inline-block; */
     padding: 0px;
     padding-left: 2px;
     font-size: 8pt;
 }
-.setupDropdown.hoverText a {
+.uiLabeledAsset.hoverText a {
     text-decoration: none;
 }
 

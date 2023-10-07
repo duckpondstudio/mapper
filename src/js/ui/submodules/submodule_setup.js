@@ -22,7 +22,7 @@ class Dropdown {
         this.label.innerHTML = name;
 
         this.container = document.createElement('div');
-        this.container.setAttribute('class', 'setupDropdown ' + simpleName);
+        this.container.setAttribute('class', 'uiLabeledAsset ' + simpleName);
 
         this.container.appendChild(this.label);
         this.container.appendChild(this.dropdown);
@@ -36,7 +36,7 @@ class Dropdown {
         this.link.innerHTML += " &nbsp;<sup><a href=" +
             linkUrl + " target=_blank>(?)</a></sup>";
         if (!stringUtils.IsNullOrEmptyOrWhitespace(hoverText)) {
-            this.link.setAttribute('class', 'setupDropdown hoverText');
+            this.link.setAttribute('class', 'uiLabeledAsset hoverText');
             this.link.setAttribute('title', hoverText);
         }
         this.label.appendChild(this.link);
