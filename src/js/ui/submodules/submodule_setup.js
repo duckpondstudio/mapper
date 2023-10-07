@@ -94,6 +94,13 @@ export class SetupSubModule extends SubModule {
         this.dataColor.AssignLink("https://github.com/bpostlethwaite/colormap/blob/master/colormaps.png",
             "Colour Previews");
         
+        // TODO: get color from CSS value for this map 
+        this.mapLandColorPicker.color = DEFAULT LAND COLOR
+        this.mapWaterColorPicker.color = DEFAULT LAND COLOR// intentional bugs to grab my attention when i return wheeeee
+        // see: 
+        // SetCSSRule(".mapContainer .map .land.m" + this.module.moduleId,
+        //     "fill:" + GetColor(landColor));
+        // this.module.mapSubModule.SetMapLandColor("#AABB00");
         console.log(GetColor('land'));
 
     }
