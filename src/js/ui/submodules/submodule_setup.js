@@ -3,7 +3,7 @@ import * as m from '../../data/maps';
 import { CreateDropdown } from '../dropdown';
 import { CreateColorPicker } from '../colorpicker';
 import * as stringUtils from '../../utils/string';
-import { AllGradients } from '../../utils/color';
+import { AllGradients, GetColor } from '../../utils/color';
 
 class Dropdown {
     // TODO: genericize, move to dropdown.js 
@@ -86,6 +86,8 @@ export class SetupSubModule extends SubModule {
 
         this.dataColor.AssignLink("https://github.com/bpostlethwaite/colormap/blob/master/colormaps.png",
             "Colour Previews");
+        
+        console.log(GetColor('land'));
 
     }
 

@@ -6,6 +6,8 @@ import * as disp from '../utils/display';
 import * as math from '../utils/math';
 import * as e from '../utils/element'
 import { mapSize } from './mapmaker';
+import { GetColor } from '../utils/color';
+import { SetCSSRule } from '../base/css';
 
 // see bottom for code examples
 
@@ -76,6 +78,9 @@ export class MapData {
         for (let i = 0; i < projections.length; i++) {
             this.AddProjection(projections[i]);
         }
+
+        // set default color values 
+        this.SetMapLandWaterColor();
     }
 
     /**
@@ -552,6 +557,23 @@ export class MapData {
         let iX = math.InvertNormalizedValue(x, this.GetContainerOriginX(), this.GetContainerExtentX(), false);
         let iY = math.InvertNormalizedValue(y, this.GetContainerOriginY(), this.GetContainerExtentY(), false);
         return this.GetProjectionAtXY(iX, iY);
+    }
+
+    ResetMapColor() {
+        this.SetMapLandWaterColor('land', 'water');
+    }
+    SetMapColorPair(colorPair) {
+        // TODO: make this work with color pairs 
+    }
+    SetMapLandWaterColor(landColor = 'land', waterColor = 'water') {
+    }
+    SetMapLandColor(landColor) {
+        SetCSSRule(".mapContainer .map .land.m" + this.module.moduleId,
+            "fill:" + GetColor(landColor));
+    }
+    SetMapWaterColor(waterColor) {
+        SetCSSRule(".mapContainer .map .water.m" + this.module.moduleId,
+            "fill:" + GetColor(waterColor));
     }
 
 

@@ -171,7 +171,7 @@ export function GetColor(colorName) {
             } else if (singlecolors[c].startsWith('0x')) {
                 return '#' + singlecolors[c].substring(2);
             }
-            return c;
+            return singlecolors[c];
         }
     };
     console.warn("Invalid colorName. Could not parse, or " +
