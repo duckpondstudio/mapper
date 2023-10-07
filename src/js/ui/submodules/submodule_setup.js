@@ -46,6 +46,8 @@ class Dropdown {
 class ColorPicker {
     // TODO: genericize, move to colorpicker.js
     colorPicker;
+    label;
+    container;
     constructor(name, setupSubmodule, callback, ...options) {
         let simpleName = stringUtils.Simplify(name);
         this.colorPicker = CreateColorPicker();
@@ -54,7 +56,12 @@ class ColorPicker {
         this.label.innerHTML = name;
 
         this.container = document.createElement('div');
-        this.container.setAttribute('class', 'setupColorPicker ' + simpleName);
+        this.container.setAttribute('class', 'uiLabeledAsset colorPicker ' + simpleName);
+
+        this.container.appendChild(this.label);
+        this.container.appendChild(this.colorPicker);
+        
+        setupSubmodule.submoduleDiv.appendChild(this.container);
     }
 }
 
@@ -72,8 +79,8 @@ export class SetupSubModule extends SubModule {
         this.mapDropdown = new Dropdown('Projection', this, this.MapSelected, ...m.GetAllMaps());
         this.mapColor = new Dropdown('Map Colours', this, this.MapColorSelected, '---');
 
-        this.mapLandColorPicker = new ColorPicker('Map Land Colour', this, this.MapLandColorSelected);
-        this.mapWaterColorPicker = new ColorPicker('Map Water Colour', this, this.MapWaterColorSelected);
+        this.mapLandColorPicker = new ColorPicker('Land', this, this.MapLandColorSelected);
+        this.mapWaterColorPicker = new ColorPicker('Water', this, this.MapWaterColorSelected);
 
         this.dataColor = new Dropdown('Data Colours', this, this.DataColorSelected, ...AllGradients(true));
 

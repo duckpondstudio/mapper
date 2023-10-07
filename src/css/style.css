@@ -1,5 +1,11 @@
 @import 'vars.css';
 
+:root {
+    --tool-cool-color-picker-btn-border-color: #767676;
+    --tool-cool-color-picker-btn-border-color-inner: #76767600;
+    --tool-cool-color-picker-btn-border-radius: 3px;
+}
+
 body {
     height: 100%;
     background-repeat: no-repeat;
@@ -71,6 +77,10 @@ h1 {
 .uiLabeledAsset {
     display: inline-block;
     padding: 4px;
+}
+.uiLabeledAsset.colorPicker {
+    position: relative;
+    bottom: -2px;
 }
 .uiLabeledAsset.hoverText {
     /* display: inline-block; */
