@@ -9,6 +9,9 @@ export class MapSubModule extends SubModule {
 
     #map;
 
+    #landColor;
+    #waterColor;
+
     ClearMaps() {
         while (this.submoduleDiv.firstChild) {
             this.submoduleDiv.removeChild(this.submoduleDiv.firstChild);
@@ -24,22 +27,34 @@ export class MapSubModule extends SubModule {
         this.submoduleDiv.style.width = mapSubModuleWidthHeight[0] + 'px';
         this.submoduleDiv.style.height = mapSubModuleWidthHeight[1] + 'px';
 
-        this.ResetMapColor();
+        this.ResetColor();
     }
 
-    ResetMapColor() {
-        this.SetMapLandWaterColor('land', 'water');
+    GetLandColor() { return this.#landColor; }
+    GetWaterColor() { return this.#waterColor; }
+
+    ResetColor() {
+        this.SetLandWaterColor('land', 'water');
     }
-    SetMapColorPair(colorPair) {
+    SetColorPair(colorPair) {
         // TODO: make this work with color pairs 
     }
-    SetMapLandWaterColor(landColor = 'land', waterColor = 'water') {
+    SetLandWaterColor(landColor = 'land', waterColor = 'water') {
+        this.SetLandColor(landColor);
+        this.SetWaterColor(waterColor);
     }
-    SetMapLandColor(landColor) {
-        SetCSSRule(".mapContainer .map .land.m" + this.parentModule.moduleId,
+    SetLandColor(landColor) {
+        if (this.#landColor == landColor) { return; }
+        this.#landColor = landColor;
+        let ruleName = ".mapContainer .map .land.m" + this.parentModule.moduleId;
+        console.log("C:", GetColor(landColor));
+        console.log("RuleName:", ruleName);
+        SetCSSRule(ruleName,
             "fill:" + GetColor(landColor));
     }
-    SetMapWaterColor(waterColor) {
+    SetWaterColor(waterColor) {
+        // if (this.#waterColor == waterColor) { return; }
+        this.#waterColor = waterColor;
         SetCSSRule(".mapContainer .map .water.m" + this.parentModule.moduleId,
             "fill:" + GetColor(waterColor));
     }

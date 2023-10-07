@@ -1,9 +1,11 @@
 import 'toolcool-color-picker';
 
-export function CreateColorPicker() {
+export function CreateColorPicker(parent, onChangeCallback) {
 
     
     let colorPicker = document.createElement('toolcool-color-picker');
+
+    colorPicker.parent = parent;
 
     colorPicker.setAttribute('button-width', '32px');
     colorPicker.setAttribute('button-height', '20px');
@@ -13,6 +15,12 @@ export function CreateColorPicker() {
     // colorPicker.style.
     // colorPicker.style.marginTop = '20px';
 
+    // colorPicker.addEventListener('change', onChangeCallback);
+    if (onChangeCallback != null) {
+        // colorPicker.onchange = onChangeCallback;
+        colorPicker.addEventListener('change', onChangeCallback);
+    }
+        
     return colorPicker;
 
 }

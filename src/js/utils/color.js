@@ -159,9 +159,13 @@ export function GetColor(colorName) {
     if (colorName == null) {
         console.warn("Can't get null color, returning #000000");
     }
-    if (colorName.startsWith('0x')) {
-        return '#' + colorName.substring(2);
-    } else if (colorName.startsWith('#')) {
+    if (typeof (colorName) == 'string') {
+        if (colorName.startsWith('0x')) {
+            return '#' + colorName.substring(2);
+        } else if (colorName.startsWith('#')) {
+            return colorName;
+        }
+    } else {
         return colorName;
     }
     for (let c in singlecolors) {

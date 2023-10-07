@@ -50,7 +50,7 @@ class ColorPicker {
     container;
     constructor(name, setupSubmodule, callback, ...options) {
         let simpleName = stringUtils.Simplify(name);
-        this.colorPicker = CreateColorPicker();
+        this.colorPicker = CreateColorPicker(setupSubmodule, callback);
 
         this.label = document.createElement('div');
         this.label.innerHTML = name;
@@ -68,7 +68,7 @@ class ColorPicker {
         return this.colorPicker.color;
     }
     set color(color) {
-        this.colorPicker.color = color;
+        this.colorPicker.setAttribute('color', color);
     }
 }
 
@@ -86,6 +86,7 @@ export class SetupSubModule extends SubModule {
         this.mapDropdown = new Dropdown('Projection', this, this.MapSelected, ...m.GetAllMaps());
         this.mapColor = new Dropdown('Map Colours', this, this.MapColorSelected, '---');
 
+        console.log(1);
         this.mapLandColorPicker = new ColorPicker('Land', this, this.MapLandColorSelected);
         this.mapWaterColorPicker = new ColorPicker('Water', this, this.MapWaterColorSelected);
 
@@ -94,34 +95,32 @@ export class SetupSubModule extends SubModule {
         this.dataColor.AssignLink("https://github.com/bpostlethwaite/colormap/blob/master/colormaps.png",
             "Colour Previews");
         
-        // TODO: get color from CSS value for this map 
-        this.mapLandColorPicker.color = DEFAULT LAND COLOR
-        this.mapWaterColorPicker.color = DEFAULT LAND COLOR// intentional bugs to grab my attention when i return wheeeee
-        // see: 
-        // SetCSSRule(".mapContainer .map .land.m" + this.module.moduleId,
-        //     "fill:" + GetColor(landColor));
-        // this.module.mapSubModule.SetMapLandColor("#AABB00");
-        console.log(GetColor('land'));
+        
+        // TODO: get color from CSS value for this map
+        
+        // this.mapLandColorPicker.color = GetColor('land');
 
     }
 
     MapSelected() {
         let currentValue = this[this.selectedIndex].value;
+        // use "this.parent", which is assigned in dropdown, 
+        // because "this" refers to the DROPDOWN, not this class
         if (this.parent.parentModule.map != currentValue) {
             this.parent.parentModule.AssignMap(currentValue);
         }
     }
     MapColorSelected() {
-        console.log("HI");
     }
     MapLandColorSelected() {
-
+        let color = this.parent.mapLandColorPicker.color;
+        this.parent.parentModule.mapSubModule.SetLandColor(color);
     }
     MapWaterColorSelected() {
-
+        let color = this.parent.mapWaterColorPicker.color;
+        this.parent.parentModule.mapSubModule.SetWaterColor(color);
     }
     DataColorSelected() {
-
         console.log("HI2");
     }
 }
