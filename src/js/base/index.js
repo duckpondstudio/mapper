@@ -6,8 +6,16 @@ import { DemoUIObject } from '../ui/uidemo';
 import { InputSetup } from './input';
 import * as m from '../data/maps';
 
+/**
+ * Global reference to document CSS
+ * @type {CSSStyleDeclaration}
+ */
+export let css;
+
 window.addEventListener('load', function () {
     // window is loaded
+    // load css reference 
+    css = getComputedStyle(this.document.documentElement);
     // import CSV files 
     ImportAllFiles(require.context('./../../assets/export', true,
         /\.(csv|txt|xlsx?|xls)$/
