@@ -1,6 +1,6 @@
 // see: https://github.com/bpostlethwaite/colormap
 import * as colormap from 'colormap';
-import { css } from '../base';
+import { css } from '../base/css';
 
 // --------------------- //
 // --- SINGLE COLORS --- //
