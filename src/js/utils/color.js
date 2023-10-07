@@ -1,5 +1,6 @@
 // see: https://github.com/bpostlethwaite/colormap
 import * as colormap from 'colormap';
+import { css } from '../base';
 
 // --------------------- //
 // --- SINGLE COLORS --- //
@@ -144,6 +145,20 @@ export function GradientCSS(gradientName,
     css += ')';
 
     return css;
+}
+
+export function GetSingleColor(colorName) {
+    for (let c in singlecolors) {
+        if (c == colorName) {
+            if (singlecolors[c].startsWith('--')) {
+                return css.getPropertyValue(singlecolors[c]);
+            }
+            return c;
+        }
+    };
+    console.warn("Could not find single color of colorName: " + colorName +
+        ", returning 0xFF00FF");
+    return '0xFF00FF';
 }
 
 /** store local ref to loaded {@link colormap colormaps} */
