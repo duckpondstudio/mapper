@@ -147,18 +147,37 @@ export function GradientCSS(gradientName,
     return css;
 }
 
-export function GetSingleColor(colorName) {
+/**
+ * Parse a color by name reference or value.
+ * @param {string} colorName Name of the color. Must correspond to a name 
+ * found in {@link singlecolors}, or be a hex code color ("#AABBCC" or "0xAABBCC"), 
+ * or be a CSS variable reference ("--my-css-color").
+ * @see {@link singlecolors} 
+ * @returns {string} string hex color in the format "#AABBCC"
+ */
+export function GetColor(colorName) {
+    if (colorName == null) {
+        console.warn("Can't get null color, returning #000000");
+    }
+    if (colorName.startsWith('0x')) {
+        return '#' + colorName.substring(2);
+    } else if (colorName.startsWith('#')) {
+        return colorName;
+    }
     for (let c in singlecolors) {
         if (c == colorName) {
             if (singlecolors[c].startsWith('--')) {
                 return css.getPropertyValue(singlecolors[c]);
+            } else if (singlecolors[c].startsWith('0x')) {
+                return '#' + singlecolors[c].substring(2);
             }
             return c;
         }
     };
-    console.warn("Could not find single color of colorName: " + colorName +
-        ", returning 0xFF00FF");
-    return '0xFF00FF';
+    console.warn("Invalid colorName. Could not parse, or " +
+        "find single color of colorName: " + colorName +
+        ", returning #FF00FF");
+    return '#FF00FF';
 }
 
 /** store local ref to loaded {@link colormap colormaps} */
