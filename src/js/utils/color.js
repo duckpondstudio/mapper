@@ -1,6 +1,29 @@
 // see: https://github.com/bpostlethwaite/colormap
 import * as colormap from 'colormap';
 
+// --------------------- //
+// --- SINGLE COLORS --- //
+// --------------------- //
+
+export const singlecolors = {
+    land: '--color-map-land-fill',
+    water: '--color-map-water-fill',
+}
+
+
+// --------------------- //
+// ---  COLOR PAIRS  --- //
+// --------------------- //
+
+export const colorpairs = {
+    default: ['land', 'water'],
+}
+
+
+// --------------------- //
+// ---   GRADIENTS   --- //
+// --------------------- //
+
 export const gradients_types = {
     singleaxis: 'gradients_singleaxis',
     twoaxis: 'gradients_twoaxis',
