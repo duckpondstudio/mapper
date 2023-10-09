@@ -52,5 +52,8 @@
     --appearance-shadow-y: 5px;
     --appearance-shadow-blur: 0.369px;
 
+    --tool-cool-color-picker-btn-border-color: #767676;
+    --tool-cool-color-picker-btn-border-color-inner: #76767600;
+    --tool-cool-color-picker-btn-border-radius: 3px;
 
 }
