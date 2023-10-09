@@ -3,7 +3,7 @@ import * as m from '../../data/maps';
 import { GetBoundingGlobalRect } from "../../utils/element";
 import { mapSize } from '../../mapgen/mapmaker';
 import { SetCSSRule, SetCSSVar, root } from '../../base/css';
-import { GetColor, lerpColor as LerpColor } from '../../utils/color';
+import { GetColor, LerpColor } from '../../utils/color';
 
 export class MapSubModule extends SubModule {
 

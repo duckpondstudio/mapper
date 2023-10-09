@@ -7,9 +7,8 @@ import * as LC from '@sunify/lerp-color';
 // ---  COLOR MATH  --- //
 // -------------------- //
 
-export const lerpColor = function (from, to, ratio) {
+export const LerpColor = function (from, to, ratio) {
     return LC.default(from, to, ratio);
-    // return lerp.lerpColor(from, to, ratio);
 };
 
 
