@@ -130,8 +130,9 @@ export const gradients_singleaxis = {
     copper: 'copper',
     greys: 'greys',
     greens: 'greens',
-    YlGnBu: 'YlGnBu',
-    YlOrRed: 'YlOrRed',
+    // intentionally misspelled, see https://github.com/bpostlethwaite/colormap/issues/32#issuecomment-1753905965 
+    YIGnBu: 'YIGnBu',
+    YIOrRd: 'YIOrRd',
 }
 export const gradients_twoaxis = {
     picnic: 'picnic',
