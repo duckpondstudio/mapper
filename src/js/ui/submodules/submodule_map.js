@@ -3,7 +3,7 @@ import * as m from '../../data/maps';
 import { GetBoundingGlobalRect } from "../../utils/element";
 import { mapSize } from '../../mapgen/mapmaker';
 import { SetCSSRule, SetCSSVar, root } from '../../base/css';
-import { GetColor } from '../../utils/color';
+import { GetColor, lerpColor as LerpColor } from '../../utils/color';
 
 export class MapSubModule extends SubModule {
 
@@ -43,13 +43,15 @@ export class MapSubModule extends SubModule {
         let ruleLandName = ".mapContainer .map .land.m" + this.parentModule.moduleId;
         let ruleWaterName = ".mapContainer .map .water.m" + this.parentModule.moduleId;
         let cssLandVarName = '--color-map-land-fill-m' + this.parentModule.moduleId;
+        let cssLandStrokeVarName = '--color-map-land-fill-m' + this.parentModule.moduleId + '-stroke';
         let cssWaterVarName = '--color-map-water-fill-m' + this.parentModule.moduleId;
         // create CSS vars 
         SetCSSVar(cssLandVarName, this.GetLandColor());
+        SetCSSVar(cssLandStrokeVarName, LerpColor('#ffffff', '#000000', 1));
         SetCSSVar(cssWaterVarName, this.GetWaterColor());
         // set CSS rules 
-        SetCSSRule(ruleLandName, 'fill:var(' + cssLandVarName + ')');
-        SetCSSRule(ruleWaterName, 'stroke:var(' + cssWaterVarName + ')', 'fill:var(' + cssWaterVarName + ')');
+        SetCSSRule(ruleLandName, 'fill:var(' + cssLandVarName + ')', 'stroke:var(' + cssLandStrokeVarName + ')');
+        SetCSSRule(ruleWaterName, 'fill:var(' + cssWaterVarName + ')', 'stroke:var(' + cssWaterVarName + ')');
     }
 
 
@@ -66,8 +68,9 @@ export class MapSubModule extends SubModule {
     SetLandColor(landColor) {
         if (this.#landColor == landColor) { return; }
         this.#landColor = landColor;
-        let varName = '--color-map-land-fill-m' + this.parentModule.moduleId;
-        SetCSSVar(varName, this.GetLandColor());
+        let fillVarName = '--color-map-land-fill-m' + this.parentModule.moduleId;
+        let strokeVarName = '--color-map-land-fill-m' + this.parentModule.moduleId + '-stroke';
+        SetCSSVar(fillVarName, this.GetLandColor());
     }
     SetWaterColor(waterColor) {
         // if (this.#waterColor == waterColor) { return; }

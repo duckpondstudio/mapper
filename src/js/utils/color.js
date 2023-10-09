@@ -2,6 +2,28 @@
 import * as colormap from 'colormap';
 import { css } from '../base/css';
 
+// -------------------- //
+// ---  COLOR MATH  --- //
+// -------------------- //
+
+export const lerpColor = function (from, to, ratio) {
+    const ar = (from & 0xFF0000) >> 16,
+        ag = (from & 0x00FF00) >> 8,
+        ab = (from & 0x0000FF),
+
+        br = (to & 0xFF0000) >> 16,
+        bg = (to & 0x00FF00) >> 8,
+        bb = (to & 0x0000FF),
+
+        rr = ar + ratio * (br - ar),
+        rg = ag + ratio * (bg - ag),
+        rb = ab + ratio * (bb - ab);
+
+    return `#${((rr << 16) + (rg << 8) + (rb | 0)).toString(16).padStart(6, '0').slice(-6)}`
+    // return (rr << 16) + (rg << 8) + (rb | 0);
+};
+
+
 // --------------------- //
 // --- SINGLE COLORS --- //
 // --------------------- //
