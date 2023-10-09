@@ -54,6 +54,19 @@ export function AllColorPairs(includeSeparator = false) {
     return pairs;
 }
 
+export function GetColorPair(colorPairName, formatToColors = false) {
+    for (let cp in colorpairs) {
+        if (cp == colorPairName) {
+            if (formatToColors) {
+                return [GetColor(colorpairs[cp][0]), GetColor(colorpairs[cp][1])];
+            }
+            return colorpairs[cp];
+        }
+    }
+    console.warn("Could not find ColorPair of name: " + colorPairName + ", returning null");
+    return null;
+}
+
 
 // --------------------- //
 // ---   GRADIENTS   --- //

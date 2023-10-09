@@ -3,7 +3,7 @@ import * as m from '../../data/maps';
 import { CreateDropdown } from '../dropdown';
 import { CreateColorPicker } from '../colorpicker';
 import * as stringUtils from '../../utils/string';
-import { AllGradients, AllColorPairs, GetColor, GradientsOfType, IsGradient } from '../../utils/color';
+import { AllGradients, AllColorPairs, GetColor, GradientsOfType, IsGradient, GetColorPair } from '../../utils/color';
 
 class Dropdown {
     // TODO: genericize, move to dropdown.js 
@@ -123,7 +123,9 @@ export class SetupSubModule extends SubModule {
             // single-axis gradient 
         } else {
             // color pair
-            
+            let colorPair = GetColorPair(currentValue, true);
+            console.log(colorPair);
+            this.parent.parentModule.mapSubModule.SetLandWaterColor(colorPair[0], colorPair[1]);
         }
         this.parent.UpdateDisplayColorPickers();
     }
