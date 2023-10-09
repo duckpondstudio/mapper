@@ -51,6 +51,7 @@ export const colorpairs = {
     bw: ['black', 'white'],
     bw_inv: ['white', 'black'],
     caution: ['cautionyellow', 'darkgray'],
+    volcano: ['#2C2734', '#F36925']
 }
 // note - be careful not to use duplicate names with any gradients, which may confuse the IsGradient check
 
