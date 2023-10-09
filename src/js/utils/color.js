@@ -44,13 +44,6 @@ export function GetColorPairs() {
 // ---   GRADIENTS   --- //
 // --------------------- //
 
-export const gradients_types = {
-    singleaxis: 'gradients_singleaxis',
-    twoaxis: 'gradients_twoaxis',
-    utility: 'gradients_utility',
-    aesthetic: 'gradients_aesthetic',
-}
-
 export const gradients_singleaxis = {
     spring: 'spring',
     summer: 'summer',
@@ -105,22 +98,40 @@ export const gradients_aesthetic = {
 
 export function AllGradients(includeTypeNames = false) {
     let gradients = [];
-    if (includeTypeNames) { gradients.push('--Single Axis'); }
-    for (let g in gradients_singleaxis) {
-        gradients.push(g);
-    };
-    if (includeTypeNames) { gradients.push('--Two Axis'); }
-    for (let g in gradients_twoaxis) {
-        gradients.push(g);
-    };
-    if (includeTypeNames) { gradients.push('--Utility'); }
-    for (let g in gradients_utility) {
-        gradients.push(g);
-    };
-    if (includeTypeNames) { gradients.push('--Aesthetic'); }
-    for (let g in gradients_aesthetic) {
-        gradients.push(g);
-    };
+    gradients.push(...GradientsOfType('singleaxis', includeTypeNames));
+    gradients.push(...GradientsOfType('twoaxis', includeTypeNames));
+    gradients.push(...GradientsOfType('utility', includeTypeNames));
+    gradients.push(...GradientsOfType('aesthetic', includeTypeNames));
+    return gradients;
+}
+export function GradientsOfType(type, includeTypeNames = false) {
+    let gradients = [];
+    switch (type) {
+        case 'singleaxis':
+            if (includeTypeNames) { gradients.push('--Single Axis'); }
+            for (let g in gradients_singleaxis) {
+                gradients.push(g);
+            };
+            break;
+        case 'twoaxis':
+            if (includeTypeNames) { gradients.push('--Two Axis'); }
+            for (let g in gradients_twoaxis) {
+                gradients.push(g);
+            };
+            break;
+        case 'utility':
+            if (includeTypeNames) { gradients.push('--Utility'); }
+            for (let g in gradients_utility) {
+                gradients.push(g);
+            };
+            break;
+        case 'aesthetic':
+            if (includeTypeNames) { gradients.push('--Aesthetic'); }
+            for (let g in gradients_aesthetic) {
+                gradients.push(g);
+            };
+            break;
+    }
     return gradients;
 }
 
