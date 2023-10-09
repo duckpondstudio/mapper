@@ -47,7 +47,7 @@ export class MapSubModule extends SubModule {
         let cssWaterVarName = '--color-map-water-fill-m' + this.parentModule.moduleId;
         // create CSS vars 
         SetCSSVar(cssLandVarName, this.GetLandColor());
-        SetCSSVar(cssLandStrokeVarName, LerpColor('#ffffff', '#000000', 1));
+        SetCSSVar(cssLandStrokeVarName, LerpColor(this.GetLandColor(), '#000000', 0.5));
         SetCSSVar(cssWaterVarName, this.GetWaterColor());
         // set CSS rules 
         SetCSSRule(ruleLandName, 'fill:var(' + cssLandVarName + ')', 'stroke:var(' + cssLandStrokeVarName + ')');
@@ -71,6 +71,8 @@ export class MapSubModule extends SubModule {
         let fillVarName = '--color-map-land-fill-m' + this.parentModule.moduleId;
         let strokeVarName = '--color-map-land-fill-m' + this.parentModule.moduleId + '-stroke';
         SetCSSVar(fillVarName, this.GetLandColor());
+        let targetColor = this.parentModule.setupSubModule.mapLandColorPicker.isDark ? "#FFFFFF" : "#000000";
+        SetCSSVar(strokeVarName, LerpColor(this.GetLandColor(), targetColor, 0.35));
     }
     SetWaterColor(waterColor) {
         // if (this.#waterColor == waterColor) { return; }

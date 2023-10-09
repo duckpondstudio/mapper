@@ -70,6 +70,10 @@ class ColorPicker {
     set color(color) {
         this.colorPicker.setAttribute('color', color);
     }
+
+    get isDark() {
+        return this.colorPicker.color.isDark();
+    }
 }
 
 export class SetupSubModule extends SubModule {
