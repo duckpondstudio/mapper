@@ -35,8 +35,17 @@ export function SetCSSVar(name, value) {
  * @param {string} name name of the CSS class, eg ".body" 
  * @param {string} rule CSS rule to modify, eg "color:#ff0000"
  */
-export function SetCSSRule(name, rule) {
-    // TODO: investigate why this isn't working on set, only create 
+export function SetCSSRule(name, ...rules) {
+    // TODO: investigate why this isn't working on set, only create
+
+    let rule = '';
+    for (let i = 0; i < rules.length; i++) {
+        rule += rules[i];
+        if (i < rules.length - 1) {
+            rule += ';';
+        }
+    }
+
     cssClassBuilder.addRule(name, rule);
     LoadCSS();
 }
