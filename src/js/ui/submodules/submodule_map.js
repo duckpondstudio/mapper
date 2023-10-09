@@ -3,7 +3,7 @@ import * as m from '../../data/maps';
 import { GetBoundingGlobalRect } from "../../utils/element";
 import { mapSize } from '../../mapgen/mapmaker';
 import { SetCSSRule, SetCSSVar, root } from '../../base/css';
-import { GetColor, LerpColor } from '../../utils/color';
+import { GetColor, IsDark, LerpColor } from '../../utils/color';
 
 export class MapSubModule extends SubModule {
 
@@ -71,11 +71,12 @@ export class MapSubModule extends SubModule {
         let fillVarName = '--color-map-land-fill-m' + this.parentModule.moduleId;
         let strokeVarName = '--color-map-land-fill-m' + this.parentModule.moduleId + '-stroke';
         SetCSSVar(fillVarName, this.GetLandColor());
-        let targetColor = this.parentModule.setupSubModule.mapLandColorPicker.isDark ? "#FFFFFF" : "#000000";
-        SetCSSVar(strokeVarName, LerpColor(this.GetLandColor(), targetColor, 0.35));
+        let fillColor = this.GetLandColor();
+        let strokeLerpTargetColor = IsDark(fillColor) ? "#FFFFFF" : "#000000";
+        SetCSSVar(strokeVarName, LerpColor(fillColor, strokeLerpTargetColor, 0.35));
     }
     SetWaterColor(waterColor) {
-        // if (this.#waterColor == waterColor) { return; }
+        if (this.#waterColor == waterColor) { return; }
         this.#waterColor = waterColor;
         let varName = '--color-map-water-fill-m' + this.parentModule.moduleId;
         SetCSSVar(varName, this.GetWaterColor());
