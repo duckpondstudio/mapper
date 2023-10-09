@@ -87,7 +87,7 @@ export const gradients_utility = {
     par: 'par',
     phase: 'phase',
     salinity: 'salinity',
-    temperare: 'temperare',
+    temperature: 'temperature',
     turbidity: 'turbidity',
     velocity_blue: 'velocity-blue',
     velocity_green: 'velocity-green',
