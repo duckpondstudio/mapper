@@ -85,6 +85,9 @@ export class SetupSubModule extends SubModule {
     mapWaterColorPicker;
     dataColor;
 
+    #lastColorPickerVisible = false;
+    #bypassCallback = false;
+
     constructor(parentModule, submoduleName) {
         super(parentModule, submoduleName);
 
@@ -103,7 +106,7 @@ export class SetupSubModule extends SubModule {
         this.dataColor.AssignLink("https://github.com/bpostlethwaite/colormap/blob/master/colormaps.png",
             "Colour Previews");
 
-        this.UpdateDisplayColorPickers();
+        this.UpdateDisplayColorPickers(true);
     }
 
     MapSelected() {
@@ -130,19 +133,29 @@ export class SetupSubModule extends SubModule {
         this.parent.UpdateDisplayColorPickers();
     }
     MapLandColorSelected() {
+        if (this.parent.#bypassCallback) { return; }
         let color = this.parent.mapLandColorPicker.color;
         this.parent.parentModule.mapSubModule.SetLandColor(color);
     }
     MapWaterColorSelected() {
+        if (this.parent.#bypassCallback) { return; }
         let color = this.parent.mapWaterColorPicker.color;
         this.parent.parentModule.mapSubModule.SetWaterColor(color);
     }
     DataColorSelected() {
-        console.log("HI2");
     }
 
-    UpdateDisplayColorPickers() {
+    UpdateDisplayColorPickers(force = false) {
         let display = this.mapColor.dropdown[this.mapColor.dropdown.selectedIndex].value == 'custom';
+        if (!force && this.#lastColorPickerVisible == display) { return; }
+        this.#lastColorPickerVisible = display;
+        if (display && !force) {
+            // displaying after hiding (or forcing display), update colors without modified callback (unless forcing)
+            this.#bypassCallback = true;
+            this.mapLandColorPicker.color = this.parentModule.mapSubModule.GetLandColor();
+            this.mapWaterColorPicker.color = this.parentModule.mapSubModule.GetWaterColor();
+            this.#bypassCallback = false;
+        }
         this.mapLandColorPicker.container.style.display = display ? 'inline-block' : 'none';
         this.mapWaterColorPicker.container.style.display = display ? 'inline-block' : 'none';
     }
