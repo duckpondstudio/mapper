@@ -19,6 +19,13 @@ export const LerpColor = function (from, to, ratio) {
 export const singlecolors = {
     land: '--color-map-land-fill',
     water: '--color-map-water-fill',
+    white: '#FFFFFF',
+    black: '#000000',
+    error: '#FF00FF',
+    earthgreen: '#A4ECB4',
+    earthwater: '#BCFFFF',
+    cautionyellow: '#F9D82E',
+    darkgray: '#201F21',
 }
 
 
@@ -28,7 +35,10 @@ export const singlecolors = {
 
 export const colorpairs = {
     default: ['land', 'water'],
-    test: ['land', 'water'],
+    earth: ['earthgreen', 'earthwater'],
+    bw: ['black', 'white'],
+    bw_inv: ['white', 'black'],
+    caution: ['cautionyellow', 'darkgray'],
 }
 // note - be careful not to use duplicate names with any gradients, which may confuse the IsGradient check
 
