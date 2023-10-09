@@ -3,7 +3,7 @@ import * as m from '../../data/maps';
 import { CreateDropdown } from '../dropdown';
 import { CreateColorPicker } from '../colorpicker';
 import * as stringUtils from '../../utils/string';
-import { AllGradients, GetColorPairs, GetColor, GradientsOfType } from '../../utils/color';
+import { AllGradients, GetColorPairs, GetColor, GradientsOfType, IsGradient } from '../../utils/color';
 
 class Dropdown {
     // TODO: genericize, move to dropdown.js 
@@ -115,6 +115,17 @@ export class SetupSubModule extends SubModule {
         }
     }
     MapColorSelected() {
+        let currentValue = this[this.selectedIndex].value;
+
+        // first, determine if custom 
+        if (currentValue == 'custom') {
+            // custom colors 
+        } else if (IsGradient(currentValue, 'singleaxis')) {
+            // single-axis gradient 
+        } else {
+            // color pair
+            
+        }
         this.parent.UpdateDisplayColorPickers();
     }
     MapLandColorSelected() {
@@ -130,7 +141,6 @@ export class SetupSubModule extends SubModule {
     }
 
     UpdateDisplayColorPickers() {
-        console.log(this.mapColor.dropdown[this.mapColor.dropdown.selectedIndex].value);
         let display = this.mapColor.dropdown[this.mapColor.dropdown.selectedIndex].value == 'custom';
         this.mapLandColorPicker.container.style.display = display ? 'inline-block' : 'none';
         this.mapWaterColorPicker.container.style.display = display ? 'inline-block' : 'none';
