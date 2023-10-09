@@ -42,7 +42,6 @@
         "colormap": "^2.3.2",
         "dotenv": "^16.3.1",
         "papaparse": "^5.4.1",
-        "toolcool-color-picker": "^1.0.15",
-        "webpack-sftp-client": "^1.2.1"
+        "toolcool-color-picker": "^1.0.15"
     }
 }
