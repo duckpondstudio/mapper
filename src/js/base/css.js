@@ -11,11 +11,12 @@ export function LoadCSS() {
 }
 
 /**
- * Add/modify the given CSS rule
+ * Add/modify the given CSS rule (NOTE: doesn't seem to work rn, you can create a rule, but editing deletes it - test)
  * @param {string} name name of the CSS class, eg ".body" 
  * @param {string} rule CSS rule to modify, eg "color:#ff0000"
  */
 export function SetCSSRule(name, rule) {
+    // TODO: investigate why this isn't working on set, only create 
     cssClassBuilder.addRule(name, rule);
     LoadCSS();
 }
