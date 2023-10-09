@@ -29,11 +29,16 @@ export const singlecolors = {
 
 export const colorpairs = {
     default: ['land', 'water'],
+    test: ['land', 'water'],
 }
 
-export function GetColorPairs() {
+export function GetColorPairs(includeSeparator = false) {
     let pairs = [];
     for (let cp in colorpairs) {
+        if (includeSeparator && cp != 'default') {
+            pairs.push('--Color Pairs');
+            includeSeparator = false;
+        }
         pairs.push(cp);
     };
     return pairs;
