@@ -48,9 +48,9 @@ class ColorPicker {
     colorPicker;
     label;
     container;
-    constructor(name, setupSubmodule, callback, ...options) {
+    constructor(name, setupSubmodule, callback, initialColor) {
         let simpleName = stringUtils.Simplify(name);
-        this.colorPicker = CreateColorPicker(setupSubmodule, callback);
+        this.colorPicker = CreateColorPicker(setupSubmodule, callback, initialColor);
 
         this.label = document.createElement('div');
         this.label.innerHTML = name;
@@ -60,12 +60,12 @@ class ColorPicker {
 
         this.container.appendChild(this.label);
         this.container.appendChild(this.colorPicker);
-        
+
         setupSubmodule.submoduleDiv.appendChild(this.container);
     }
 
     get color() {
-        return this.colorPicker.color;
+        return this.colorPicker.color.toHexString();
     }
     set color(color) {
         this.colorPicker.setAttribute('color', color);
@@ -87,17 +87,16 @@ export class SetupSubModule extends SubModule {
         this.mapColor = new Dropdown('Map Colours', this, this.MapColorSelected, '---');
 
         console.log(1);
-        this.mapLandColorPicker = new ColorPicker('Land', this, this.MapLandColorSelected);
-        this.mapWaterColorPicker = new ColorPicker('Water', this, this.MapWaterColorSelected);
+        this.mapLandColorPicker = new ColorPicker('Land', this, this.MapLandColorSelected, GetColor('land'));
+        this.mapWaterColorPicker = new ColorPicker('Water', this, this.MapWaterColorSelected, GetColor('water'));
 
         this.dataColor = new Dropdown('Data Colours', this, this.DataColorSelected, ...AllGradients(true));
 
         this.dataColor.AssignLink("https://github.com/bpostlethwaite/colormap/blob/master/colormaps.png",
             "Colour Previews");
-        
-        
+
         // TODO: get color from CSS value for this map
-        
+
         // this.mapLandColorPicker.color = GetColor('land');
 
     }

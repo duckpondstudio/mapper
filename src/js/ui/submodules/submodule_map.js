@@ -2,15 +2,15 @@ import { SubModule } from '../submodule';
 import * as m from '../../data/maps';
 import { GetBoundingGlobalRect } from "../../utils/element";
 import { mapSize } from '../../mapgen/mapmaker';
-import { SetCSSRule } from '../../base/css';
+import { SetCSSRule, SetCSSVar, root } from '../../base/css';
 import { GetColor } from '../../utils/color';
 
 export class MapSubModule extends SubModule {
 
     #map;
 
-    #landColor;
-    #waterColor;
+    #landColor = 'land';
+    #waterColor = 'water';
 
     ClearMaps() {
         while (this.submoduleDiv.firstChild) {
@@ -27,11 +27,31 @@ export class MapSubModule extends SubModule {
         this.submoduleDiv.style.width = mapSubModuleWidthHeight[0] + 'px';
         this.submoduleDiv.style.height = mapSubModuleWidthHeight[1] + 'px';
 
+        this.#AssignColorCSSClass();
+
         this.ResetColor();
     }
 
-    GetLandColor() { return this.#landColor; }
-    GetWaterColor() { return this.#waterColor; }
+    GetLandColor() { return GetColor(this.#landColor); }
+    GetWaterColor() { return GetColor(this.#waterColor); }
+
+
+    #AssignColorCSSClass() {
+        // create a dynamically named mX (m0, m1) CSS class, and variable references
+        //     so that we can just modify the CSS vars to change the color 
+        // define names 
+        let ruleLandName = ".mapContainer .map .land.m" + this.parentModule.moduleId;
+        let ruleWaterName = ".mapContainer .map .water.m" + this.parentModule.moduleId;
+        let cssLandVarName = '--color-map-land-fill-m' + this.parentModule.moduleId;
+        let cssWaterVarName = '--color-map-water-fill-m' + this.parentModule.moduleId;
+        // create CSS vars 
+        SetCSSVar(cssLandVarName, this.GetLandColor());
+        SetCSSVar(cssWaterVarName, this.GetWaterColor());
+        // set CSS rules 
+        SetCSSRule(ruleLandName, 'fill:var(' + cssLandVarName + ')');
+        SetCSSRule(ruleWaterName, 'stroke:var(' + cssWaterVarName + ')', 'fill:var(' + cssWaterVarName + ')');
+    }
+
 
     ResetColor() {
         this.SetLandWaterColor('land', 'water');
@@ -46,17 +66,14 @@ export class MapSubModule extends SubModule {
     SetLandColor(landColor) {
         if (this.#landColor == landColor) { return; }
         this.#landColor = landColor;
-        let ruleName = ".mapContainer .map .land.m" + this.parentModule.moduleId;
-        console.log("C:", GetColor(landColor));
-        console.log("RuleName:", ruleName);
-        SetCSSRule(ruleName,
-            "fill:" + GetColor(landColor));
+        let varName = '--color-map-land-fill-m' + this.parentModule.moduleId;
+        SetCSSVar(varName, this.GetLandColor());
     }
     SetWaterColor(waterColor) {
         // if (this.#waterColor == waterColor) { return; }
         this.#waterColor = waterColor;
-        SetCSSRule(".mapContainer .map .water.m" + this.parentModule.moduleId,
-            "fill:" + GetColor(waterColor));
+        let varName = '--color-map-water-fill-m' + this.parentModule.moduleId;
+        SetCSSVar(varName, this.GetWaterColor());
     }
 
     /**
