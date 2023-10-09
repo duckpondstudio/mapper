@@ -3,7 +3,7 @@ import * as m from '../../data/maps';
 import { CreateDropdown } from '../dropdown';
 import { CreateColorPicker } from '../colorpicker';
 import * as stringUtils from '../../utils/string';
-import { AllGradients, GetColorPairs, GetColor, GradientsOfType, IsGradient } from '../../utils/color';
+import { AllGradients, AllColorPairs, GetColor, GradientsOfType, IsGradient } from '../../utils/color';
 
 class Dropdown {
     // TODO: genericize, move to dropdown.js 
@@ -90,7 +90,7 @@ export class SetupSubModule extends SubModule {
 
         this.mapDropdown = new Dropdown('Projection', this, this.MapSelected, ...m.GetAllMaps());
 
-        let colorPairs = GetColorPairs(true);
+        let colorPairs = AllColorPairs(true);
         colorPairs.push(...GradientsOfType('singleaxis', true));
         colorPairs.push('--DIY', 'custom');
         this.mapColor = new Dropdown('Map Colours', this, this.MapColorSelected, ...colorPairs);
@@ -116,10 +116,9 @@ export class SetupSubModule extends SubModule {
     }
     MapColorSelected() {
         let currentValue = this[this.selectedIndex].value;
-
         // first, determine if custom 
         if (currentValue == 'custom') {
-            // custom colors 
+            // custom colors, do nothing 
         } else if (IsGradient(currentValue, 'singleaxis')) {
             // single-axis gradient 
         } else {

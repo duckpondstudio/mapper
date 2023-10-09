@@ -42,7 +42,7 @@ export const colorpairs = {
 }
 // note - be careful not to use duplicate names with any gradients, which may confuse the IsGradient check
 
-export function GetColorPairs(includeSeparator = false) {
+export function AllColorPairs(includeSeparator = false) {
     let pairs = [];
     for (let cp in colorpairs) {
         if (includeSeparator && cp != 'default') {
