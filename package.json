@@ -38,6 +38,7 @@
         "webpack-dev-server": "^4.15.0"
     },
     "dependencies": {
+        "@sunify/lerp-color": "^2.0.0",
         "colormap": "^2.3.2",
         "papaparse": "^5.4.1",
         "toolcool-color-picker": "^1.0.15"
