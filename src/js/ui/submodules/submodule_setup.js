@@ -3,7 +3,7 @@ import * as m from '../../data/maps';
 import { CreateDropdown } from '../dropdown';
 import { CreateColorPicker } from '../colorpicker';
 import * as stringUtils from '../../utils/string';
-import { AllGradients, GetColorPairs, GetColor } from '../../utils/color';
+import { AllGradients, GetColorPairs, GetColor, GradientsOfType } from '../../utils/color';
 
 class Dropdown {
     // TODO: genericize, move to dropdown.js 
@@ -90,8 +90,9 @@ export class SetupSubModule extends SubModule {
 
         this.mapDropdown = new Dropdown('Projection', this, this.MapSelected, ...m.GetAllMaps());
 
-        let colorPairs = GetColorPairs();
-        colorPairs.push('--', 'custom');
+        let colorPairs = GetColorPairs(true);
+        colorPairs.push(...GradientsOfType('singleaxis', true));
+        colorPairs.push('--DIY', 'custom');
         this.mapColor = new Dropdown('Map Colours', this, this.MapColorSelected, ...colorPairs);
 
         this.mapLandColorPicker = new ColorPicker('Land', this, this.MapLandColorSelected, GetColor('land'));
@@ -103,7 +104,6 @@ export class SetupSubModule extends SubModule {
             "Colour Previews");
 
         this.UpdateDisplayColorPickers();
-
     }
 
     MapSelected() {
