@@ -3,12 +3,32 @@
  * @type {CSSStyleDeclaration}
  */
 export let css;
+/**
+ * Global reference to the CSS :root element 
+ */
+export let root;
+
+let rootStyle;
 
 /** Load CSS style reference, run once at start and again whenever CSS style changes */
 export function LoadCSS() {
     // load css reference 
     css = getComputedStyle(document.documentElement);
+    root = document.querySelector(':root');
+    rootStyle = getComputedStyle(root);
 }
+
+
+export function GetCSSVar(name) {
+    return rootStyle.getPropertyValue(name);
+}
+export function SetCSSVar(name, value) {
+    root.style.setProperty(name, value);
+    // update root computed style 
+    rootStyle = getComputedStyle(root);
+}
+
+
 
 /**
  * Add/modify the given CSS rule (NOTE: doesn't seem to work rn, you can create a rule, but editing deletes it - test)
