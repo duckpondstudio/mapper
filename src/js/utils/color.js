@@ -31,6 +31,7 @@ export const colorpairs = {
     default: ['land', 'water'],
     test: ['land', 'water'],
 }
+// note - be careful not to use duplicate names with any gradients, which may confuse the IsGradient check
 
 export function GetColorPairs(includeSeparator = false) {
     let pairs = [];
@@ -136,8 +137,25 @@ export function GradientsOfType(type, includeTypeNames = false) {
                 gradients.push(g);
             };
             break;
+        default:
+            console.warn('Invalid gradient type " + type + ", must be "singleaxis", "twoaxis", "utility", or "aesthetic"');
+            break;
     }
     return gradients;
+}
+
+/**
+ * Checks if the given name is, in fact, a valid gradient
+ * @param {string} gradient Gradient name to check
+ * @param {string} ofType Gradient type, 'singleaxis', 'twoaxis', 'utility', or 'aesthetic'. If null checks all. 
+ * @returns {boolean}
+ */
+export function IsGradient(gradient, ofType = null) {
+    let gradients = ofType != null ? GradientsOfType(ofType) : AllGradients();
+    for (let i in gradients) {
+        if (gradient == gradients[i]) { return true; }
+    }
+    return false;
 }
 
 const gradient_default = gradients_singleaxis.spring;
