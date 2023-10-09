@@ -83,6 +83,10 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');      // const reference to webpack's html plugin
 const path = require('path');                                  // const convenience reference to the local filepath
 
+const dotenv = require('dotenv'); // dotenv environment var import, npm i dotenv 
+dotenv.config();// load .env
+dotenv.config({path: 'private.env'});// load private.env
+
 module.exports = {
 
     //                                                  set export mode
@@ -98,7 +102,7 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             //                                          webpage title here
-            title: 'New Website',
+            title: process.env.SITE_NAME || 'Webpage',
         }),
     ],
 
@@ -160,7 +164,7 @@ module.exports = {
                         return `data/${extension}/[name][ext]`;
                     },
                 },
-                include: [path.resolve(__dirname, 'src/assets/export')],
+                include: [path.resolve(__dirname, process.env.DIR_ASSET_EXPORT || 'src/assets/export')],
                 exclude: /node_modules/,
             },
 
@@ -178,7 +182,7 @@ module.exports = {
     resolve: {
         alias: {
             // Alias used for dynamic import of all .csv files in the assets/csv directory
-            csvFiles: path.resolve(__dirname, 'src/assets/export/csv'),
+            csvFiles: path.resolve(__dirname, process.env.DIR_ASSET_CSV || 'src/assets/export/csv'),
         },
     },
 };
