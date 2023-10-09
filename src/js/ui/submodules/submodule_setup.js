@@ -3,7 +3,7 @@ import * as m from '../../data/maps';
 import { CreateDropdown } from '../dropdown';
 import { CreateColorPicker } from '../colorpicker';
 import * as stringUtils from '../../utils/string';
-import { AllGradients, GetColor } from '../../utils/color';
+import { AllGradients, GetColorPairs, GetColor } from '../../utils/color';
 
 class Dropdown {
     // TODO: genericize, move to dropdown.js 
@@ -22,7 +22,7 @@ class Dropdown {
         this.label.innerHTML = name;
 
         this.container = document.createElement('div');
-        this.container.setAttribute('class', 'uiLabeledAsset ' + simpleName);
+        this.container.setAttribute('class', 'uiLabeledAsset dropdown ' + simpleName);
 
         this.container.appendChild(this.label);
         this.container.appendChild(this.dropdown);
@@ -53,6 +53,7 @@ class ColorPicker {
         this.colorPicker = CreateColorPicker(setupSubmodule, callback, initialColor);
 
         this.label = document.createElement('div');
+        this.label.setAttribute('class', 'uiLabeledAsset colorPicker label');
         this.label.innerHTML = name;
 
         this.container = document.createElement('div');
@@ -88,9 +89,11 @@ export class SetupSubModule extends SubModule {
         super(parentModule, submoduleName);
 
         this.mapDropdown = new Dropdown('Projection', this, this.MapSelected, ...m.GetAllMaps());
-        this.mapColor = new Dropdown('Map Colours', this, this.MapColorSelected, '---');
 
-        console.log(1);
+        let colorPairs = GetColorPairs();
+        colorPairs.push('--', 'custom');
+        this.mapColor = new Dropdown('Map Colours', this, this.MapColorSelected, ...colorPairs);
+
         this.mapLandColorPicker = new ColorPicker('Land', this, this.MapLandColorSelected, GetColor('land'));
         this.mapWaterColorPicker = new ColorPicker('Water', this, this.MapWaterColorSelected, GetColor('water'));
 
@@ -99,9 +102,7 @@ export class SetupSubModule extends SubModule {
         this.dataColor.AssignLink("https://github.com/bpostlethwaite/colormap/blob/master/colormaps.png",
             "Colour Previews");
 
-        // TODO: get color from CSS value for this map
-
-        // this.mapLandColorPicker.color = GetColor('land');
+        this.UpdateDisplayColorPickers();
 
     }
 
@@ -114,6 +115,7 @@ export class SetupSubModule extends SubModule {
         }
     }
     MapColorSelected() {
+        this.parent.UpdateDisplayColorPickers();
     }
     MapLandColorSelected() {
         let color = this.parent.mapLandColorPicker.color;
@@ -125,5 +127,12 @@ export class SetupSubModule extends SubModule {
     }
     DataColorSelected() {
         console.log("HI2");
+    }
+
+    UpdateDisplayColorPickers() {
+        console.log(this.mapColor.dropdown[this.mapColor.dropdown.selectedIndex].value);
+        let display = this.mapColor.dropdown[this.mapColor.dropdown.selectedIndex].value == 'custom';
+        this.mapLandColorPicker.container.style.display = display ? 'inline-block' : 'none';
+        this.mapWaterColorPicker.container.style.display = display ? 'inline-block' : 'none';
     }
 }

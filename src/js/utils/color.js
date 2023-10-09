@@ -31,6 +31,14 @@ export const colorpairs = {
     default: ['land', 'water'],
 }
 
+export function GetColorPairs() {
+    let pairs = [];
+    for (let cp in colorpairs) {
+        pairs.push(cp);
+    };
+    return pairs;
+}
+
 
 // --------------------- //
 // ---   GRADIENTS   --- //

@@ -7,7 +7,8 @@
 
     --module-width: min(800px, calc(100% - 96px));
     --submodule-height-min: 60px;
-    --submodule-info-height-min: 28px;
+    --submodule-info-height-min: 55px;
+    --submodule-setup-ui-asset-height-min: 40px;
 
     /* -------------------------- */
     /* ---     CSS COLORS     --- */
@@ -55,5 +56,6 @@
     --tool-cool-color-picker-btn-border-color: #767676;
     --tool-cool-color-picker-btn-border-color-inner: #76767600;
     --tool-cool-color-picker-btn-border-radius: 3px;
+    --tool-cool-color-picker-btn-border-radius-inner: 2px;
 
 }
