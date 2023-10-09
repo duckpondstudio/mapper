@@ -93,6 +93,10 @@ export class SetupSubModule extends SubModule {
 
         this.mapDropdown = new Dropdown('Projection', this, this.MapSelected, ...m.GetAllMaps());
 
+        this.dataColor = new Dropdown('Data Colours', this, this.DataColorSelected, ...AllGradients(true));
+        this.dataColor.AssignLink("https://github.com/bpostlethwaite/colormap/blob/master/colormaps.png",
+            "Colour Previews");
+
         let colorPairs = AllColorPairs(true);
         colorPairs.push(...GradientsOfType('singleaxis', true));
         colorPairs.push('--DIY', 'custom');
@@ -100,11 +104,6 @@ export class SetupSubModule extends SubModule {
 
         this.mapLandColorPicker = new ColorPicker('Land', this, this.MapLandColorSelected, GetColor('land'));
         this.mapWaterColorPicker = new ColorPicker('Water', this, this.MapWaterColorSelected, GetColor('water'));
-
-        this.dataColor = new Dropdown('Data Colours', this, this.DataColorSelected, ...AllGradients(true));
-
-        this.dataColor.AssignLink("https://github.com/bpostlethwaite/colormap/blob/master/colormaps.png",
-            "Colour Previews");
 
         this.UpdateDisplayColorPickers(true);
     }
