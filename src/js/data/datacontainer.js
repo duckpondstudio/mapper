@@ -1,4 +1,4 @@
-import * as dataClasses from './dataclasses';
+import * as dataLocation from './datalocation';
 import * as stringUtils from '../utils/string';
 
 /** Flag for WIP feature, searching by data field combos (eg longitude AND latitude) */
@@ -7,7 +7,7 @@ let searchByDataCombos = false;
 export class LocationsContainer {
 
     /** Array containing all locations 
-     * @type {dataClasses.Location[]}
+     * @type {dataLocation.Location[]}
     */
     locations;
 
@@ -30,7 +30,7 @@ export class LocationsContainer {
 
     constructor(locationType) {
 
-        if (!dataClasses.IsValidLocationType(locationType)) {
+        if (!dataLocation.IsValidLocationType(locationType)) {
             console.error("Invalid locationType", locationType,
                 'cannot create new LocationsContainer with invalid type.');
             return;
@@ -38,9 +38,9 @@ export class LocationsContainer {
 
         this.locations = [];
 
-        this.dataFields = dataClasses.GetDataFields(locationType);
-        this.searchDataFields = dataClasses.GetSearchDataFields(locationType);
-        this.searchDataCombos = dataClasses.GetSearchDataCombos(locationType);
+        this.dataFields = dataLocation.GetDataFields(locationType);
+        this.searchDataFields = dataLocation.GetSearchDataFields(locationType);
+        this.searchDataCombos = dataLocation.GetSearchDataCombos(locationType);
 
         // create maps for data fields
 
@@ -58,7 +58,7 @@ export class LocationsContainer {
      * Adds a new Location to this container.
      * 
      * Note: For adding, Location MUST have a 'name' property
-     * @param {dataClasses.Location} location 
+     * @param {dataLocation.Location} location 
      * @param {boolean} checkForExisting 
      * @returns 
      */
@@ -88,7 +88,7 @@ export class LocationsContainer {
         // add to array 
         this.locations.push(location);
         this.locationMap_ByName.set(
-            location[dataClasses.searchname],
+            location[dataLocation.searchname],
             location);
 
         location.addedToContainer = true;
@@ -100,7 +100,7 @@ export class LocationsContainer {
     /**
      * Ensure the given location's data is all up-to-date 
      * in the relevant data maps 
-     * @param {dataClasses.Location} location 
+     * @param {dataLocation.Location} location 
      */
     UpdateLocationDataMaps(location) {
         // add to maps 
@@ -142,7 +142,7 @@ export class LocationsContainer {
 
         // second, search by altnames (datafields)
         if (dataValues[3] != null) {
-            let searchAltNames = dataClasses.Location.AltNamesToArray(dataValues[3]);
+            let searchAltNames = dataLocation.Location.AltNamesToArray(dataValues[3]);
             searchAltNames.forEach(altName => {
                 if (!stringUtils.IsNullOrEmptyOrWhitespace(altName) &&
                     this.locationMap_ByName.has(altName)) {
@@ -237,18 +237,18 @@ export class LocationsContainer {
 }
 
 /**
- * Gets the {@link LocationsContainer} for the given {@link dataClasses.Location Location} type
- * @param {string} locationType Location type input, see {@link dataClasses.type_Continent}, 
- * {@link dataClasses.type_Country Country}, etc
+ * Gets the {@link LocationsContainer} for the given {@link dataLocation.Location Location} type
+ * @param {string} locationType Location type input, see {@link dataLocation.type_Continent}, 
+ * {@link dataLocation.type_Country Country}, etc
  * @returns {LocationsContainer} {@link LocationsContainer} for the relevant location type 
  */
 export function GetLocationsContainer(locationType) {
     switch (locationType) {
-        case dataClasses.type_Continent: return ContinentsContainer;
-        case dataClasses.type_Country: return CountriesContainer;
-        case dataClasses.type_Region: return RegionsContainer;
-        case dataClasses.type_City: return CitiesContainer;
-        case dataClasses.type_Default:
+        case dataLocation.type_Continent: return ContinentsContainer;
+        case dataLocation.type_Country: return CountriesContainer;
+        case dataLocation.type_Region: return RegionsContainer;
+        case dataLocation.type_City: return CitiesContainer;
+        case dataLocation.type_Default:
             console.error("Type_Default is an invalid input for GetLocationsContainer, returning null");
             return null;
         default:
@@ -257,7 +257,7 @@ export function GetLocationsContainer(locationType) {
     }
 }
 
-export const ContinentsContainer = new LocationsContainer(dataClasses.type_Continent);
-export const CountriesContainer = new LocationsContainer(dataClasses.type_Country);
-export const RegionsContainer = new LocationsContainer(dataClasses.type_Region);
-export const CitiesContainer = new LocationsContainer(dataClasses.type_City);
+export const ContinentsContainer = new LocationsContainer(dataLocation.type_Continent);
+export const CountriesContainer = new LocationsContainer(dataLocation.type_Country);
+export const RegionsContainer = new LocationsContainer(dataLocation.type_Region);
+export const CitiesContainer = new LocationsContainer(dataLocation.type_City);

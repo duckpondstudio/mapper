@@ -1,4 +1,4 @@
-import * as dataClasses from "./dataclasses";
+import * as dataLocation from "./datalocation";
 
 export const targetType = {
 
@@ -7,38 +7,38 @@ export const targetType = {
     geoPoint: 'geopoint',
 
     /** string name of a location formatted for (typically, ASCII) display, eg San Francisco 
-     * @see {@link dataClasses.name DataClasses.name}
+     * @see {@link dataLocation.name DataClasses.name}
      * @type {string} */
-    stringName: dataClasses.name,
+    stringName: dataLocation.name,
     /** string name of a location formatted for searching (typically via stringUtils.Simplify), eg sanfrancisco 
-     * @see {@link dataClasses.searchname DataClasses.searchname}
+     * @see {@link dataLocation.searchname DataClasses.searchname}
      * @type {string} */
-    searchName: dataClasses.searchname,
+    searchName: dataLocation.searchname,
 
     /** 
-     * {@link dataClasses.Location Location} reference, 
-     * specifically {@link dataClasses.Continent Continent}
-     * @see {@link dataClasses.type_Continent DataClasses.type_Continent}
+     * {@link dataLocation.Location Location} reference, 
+     * specifically {@link dataLocation.Continent Continent}
+     * @see {@link dataLocation.type_Continent DataClasses.type_Continent}
      * @type {string} */
-    continent: dataClasses.type_Continent,
+    continent: dataLocation.type_Continent,
     /** 
-     * {@link dataClasses.Location Location} reference, 
-     * specifically {@link dataClasses.Country Country}
-     * @see {@link dataClasses.type_Country DataClasses.type_Country}
+     * {@link dataLocation.Location Location} reference, 
+     * specifically {@link dataLocation.Country Country}
+     * @see {@link dataLocation.type_Country DataClasses.type_Country}
      * @type {string} */
-    country: dataClasses.type_Country,
+    country: dataLocation.type_Country,
     /** 
-     * {@link dataClasses.Location Location} reference, 
-     * specifically {@link dataClasses.Region Region}
-     * @see {@link dataClasses.type_Region DataClasses.type_Region}
+     * {@link dataLocation.Location Location} reference, 
+     * specifically {@link dataLocation.Region Region}
+     * @see {@link dataLocation.type_Region DataClasses.type_Region}
      * @type {string} */
-    region: dataClasses.type_Region,
+    region: dataLocation.type_Region,
     /** 
-     * {@link dataClasses.Location Location} reference, 
-     * specifically {@link dataClasses.City City}
-     * @see {@link dataClasses.type_City DataClasses.type_City}
+     * {@link dataLocation.Location Location} reference, 
+     * specifically {@link dataLocation.City City}
+     * @see {@link dataLocation.type_City DataClasses.type_City}
      * @type {string} */
-    city: dataClasses.type_City,
+    city: dataLocation.type_City,
 
     /** Continent subtype, UN M49 code, three-digit number (saved as string)
      * @type {string} */

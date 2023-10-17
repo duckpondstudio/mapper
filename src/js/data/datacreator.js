@@ -3,7 +3,7 @@
 import { ParseCSVLocal } from "../utils/parse_csv";
 import * as csv from "../utils/write_csv";
 import * as stringUtils from '../utils/string';
-import * as location from './dataclasses';
+import * as location from './datalocation';
 import * as dataContainer from './datacontainer';
 
 const FileNameContinents = "ContinentsData";
