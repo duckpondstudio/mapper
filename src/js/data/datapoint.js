@@ -62,13 +62,13 @@ export class DataPoint {
                     console.warn("Cannot determine x/y of datapoint with null parentOverlay, returning", this);
                     return;
                 }
-                this.shape.x = this.parentOverlay.width / this.x;
-                this.shape.y = this.parentOverlay.height / this.y;
+                this.shape.x(this.parentOverlay.width * this.x);
+                this.shape.y(this.parentOverlay.height * this.y);
                 break;
             case 2:
                 // via x/y, as pixel coordinates
-                this.shape.x = this.x;
-                this.shape.y = this.y;
+                this.shape.x(this.x);
+                this.shape.y(this.y);
                 break;
         }
     }

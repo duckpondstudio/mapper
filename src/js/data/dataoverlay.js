@@ -1,5 +1,6 @@
 import Konva from "konva";
 import { Module } from "../ui/module";
+import { DataPoint } from "./datapoint";
 
 /**
  * Handles the Konva overlay for visually displaying datadots on maps 
@@ -37,18 +38,24 @@ export class DataOverlay {
         });
         this.#layer = new Konva.Layer();
 
-        let circle = new Konva.Circle(
-            {
-                x: this.#mapRect.width / 2,
-                y: this.#mapRect.height / 2,
-                radius: 10,
-                fill: 'red',
-                stroke: 'black',
-                strokeWidth: 2
-            }
-        );
+        // let circle = new Konva.Circle(
+        //     {
+        //         x: this.#mapRect.width / 2,
+        //         y: this.#mapRect.height / 2,
+        //         radius: 10,
+        //         fill: 'red',
+        //         stroke: 'black',
+        //         strokeWidth: 2
+        //     }
+        // );
+        // this.#layer.add(circle);
 
-        this.#layer.add(circle);
+        let dataPoint = new DataPoint(this);
+
+        dataPoint.drawType = 1;
+
+        this.#layer.add(dataPoint.shape);
+
         this.#stage.add(this.#layer);
         this.#layer.draw();
     }
