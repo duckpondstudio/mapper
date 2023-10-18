@@ -14,6 +14,7 @@ export class DataOverlay {
     #stage;
     #layer;
 
+
     /**
      * Construct a new DataOverlay for the given {@link Module}
      * @param {Module} module Parent {@link Module} for this overlay
@@ -50,6 +51,13 @@ export class DataOverlay {
         this.#layer.add(circle);
         this.#stage.add(this.#layer);
         this.#layer.draw();
+    }
+
+    get width() {
+        return this.#mapRect.width;
+    }
+    get height() {
+        return this.#mapRect.height;
     }
 
 }
