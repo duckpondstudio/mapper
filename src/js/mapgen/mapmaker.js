@@ -3,6 +3,8 @@ import overlayGeo from './../../assets/geojson/outline-safe.geojson';//       re
 // import overlayGeo from './../../assets/geojson/outline-simple.geojson';//  recommended for ocean rendering
 // import overlayGeo from './../../assets/geojson/outline-default.geojson';// not recommended (SVG rendering errors)
 
+// NOTE: remember, references to actual world map GeoJSON files are located in utils/parse_geojson.js  
+
 // TODO: allow multiple geojson files to be imported onto a single map (eg to load land + ocean + lat/long lines separately)
 // TODO: allow separate geojson files on the same map to be independently toggled on/off (ideally without recalculating the same map)
 

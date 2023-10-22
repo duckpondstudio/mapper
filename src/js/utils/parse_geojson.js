@@ -6,6 +6,10 @@ import geoEarth from './../../assets/geojson/ne_50m_land.geojson';
 import geoOcean from './../../assets/geojson/outline-simple.geojson';//     recommended for ocean rendering
 // import geoOcean from './../../assets/geojson/outline-default.geojson';// not recommended (SVG rendering errors)
 
+import geoLatLong from './../../assets/geojson/latitude-longitude-15deg.geojson';
+// import geoLat from './../../assets/geojson/latitude-15deg.geojson';
+// import geoLong from './../../assets/geojson/longitude-15deg.geojson';
+
 // GeoJSON geo-types per the GeoJSON spec at https://rdrr.io/cran/geoops/man/geojson-types.html June 18 2023
 /** Collection geo-types (non-singular-objects) in GeoJSON format (generally containing collections), lowercase */
 const geoJsonCollections = ['featurecollection', 'geometrycollection'];
@@ -24,6 +28,7 @@ export function GetGeoJSON() {
     return CombineGeoJSON(
         geoOcean,
         geoEarth,
+        // geoLatLong, // TODO: buggy 
     );
 }
 
