@@ -4,5 +4,10 @@
             "path": "."
         }
     ],
-    "settings": {}
+    "settings": {
+        "workbench.colorCustomizations": {
+            "minimap.background": "#1a1a1a69",
+            "scrollbar.shadow": "#1a1a1a69"
+        }
+    }
 }
