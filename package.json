@@ -21,7 +21,7 @@
         "d3-geo": "^3.1.0",
         "d3-geo-projection": "^4.0.0",
         "dice-coefficient": "^2.1.1",
-        "fabric": "^5.3.0",
+        "fabric": "^7.2.0",
         "feather-icons": "^4.29.0",
         "file-loader": "^6.2.0",
         "html-webpack-plugin": "^5.5.1",
@@ -43,5 +43,9 @@
         "dotenv": "^16.3.1",
         "papaparse": "^5.4.1",
         "toolcool-color-picker": "^1.0.15"
+    },
+    "overrides": {
+        "serialize-javascript": "^7.0.3",
+        "fabric": "^7.2.0"
     }
 }
